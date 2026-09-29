@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Resultados gerados a cada execucao (rodar_edc.py grava em resultados/AAAAMMDD_HHMMSS_<nome>/)
+resultados/
+
+# Configuracao local de ferramentas/editor
+.claude/
+.vscode/
+.idea/
+.DS_Store

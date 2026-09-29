@@ -1,0 +1,16 @@
+# Python 3.11
+#
+# rdkit, scikit-learn e xgboost devem ser EXATAMENTE estas versoes: os modelos (.joblib)
+# sao serializados com elas, e o numero de descritores do RDKit define o vetor de features
+# (2048 bits ECFP4 + 132 descritores = 2180). Com outra versao do RDKit o preditor falha
+# com "Feature shape mismatch".
+rdkit==2026.3.6
+scikit-learn==1.9.1
+xgboost==3.4.2
+
+# Versoes com que o pipeline foi testado
+numpy==2.4.6
+pandas==3.0.6
+scipy==1.17.1
+joblib==1.6.0
+matplotlib==3.11.2

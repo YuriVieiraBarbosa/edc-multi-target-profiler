@@ -1,0 +1,10 @@
+endpoint,modelo,alpha,cobertura_nominal,n_calibracao,q_absoluto,largura_intervalo_fixo,cobertura_empirica_fixo,cobertura_empirica_normalizado,largura_mediana_normalizado,q_normalizado,modelo_clf,limiar_otimizado,MCC_teste_0.5,MCC_teste_limiar,BalAcc_teste_0.5,BalAcc_teste_limiar,limiar_producao,ganho_limiar,conformal_modo,cobertura_scaffold,nao_implantavel
+AR_B,XGBoost,0.2,0.8,362,0.801,1.603,0.673,0.673,1.603,0.8014,XGBoost,0.6,0.391,0.35,0.693,0.681,0.5,-0.041,fixo,0.673,False
+AR_F,RandomForest,0.2,0.8,124,0.764,1.528,0.79,0.758,1.334,1.0513,RandomForest,0.67,0.0,0.0,0.5,0.5,0.5,0.0,fixo,0.79,True
+ESR1_B,XGBoost,0.2,0.8,540,0.837,1.674,0.772,0.772,1.674,0.8368,XGBoost,0.24,0.485,0.422,0.749,0.66,0.5,-0.063,fixo,0.772,False
+ESR1_F,RandomForest,0.2,0.8,32,1.234,2.467,0.645,0.613,1.796,1.5639,RandomForest,0.32,0.831,0.831,0.875,0.875,0.5,0.0,fixo,0.645,True
+ESR2_B,XGBoost,0.2,0.8,310,0.925,1.849,0.565,0.565,1.849,0.9247,RandomForest,0.67,0.391,0.331,0.748,0.732,0.5,-0.06,fixo,0.565,False
+PPARG_B,XGBoost,0.2,0.8,288,0.82,1.639,0.718,0.718,1.639,0.8197,Logistic,0.58,0.706,0.671,0.815,0.819,0.5,-0.035,fixo,0.718,False
+PPARG_F,Ridge,0.2,0.8,46,1.025,2.05,0.739,0.739,2.05,1.0249,SVC,0.57,0.821,0.913,0.91,0.947,0.57,0.092,fixo,0.739,False
+THRA_B,RandomForest,0.2,0.8,44,0.592,1.184,0.432,0.705,2.026,1.064,RandomForest,0.39,0.284,0.281,0.585,0.55,0.5,-0.003,normalizado,0.705,True
+THRB_B,XGBoost,0.2,0.8,80,0.715,1.429,0.886,0.886,1.429,0.7147,XGBoost,0.58,0.486,0.486,0.783,0.783,0.5,0.0,fixo,0.886,False
