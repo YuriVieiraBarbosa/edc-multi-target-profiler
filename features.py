@@ -62,22 +62,45 @@ def murcko_scaffold(smiles):
 
 
 # Split by Bemis-Murcko scaffold. NOTE: the code fills the TEST set with the largest groups, contrary to the docstring below.
-def scaffold_split(smiles, test_size=0.2, seed=0):
-    """Split por scaffold de Bemis-Murcko: scaffolds maiores vão para treino."""
+def scaffold_split(smiles, test_size=0.2, seed=0, permitir_aleatorio=False):
+    """Split por scaffold de Bemis-Murcko.
+
+    ATENÇÃO: os scaffolds de MAIOR grupo vão para o TESTE, preenchido de forma gulosa do
+    maior para o menor até `test_size`. O teste externo é, portanto, extrapolação para as
+    famílias químicas dominantes: pessimista e de alta variância. Esta é a convenção com que
+    os modelos implantados foram avaliados, e por isso foi mantida.
+
+    Moléculas sem scaffold (acíclicas, ou falha do RDKit) recebem cada uma o seu próprio
+    grupo. Agrupá-las sob o scaffold vazio trataria compostos sem relação estrutural como
+    uma única família química, o que já tornou o teste degenerado em dois ensaios do Tox21.
+
+    Se o teste guloso não alcançar metade do alvo, a função levanta erro em vez de cair em
+    silêncio para divisão aleatória: uma divisão aleatória rotulada como "por scaffold"
+    produz métricas otimistas sob um nome errado. Passe permitir_aleatorio=True para optar
+    explicitamente por ela.
+    """
     from collections import defaultdict
     groups = defaultdict(list)
     for i, s in enumerate(smiles):
-        groups[murcko_scaffold(s)].append(i)
+        sc = murcko_scaffold(s)
+        groups[sc if sc else ("__sem_scaffold__", i)].append(i)
     sets = sorted(groups.values(), key=lambda x: (-len(x), x[0]))
     n_test = int(round(test_size * len(smiles)))
     train, test = [], []
-    rng = np.random.default_rng(seed)
     for grp in sets:
         if len(test) + len(grp) <= n_test:
             test.extend(grp)
         else:
             train.extend(grp)
-    if len(test) < 0.5 * n_test:  # fallback para datasets com poucos scaffolds
+    if len(test) < 0.5 * n_test:
+        if not permitir_aleatorio:
+            raise ValueError(
+                f"divisao por scaffold insuficiente: {len(test)} compostos no teste contra "
+                f"alvo de {n_test} ({len(sets)} scaffolds em {len(smiles)} compostos). "
+                "Poucos scaffolds para a fracao pedida. Reduza test_size, agrupe por outro "
+                "criterio, ou passe permitir_aleatorio=True para aceitar divisao ALEATORIA "
+                "(que nao e divisao por scaffold e da metricas otimistas).")
+        rng = np.random.default_rng(seed)
         idx = rng.permutation(len(smiles))
         test = list(idx[:n_test]); train = list(idx[n_test:])
     return np.array(sorted(train)), np.array(sorted(test))

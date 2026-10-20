@@ -83,15 +83,32 @@ act["source"] = "ChEMBL37"
 act.to_pickle("cache/chembl_ic50_filtrado.pkl")
 
 # ---------------------------------------------------------------- BindingDB
-bdb = pd.read_pickle("cache/bindingdb_ic50_raw.pkl")
-bstd = pd.read_pickle("cache/bindingdb_std_lookup.pkl").rename(
-    columns={"canonical_smiles": "Ligand SMILES"})
+# extract_bindingdb.py grava .parquet; o .pkl fica aceito para caches antigos.
+bdb_raw = "cache/bindingdb_ic50_raw.parquet"
+if os.path.exists(bdb_raw):
+    bdb = pd.read_parquet(bdb_raw)
+elif os.path.exists("cache/bindingdb_ic50_raw.pkl"):
+    bdb = pd.read_pickle("cache/bindingdb_ic50_raw.pkl")
+else:
+    raise SystemExit(f"{bdb_raw} nao encontrado. Rode antes: python extract_bindingdb.py")
 bdb = bdb[bdb["Number of Protein Chains in Target (>1 implies a multichain complex)"] == "1"]
 raw_ic = bdb["IC50 (nM)"].astype(str).str.strip()
 bdb = bdb[~raw_ic.str.contains(r"[<>]")]
 bdb["value_nM"] = pd.to_numeric(raw_ic.str.replace(r"[^0-9eE.+-]", "", regex=True),
                                 errors="coerce")
 bdb = bdb[bdb["value_nM"].between(1e-3, 1e7)]
+# Nenhum script gravava cache/bindingdb_std_lookup.pkl, que antes era apenas LIDO aqui.
+# O lookup passa a ser construido como o do ChEMBL (mesma funcao, mesmo cache em disco),
+# e depois dos filtros numericos, para padronizar menos SMILES.
+bstd_path = "cache/bindingdb_std_lookup.pkl"
+if os.path.exists(bstd_path):
+    bstd = pd.read_pickle(bstd_path)
+else:
+    bstd = curation.standardize_frame(bdb["Ligand SMILES"], n_jobs=10)
+    bstd.to_pickle(bstd_path)
+print("  BindingDB SMILES unicos padronizados:", len(bstd),
+      "| rejeitados:", int(bstd["reject_reason"].notna().sum()))
+bstd = bstd.rename(columns={"canonical_smiles": "Ligand SMILES"})
 bdb = bdb.merge(bstd, on="Ligand SMILES", how="left")
 bdb = bdb[bdb["reject_reason"].isna()]
 bdb["pIC50"] = curation.to_pic50(bdb["value_nM"])

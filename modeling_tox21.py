@@ -108,9 +108,23 @@ def _tan(bits, block=1024):
     return out
 
 
+# Locate the folder holding the curated assay datasets. pipeline_tox21.py writes to
+# data_tox21/, but the delivered tree renamed it, so accept either name instead of failing
+# with an empty glob that looks like "no datasets".
+def pasta_dados(candidatas, rotulo):
+    for c in candidatas:
+        if glob.glob(os.path.join(c, "dataset_*.csv")):
+            return c
+    raise SystemExit(f"nenhum dataset de {rotulo} encontrado. Procurei por dataset_*.csv em: "
+                     + ", ".join(candidatas) + ".\nRode o pipeline_* correspondente antes, ou "
+                     "crie um atalho simbolico com um desses nomes.")
+
+
 if __name__ == "__main__":
+    pasta = pasta_dados(["data_tox21", "datasets_tox21_por_ensaio"], "ensaios Tox21")
+    print(f"datasets lidos de: {pasta}/", flush=True)
     allr, allrows = [], []
-    for p in sorted(glob.glob("data_tox21/dataset_*.csv")):
+    for p in sorted(glob.glob(f"{pasta}/dataset_*.csv")):
         r, rows = rodar(p)
         if r is None:
             print("pulado (poucos ativos):", p, flush=True); continue

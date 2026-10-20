@@ -163,57 +163,78 @@ datasets curados da camada IC50.
 Verificados no código e nos dados. O detalhamento, com os números e os arquivos de diagnóstico, está em
 `documentos/verificacao_auditoria_codigo.md`.
 
-**Impedem reproduzir o que está implantado**
+### Corrigidos em 20/10/2026
+
+Nenhuma correção altera a previsão dos modelos implantados: o alerta e as contagens dos 83 pares do
+`painel_ref.csv` saem idênticos aos anteriores.
+
+**Produziam resultado errado sem avisar**
+
+- **Camada identificada pelo nome da pasta.** A comparação passou a usar o nome *base*
+  (`os.path.basename`), então `--model-dirs` com caminho absoluto funciona, e uma pasta com nome
+  desconhecido levanta erro em vez de ser interpretada errado. Antes, `--model-dirs
+  /abs/.../models_tox21` rotulava os 11 modelos do Tox21 como `ChEMBL AR/ESR1/PPARG/TR`, com o modo do
+  ensaio virando nome de receptor, e corrompia todos os votos em silêncio.
+- **Nomes repetidos na entrada.** O `predict_edc2.py` agora levanta erro explícito, como o
+  `consenso_v2.py` já fazia, em vez de fundir moléculas diferentes numa linha do resumo.
+- **Moléculas sem scaffold de Bemis-Murcko.** Cada uma passou a receber o próprio grupo, em vez de todas
+  caírem num pseudo-grupo tratado como família química. Medido: o teste externo de
+  `TOX21_AR_antagonista_HEK293T` caiu de 95,2% para 0,0% de acíclicas e o de `TOX21_TR_antagonista_GH3`
+  de 91,9% para 0,1%; nenhum endpoint fica mais com teste majoritariamente acíclico. A mudança também
+  destravou `PPARG_Kd_B`, cujo teste tinha uma **única classe** (ROC-AUC indefinido). Afeta apenas
+  retreino — os `.joblib` implantados não mudam.
+- **Queda silenciosa para divisão aleatória.** `features.scaffold_split` levanta erro quando o teste
+  guloso não alcança metade do alvo, e só faz divisão aleatória com `permitir_aleatorio=True`. Uma
+  divisão aleatória rotulada como "por scaffold" dá métricas otimistas sob um nome errado.
+
+**Impediam rodar de ponta a ponta**
+
+- **BindingDB.** O `pipeline_curate.py` passou a ler o `.parquet` que o `extract_bindingdb.py` de fato
+  grava (aceitando `.pkl` para caches antigos) e a **construir** o `cache/bindingdb_std_lookup.pkl` com a
+  mesma função de padronização usada no ChEMBL, em vez de ler um arquivo que nenhum script criava.
+- **Nomes das pastas de dados.** `modeling_layers.py` e `modeling_tox21.py` aceitam tanto `data_layers/` e
+  `data_tox21/` (onde os `pipeline_*` gravam) quanto `datasets_camadas_por_endpoint/` e
+  `datasets_tox21_por_ensaio/` (os nomes entregues), e imprimem de qual pasta leram. Se nenhuma das duas
+  existir, o erro é explícito, em vez de um glob vazio que parece "nenhum dataset".
+
+**Afetavam a leitura do alerta**
+
+- **Direção do efeito.** O `_resumo.csv` ganhou a coluna `direcao`, com os modos dos votos **ativos** do
+  Tox21 (`agonista`, `antagonista`, ou ambos). Fica `nao determinada` quando não há voto de triagem
+  ativo, porque o eixo ChEMBL não carrega modo de ensaio.
+- **Cobertura invisível.** O `_resumo.csv` ganhou `modelos_implantaveis_receptor`,
+  `fracao_sobre_implantaveis` e `cobertura_dominio`. Um modelo fora do domínio continua **não** contando
+  como voto inativo, mas a diferença entre as duas frações agora mostra quanta evidência faltou.
+
+### Em aberto
+
+**Reprodutibilidade do que está implantado** — não é corrigível por mudança de código:
 
 - Os 18 modelos de `models_final/` **não são regeráveis por nenhum script da pasta**. O
   `LEIAME_calibracao.csv` tem 5 colunas (`limiar_producao`, `ganho_limiar`, `conformal_modo`,
   `cobertura_scaffold`, `nao_implantavel`) que o `conformal.py` não produz; ele grava outro arquivo,
-  `results/conformal_e_limiares.csv`. O script que fecha essa etapa não está no repositório.
+  `results/conformal_e_limiares.csv`. O script que fecha essa etapa não está no repositório, e reescrevê-lo
+  produziria modelos equivalentes, não os mesmos.
 - `finalize_models.py` e `conformal.py` dependem de `data/dataset_*.csv` (datasets curados de IC50) e de
-  `results/desempenho_modelos.csv`, ambos ausentes.
-- O caminho do BindingDB não roda de ponta a ponta: `extract_bindingdb.py` grava
-  `cache/bindingdb_ic50_raw.parquet` e `pipeline_curate.py` lê `.pkl`; e `cache/bindingdb_std_lookup.pkl`
-  é lido sem que nenhum script o crie.
-- `modeling_layers.py` e `modeling_tox21.py` leem de `data_layers/` e `data_tox21/`, que é onde os
-  `pipeline_*` gravam. As pastas entregues têm outros nomes (`datasets_camadas_por_endpoint/`,
-  `datasets_tox21_por_ensaio/`), então é preciso renomear ou criar atalhos antes de retreinar.
+  `results/desempenho_modelos.csv`, ambos ausentes. Os datasets de IC50 ficaram deliberadamente fora do
+  repositório.
 
-**Produzem resultado errado sem avisar**
+**Limites estruturais do consenso** — dependem de retreino ou de dados novos, não de código:
 
-- `predict_edc2.py` identifica a camada de cada modelo comparando o **nome da pasta** como texto. Passar
-  `--model-dirs` com caminho absoluto rotula a camada Tox21 como ChEMBL e corrompe todos os votos, sem
-  erro. Rode sempre da raiz do projeto, com os caminhos padrão.
-- O agrupamento é por `nome`. Duas moléculas com o mesmo valor nessa coluna são fundidas numa linha só
-  (sem `--name-col`, `nome` é o próprio SMILES, então SMILES repetido tem o mesmo efeito). O
-  `consenso_v2/consenso_v2.py` passou a levantar erro explícito nesse caso; o `predict_edc2.py` não.
-- Moléculas sem scaffold de Bemis-Murcko (acíclicas, ou falha da função) caem todas num pseudo-grupo
-  único, que é tratado como se fosse uma família química. No Tox21 isso é de 18% a 23% de cada ensaio.
-  O efeito é bimodal: em 15 dos 18 endpoints com acíclicas o teste externo fica com **zero** delas, mas
-  em `TOX21_AR_antagonista_HEK293T` o teste é 95% acíclico (944 de 992) e em `TOX21_TR_antagonista_GH3`,
-  92% (654 de 712). Nesses dois, o teste externo é degenerado.
-- `features.scaffold_split` cai em silêncio para divisão aleatória quando o teste guloso fica abaixo de
-  metade do alvo. Conferido nos 38 endpoints com dataset na pasta: **não dispara em nenhum**, então
-  nenhuma métrica atual vem de divisão aleatória. Fica como risco para datasets novos.
-
-**Afetam a leitura do alerta**
-
-- Regressão e classificação do mesmo endpoint contam como **duas** camadas na regra de alerta, embora
-  usem os mesmos compostos, as mesmas features e difiram só pela binarização em pAct ≥ 6.
-- Um modelo fora do domínio **desaparece** da conta em vez de contar como "não avaliado", então a fração
-  de camadas ativas depende de quantos modelos cobrem a molécula. O mesmo sinal do Tox21 pode virar
-  "moderado" ou "baixo" conforme a cobertura do ChEMBL.
+- Regressão e classificação do mesmo endpoint contam como **duas** camadas, embora usem os mesmos
+  compostos e difiram só pela binarização em pAct ≥ 6. É decisão mantida: o voto é por modelo. O
+  `consenso_v2.py` oferece `unidade="endpoint"` para colapsar as duas tarefas numa evidência só.
 - O teto do alerta depende do receptor: "alto" só é atingível em AR, ERα e PPARγ, porque exige um voto de
   cada camada. ERβ não tem ensaio Tox21 e chega no máximo a "moderado"; THRβ chega a "baixo"; THRα não
   tem nenhum modelo ChEMBL implantável e não aparece no resumo. Um "sem alerta" não significa o mesmo em
-  receptores diferentes.
-- O alerta soma votos agonistas e antagonistas, e não indica o sentido do efeito.
+  receptores diferentes. A coluna `modelos_implantaveis_receptor` deixa esse teto visível.
 - "Ativo" não quer dizer o mesmo em cada camada: no ChEMBL é potência de até 1 µM com limiar de
   probabilidade 0,5; no Tox21 é a chamada do depositante, com limiares otimizados de 0,11 a 0,40.
 - Os ensaios Tox21 de um mesmo receptor são os mesmos modos em linhagens celulares diferentes, então
   "2 de 4 ensaios ativos" pode ser o mesmo modo contado duas vezes.
 
-O `consenso_v2/` reescreve só a agregação e deixa esses três últimos pontos explícitos no relatório, sem
-retreinar nada. Veja `documentos/consenso_v2_especificacao.md`.
+O `consenso_v2/` reescreve só a agregação e deixa esses pontos explícitos no relatório, sem retreinar
+nada. Veja `documentos/consenso_v2_especificacao.md`.
 
 ## Limitações
 

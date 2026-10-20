@@ -27,17 +27,30 @@ ENSAIO = {"B": "ligacao", "F": "funcional"}
 def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
     camadas = []
     for d in model_dirs:
-        for p in sorted(glob.glob(os.path.join(d, "*.joblib"))):
+        # The layer is identified by the FOLDER NAME, and each layer has its own filename
+        # grammar. Comparing the path as given would mislabel every absolute path, silently
+        # parsing Tox21 models as ChEMBL ones, so compare the basename and refuse unknown
+        # folders instead of guessing.
+        pasta = os.path.basename(os.path.normpath(d))
+        if pasta not in ("models_final", "models_layers", "models_tox21"):
+            raise SystemExit(
+                f"pasta de modelos nao reconhecida: {d!r} (nome base {pasta!r}).\n"
+                "Esperado models_final, models_layers ou models_tox21 - o nome define como o "
+                "nome do arquivo e interpretado. Renomeie a pasta ou use um atalho simbolico.")
+        arquivos = sorted(glob.glob(os.path.join(d, "*.joblib")))
+        if not arquivos:
+            print(f"aviso: nenhum .joblib em {d}", file=sys.stderr)
+        for p in arquivos:
             m = joblib.load(p)
             base = os.path.basename(p)[:-7]
-            if d == "models_tox21":
+            if pasta == "models_tox21":
                 _, rec, modo, cel = base.split("_", 3)
                 camadas.append({"camada": "Tox21", "receptor": rec, "detalhe": f"{modo}/{cel}",
                                 "tarefa": "classificacao", "modelo": m, "chave": base})
             else:
                 partes = base.split("_")
                 tarefa = partes[-1]
-                if d == "models_final":
+                if pasta == "models_final":
                     rec, atype, medida = partes[0], partes[1], "IC50"
                 else:
                     rec, medida, atype = partes[0], partes[1], partes[2]
@@ -70,6 +83,17 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
                          "std_smiles": [d["std_smiles"] for d in std],
                          "inchikey": [d["inchikey"] for d in std],
                          "motivo_rejeicao": [d["reject_reason"] for d in std]})
+    # The summary groups by (nome, receptor), so two rows sharing a name would be merged
+    # into one, mixing the votes of different molecules without any error. Refuse instead.
+    # Without --name-col the name IS the SMILES, so a repeated SMILES has the same effect.
+    dup = base.loc[base["nome"].duplicated(), "nome"].unique()
+    if len(dup):
+        amostra = ", ".join(map(str, dup[:5])) + (" ..." if len(dup) > 5 else "")
+        raise SystemExit(
+            f"{len(dup)} nome(s) repetido(s) na entrada: {amostra}\n"
+            "O resumo agrupa por (nome, receptor), entao linhas com o mesmo nome seriam "
+            "fundidas numa so e os votos de moleculas diferentes se misturariam.\n"
+            "Use --name-col com rotulos unicos, ou remova as linhas duplicadas.")
     val = base["std_smiles"].notna().to_numpy()
     if val.sum() == 0:
         return base, pd.DataFrame()
@@ -138,6 +162,19 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
     resumo["votos"] = (resumo.camadas_ativas.astype(str) + "/" + resumo.camadas_avaliadas.astype(str)
                        + " votantes (" + resumo.camadas_ativas.astype(str) + "/"
                        + resumo.modelos_implantaveis_receptor.astype(str) + " implantaveis)")
+    # Direction of effect. The alert itself adds agonist and antagonist votes together, so
+    # it cannot tell them apart; only the Tox21 assays carry the mode (in `detalhe`, as
+    # "modo/linhagem"), and the ChEMBL layer carries none. This column reports the modes of
+    # the ACTIVE screening votes, and stays "nao determinada" when no such vote exists.
+    tox_at = ev[(~ev["farmacologica"]) & ev["ativo"]].copy()
+    if len(tox_at):
+        tox_at["modo"] = tox_at["detalhe"].str.split("/").str[0]
+        direcao = (tox_at.groupby(["nome", "receptor"]).modo
+                   .apply(lambda s: ", ".join(sorted(set(s)))).rename("direcao").reset_index())
+        resumo = resumo.merge(direcao, on=["nome", "receptor"], how="left")
+    else:
+        resumo["direcao"] = np.nan
+    resumo["direcao"] = resumo["direcao"].fillna("nao determinada")
     resumo["alerta"] = np.select(
         [(resumo.camadas_ativas >= 2) & (resumo.evidencia_farmacologica >= 1) & (resumo.evidencia_tox21 >= 1),
          (resumo.fracao_ativa >= 0.5) & (resumo.camadas_avaliadas >= 3),

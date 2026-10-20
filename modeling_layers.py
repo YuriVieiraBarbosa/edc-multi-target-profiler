@@ -91,9 +91,23 @@ def rodar(path):
     return res, rows
 
 
+# Locate the folder holding the curated datasets. pipeline_layers.py writes to data_layers/,
+# but the delivered tree renamed it, so accept either name instead of failing with an empty
+# glob that looks like "no datasets".
+def pasta_dados(candidatas, rotulo):
+    for c in candidatas:
+        if glob.glob(os.path.join(c, "dataset_*.csv")):
+            return c
+    raise SystemExit(f"nenhum dataset de {rotulo} encontrado. Procurei por dataset_*.csv em: "
+                     + ", ".join(candidatas) + ".\nRode o pipeline_* correspondente antes, ou "
+                     "crie um atalho simbolico com um desses nomes.")
+
+
 if __name__ == "__main__":
+    pasta = pasta_dados(["data_layers", "datasets_camadas_por_endpoint"], "camadas Ki/Kd/EC50")
+    print(f"datasets lidos de: {pasta}/", flush=True)
     allr, allrows = [], []
-    for p in sorted(glob.glob("data_layers/dataset_*.csv")):
+    for p in sorted(glob.glob(f"{pasta}/dataset_*.csv")):
         r, rows = rodar(p); allr.append(r); allrows.extend(rows)
         print(f"{r['endpoint']:14s} n={r['n']:5d} {r['melhor_modelo']:12s} Q2={r['Q2_cv']:.3f} "
               f"scr={r['y_scrambling_Q2_medio']:.3f} cob={r['cobertura_conformal_scaffold']:.2f}", flush=True)
