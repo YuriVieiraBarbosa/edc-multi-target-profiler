@@ -19,6 +19,7 @@ os.makedirs("models_final", exist_ok=True)
 os.makedirs("results", exist_ok=True)
 
 
+# Per-compound difficulty estimate (spread across the trees), used to scale the normalised conformal interval.
 def dificuldade(modelo, X):
     """Estimativa de dificuldade por composto: dispersão entre as árvores."""
     est = getattr(modelo, "estimators_", None)
@@ -31,6 +32,7 @@ def dificuldade(modelo, X):
         return np.ones(len(X))
 
 
+# Fit the conformal calibration and the MCC-optimised decision threshold for one endpoint.
 def rodar(path, perf):
     ep = os.path.basename(path).replace("dataset_", "").replace(".csv", "")
     df = pd.read_csv(path)

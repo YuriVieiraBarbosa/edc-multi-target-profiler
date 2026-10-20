@@ -15,6 +15,7 @@ SEED, ALPHA, ATIVO = 42, 0.20, 6.0
 os.makedirs("models_layers", exist_ok=True)
 
 
+# Same protocol as modeling.run_endpoint, applied to the Ki/Kd/EC50 layers.
 def rodar(path):
     ep = os.path.basename(path).replace("dataset_", "").replace(".csv", "")
     df = pd.read_csv(path)

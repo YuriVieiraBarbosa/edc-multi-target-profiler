@@ -23,6 +23,7 @@ ANTAG_RE = re.compile(r"\bantagonis|\binhibit|\bblock", re.I)
 log = []
 
 
+# Record the record and compound count after one filtering step, for the curation funnel log.
 def note(step, df, extra=""):
     log.append({"etapa": step, "registros": len(df),
                 "compostos": df["molecule_chembl_id"].nunique() if "molecule_chembl_id" in df else np.nan,

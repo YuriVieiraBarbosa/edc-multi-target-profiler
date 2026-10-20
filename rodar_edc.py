@@ -59,6 +59,7 @@ import plot_edc_results
 plot_edc_results.gerar_todas(prefixo)
 
 
+# Installed version of a module, or '?' when it cannot be imported.
 def _versao(mod):
     try:
         return __import__(mod).__version__

@@ -23,6 +23,7 @@ RECEPTOR = {"AR": "AR", "ESR1": "ERalfa", "ESR2": "ERbeta", "PPARG": "PPARgama",
 ENSAIO = {"B": "ligacao", "F": "funcional"}
 
 
+# Load every .joblib model and tag it with its layer, receptor and task.
 def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
     camadas = []
     for d in model_dirs:
@@ -47,6 +48,7 @@ def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
     return camadas
 
 
+# Per-compound difficulty used to scale the normalised conformal interval.
 def _dificuldade(est, X):
     sub = getattr(est, "estimators_", None)
     if sub is None:
@@ -57,6 +59,7 @@ def _dificuldade(est, X):
         return np.ones(len(X))
 
 
+# Score the molecules with all models and aggregate the per-model votes for each receptor.
 def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers", "models_tox21")):
     camadas = carregar(model_dirs)
     if not camadas:
@@ -105,7 +108,9 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
     det = det.merge(base[["nome", "smiles_entrada", "inchikey"]].reset_index()
                     .rename(columns={"index": "idx"}), on="idx", how="left")
 
-    # evidência utilizável: dentro do domínio e de modelo implantável
+    # Usable evidence: in-domain prediction from a deployable model.
+    # One model = one vote. Regression and classification of the same endpoint are two
+    # independent votes, since `endpoint` already carries the task suffix.
     det["conta"] = det["no_dominio"] & ~det["nao_implantavel"]
     ev = det[det["conta"]].copy()
     ev["farmacologica"] = ev["camada"].str.startswith("ChEMBL")
@@ -115,7 +120,24 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
                      evidencia_farmacologica=("farmacologica", lambda s: int((s & ev.loc[s.index, "ativo"]).sum())),
                      evidencia_tox21=("farmacologica", lambda s: int((~s & ev.loc[s.index, "ativo"]).sum())))
                 .reset_index())
+    # Deployable models per receptor: the ceiling of votes, identical for every molecule.
+    # A model left out by the domain filter is NOT counted as an inactive vote; it simply
+    # does not vote, which is why the two denominators below differ.
+    teto = (det[~det["nao_implantavel"]].groupby("receptor").endpoint.nunique()
+            .rename("modelos_implantaveis_receptor").reset_index())
+    resumo = resumo.merge(teto, on="receptor", how="left")
+    # Two readings of "votes received / number of models", kept side by side:
+    #   fracao_ativa              -> denominator = models that actually voted (previous scheme)
+    #   fracao_sobre_implantaveis -> denominator = all deployable models of the receptor
+    # The gap between them is the applicability-domain coverage for this molecule.
     resumo["fracao_ativa"] = (resumo.camadas_ativas / resumo.camadas_avaliadas).round(2)
+    resumo["fracao_sobre_implantaveis"] = (resumo.camadas_ativas
+                                           / resumo.modelos_implantaveis_receptor).round(2)
+    resumo["cobertura_dominio"] = (resumo.camadas_avaliadas
+                                   / resumo.modelos_implantaveis_receptor).round(2)
+    resumo["votos"] = (resumo.camadas_ativas.astype(str) + "/" + resumo.camadas_avaliadas.astype(str)
+                       + " votantes (" + resumo.camadas_ativas.astype(str) + "/"
+                       + resumo.modelos_implantaveis_receptor.astype(str) + " implantaveis)")
     resumo["alerta"] = np.select(
         [(resumo.camadas_ativas >= 2) & (resumo.evidencia_farmacologica >= 1) & (resumo.evidencia_tox21 >= 1),
          (resumo.fracao_ativa >= 0.5) & (resumo.camadas_avaliadas >= 3),
@@ -125,6 +147,7 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
     return det, resumo
 
 
+# Command-line entry point of the multi-layer consensus predictor.
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)

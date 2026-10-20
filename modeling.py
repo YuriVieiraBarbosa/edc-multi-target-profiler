@@ -29,6 +29,7 @@ os.makedirs("models", exist_ok=True)
 os.makedirs("results", exist_ok=True)
 
 
+# Candidate regressors. Ridge and SVR are wrapped in variance filtering + standardisation; the tree models are not.
 def reg_zoo(n_feat):
     scaled = lambda est: Pipeline([("vt", VarianceThreshold(0.0)),
                                    ("sc", StandardScaler()), ("est", est)])
@@ -47,6 +48,7 @@ def reg_zoo(n_feat):
     }
 
 
+# Candidate classifiers, following the same pipeline convention as reg_zoo.
 def clf_zoo():
     scaled = lambda est: Pipeline([("vt", VarianceThreshold(0.0)),
                                    ("sc", StandardScaler()), ("est", est)])
@@ -66,6 +68,7 @@ def clf_zoo():
     }
 
 
+# Full protocol for one endpoint: scaffold split, model selection by 5-fold CV, external test and y-scrambling.
 def run_endpoint(path):
     ep = os.path.basename(path).replace("dataset_", "").replace(".csv", "")
     df = pd.read_csv(path)
@@ -164,6 +167,7 @@ def run_endpoint(path):
     return res, rows
 
 
+# Pairwise Tanimoto similarity matrix of a binary fingerprint block.
 def _tanimoto_matrix(bits):
     b = bits.astype(np.float32)
     inter = b @ b.T

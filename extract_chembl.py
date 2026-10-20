@@ -53,6 +53,7 @@ WHERE td.tid IN ({tids})
 """
 
 
+# Query the ChEMBL SQLite dump for the six endocrine targets and cache the raw activities with full provenance.
 def main(db_path, out_prefix="cache/chembl37"):
     con = sqlite3.connect(db_path)
     ph = ",".join("?" * len(ACC))

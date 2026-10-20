@@ -36,6 +36,7 @@ NOMES = {2283418: "TOX21_ERa_BLA_Agonist_ratio", 2283419: "TOX21_ERa_BLA_Antagon
          2283404: "TOX21_TR_LUC_GH3_Agonist", 2283403: "TOX21_TR_LUC_GH3_Antagonist"}
 
 
+# Read one PubChem assay CSV, dropping the two metadata header rows and coercing the numeric columns.
 def ler(aid):
     d = pd.read_csv(f"{DIR}/{aid}.csv.gz", low_memory=False)
     d = d[pd.to_numeric(d.PUBCHEM_SID, errors="coerce").notna()].copy()
@@ -48,6 +49,7 @@ def ler(aid):
     return d[["sid", "cid", "smiles", "outcome", "AC50", "HITC"]]
 
 
+# Build one curated dataset per Tox21 assay, applying the cytotoxicity and autofluorescence counter-screens.
 def main():
     os.makedirs("data_tox21", exist_ok=True)
     af = set()

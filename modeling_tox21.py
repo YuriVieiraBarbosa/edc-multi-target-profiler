@@ -24,6 +24,7 @@ os.makedirs("models_tox21", exist_ok=True)
 os.makedirs("results", exist_ok=True)
 
 
+# Candidate classifiers for the qHTS assays (classification only: inactive AC50 values are censored).
 def zoo():
     sc = lambda e: Pipeline([("vt", VarianceThreshold(0.0)), ("sc", StandardScaler()), ("est", e)])
     return {
@@ -40,6 +41,7 @@ def zoo():
     }
 
 
+# Probability threshold that maximises the MCC over a 0.05-0.95 grid.
 def melhor_limiar(y, p):
     grid = np.unique(np.round(np.linspace(0.05, 0.95, 91), 3))
     mccs = [matthews_corrcoef(y, (p >= t).astype(int)) for t in grid]
@@ -47,6 +49,7 @@ def melhor_limiar(y, p):
     return float(grid[i]), float(mccs[i])
 
 
+# Train and evaluate the active/inactive classifier for one Tox21 assay.
 def rodar(path):
     ep = os.path.basename(path).replace("dataset_", "").replace(".csv", "")
     df = pd.read_csv(path)
@@ -95,6 +98,7 @@ def rodar(path):
     return res, rows
 
 
+# Pairwise Tanimoto similarity matrix, computed in blocks to bound memory.
 def _tan(bits, block=1024):
     b = bits.astype(np.float32); s = b.sum(1)
     out = np.empty((len(b), len(b)), dtype=np.float32)

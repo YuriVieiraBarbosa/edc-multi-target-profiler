@@ -1,0 +1,127 @@
+nome,receptor,leitura,direcao,farm_estado,farm_endpoints_disponiveis,farm_endpoints_avaliados,farm_endpoints_positivos,farm_melhor_endpoint,farm_melhor_prob,farm_melhor_base,farm_pAct_melhor,farm_pAct_melhor_inf,farm_pAct_melhor_sup,farm_pAct_melhor_endpoint,farm_pAct_melhor_medida,farm_potencia_por_medida,farm_tanimoto_max,farm_medidas_positivas,farm_modos_positivos,tox_estado,tox_endpoints_disponiveis,tox_endpoints_avaliados,tox_endpoints_positivos,tox_melhor_endpoint,tox_melhor_prob,tox_melhor_base,tox_pAct_melhor,tox_pAct_melhor_inf,tox_pAct_melhor_sup,tox_pAct_melhor_endpoint,tox_pAct_melhor_medida,tox_potencia_por_medida,tox_tanimoto_max,tox_medidas_positivas,tox_modos_positivos
+17beta-Estradiol,AR,convergente positivo,"agonista, antagonista",positivo,3,1,1,AR_B,0.8690000176429749,classificacao,7.5,6.699999809265137,8.300000190734863,AR_B,IC50,IC50 7.50,1.0,IC50,,positivo,4,4,3,TOX21_AR_antagonista_HEK293T,0.9480000138282776,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+17beta-Estradiol,ESR1,convergente positivo,"agonista, antagonista",positivo,4,4,4,ESR1_B,0.9940000176429749,classificacao,9.119999885559082,8.319999694824219,9.93000030517578,ESR1_Ki_B,Ki,EC50 7.44; IC50 7.34; Ki 9.12,0.717,"EC50, IC50, Ki",,positivo,4,4,3,TOX21_ESR1_agonista_HEK293T,0.988,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+17beta-Estradiol,ESR2,só farmacologico positivo (sem cobertura de triagem),nao determinada,positivo,4,4,4,ESR2_EC50_F,0.996,classificacao,9.1899995803833,7.929999828338623,10.4399995803833,ESR2_EC50_B,EC50,EC50 9.19; IC50 7.78; Ki 8.14,0.717,"EC50, IC50, Ki",,sem_modelo,0,0,0,,,,,,,,,,,,
+17beta-Estradiol,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.207,,,negativo,2,2,0,TOX21_PPARG_antagonista_HEK293,0.0099999997764825,classificacao,,,,,,,1.0,,
+17beta-Estradiol,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+17beta-Estradiol,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.169,,,sem_modelo,0,0,0,,,,,,,,,,,,
+17beta-Estradiol,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.8899999856948853,classificacao,,,,,,,1.0,AC50,antagonista
+4-Nonilfenol,AR,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,3,0,0,,,,,,,,,,0.31,,,positivo,4,4,1,TOX21_AR_antagonista_HEK293T,0.796999990940094,classificacao,,,,,,,1.0,AC50,antagonista
+4-Nonilfenol,ESR1,convergente positivo,"agonista, antagonista",positivo,4,4,3,ESR1_EC50_F,0.975000023841858,classificacao,6.989999771118164,6.019999980926514,7.96999979019165,ESR1_EC50_F,EC50,EC50 6.99; IC50 5.70; Ki 6.82,1.0,"EC50, IC50, Ki",,positivo,4,4,3,TOX21_ESR1_agonista_VM7,0.962,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+4-Nonilfenol,ESR2,só farmacologico positivo (sem cobertura de triagem),nao determinada,positivo,4,3,3,ESR2_EC50_F,0.874,classificacao,7.489999771118164,6.480000019073486,8.510000228881836,ESR2_EC50_F,EC50,EC50 7.49; IC50 6.03,0.565,"EC50, IC50",,sem_modelo,0,0,0,,,,,,,,,,,,
+4-Nonilfenol,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.436,,,negativo,2,2,0,TOX21_PPARG_antagonista_HEK293,0.0219999998807907,classificacao,,,,,,,1.0,,
+4-Nonilfenol,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+4-Nonilfenol,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.545,,,sem_modelo,0,0,0,,,,,,,,,,,,
+4-Nonilfenol,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.718999981880188,classificacao,,,,,,,0.826,AC50,antagonista
+Atrazina,AR,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,3,0,0,,,,,,,,,,0.19,,,negativo,4,4,0,TOX21_AR_antagonista_HEK293T,0.0740000009536743,classificacao,,,,,,,1.0,,
+Atrazina,ESR1,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.351,,,negativo,4,4,0,TOX21_ESR1_agonista_VM7,0.058,classificacao,,,,,,,1.0,,
+Atrazina,ESR2,sem cobertura,nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.239,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Atrazina,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.177,,,negativo,2,2,0,TOX21_PPARG_agonista_HEK293,0.002,classificacao,,,,,,,1.0,,
+Atrazina,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Atrazina,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.15,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Atrazina,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.0740000009536743,classificacao,,,,,,,1.0,,
+Bisfenol A,AR,"divergente: triagem positivo, farmacologico negativo",antagonista,negativo,3,1,0,AR_B,0.0590000003576278,classificacao,5.28000020980835,4.480000019073486,6.079999923706055,AR_B,IC50,IC50 5.28,1.0,,,positivo,4,4,2,TOX21_AR_antagonista_HEK293T,0.9319999814033508,classificacao,,,,,,,1.0,AC50,antagonista
+Bisfenol A,ESR1,convergente positivo,"agonista, antagonista",positivo,4,4,4,ESR1_Ki_B,0.935,classificacao,7.070000171661377,6.090000152587891,8.050000190734863,ESR1_EC50_F,EC50,EC50 7.07; IC50 5.96; Ki 6.25,1.0,"EC50, IC50, Ki",,positivo,4,4,3,TOX21_ESR1_agonista_VM7,0.99,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+Bisfenol A,ESR2,só farmacologico positivo (sem cobertura de triagem),nao determinada,positivo,4,3,3,ESR2_EC50_F,0.954,classificacao,8.369999885559082,7.360000133514404,9.380000114440918,ESR2_EC50_F,EC50,EC50 8.37; IC50 6.02,1.0,"EC50, IC50",,sem_modelo,0,0,0,,,,,,,,,,,,
+Bisfenol A,PPARG,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,5,0,0,,,,,,,,,,0.333,,,positivo,2,2,1,TOX21_PPARG_antagonista_HEK293,0.9589999914169312,classificacao,,,,,,,1.0,AC50,antagonista
+Bisfenol A,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Bisfenol A,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.2,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Bisfenol A,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.902999997138977,classificacao,,,,,,,1.0,AC50,antagonista
+Bisfenol S,AR,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,3,0,0,,,,,,,,,,0.333,,,positivo,4,4,1,TOX21_AR_antagonista_HEK293T,0.7960000038146973,classificacao,,,,,,,1.0,AC50,antagonista
+Bisfenol S,ESR1,convergente positivo,agonista,positivo,4,3,1,ESR1_EC50_B,0.534,classificacao,6.349999904632568,5.369999885559082,7.329999923706055,ESR1_EC50_F,EC50,EC50 6.35; IC50 5.35,0.464,EC50,,positivo,4,4,2,TOX21_ESR1_agonista_VM7,0.772,classificacao,,,,,,,1.0,AC50,agonista
+Bisfenol S,ESR2,negativo só no eixo farmacologico (cobertura parcial),nao determinada,negativo,4,1,0,ESR2_B,0.444,classificacao,5.130000114440918,4.210000038146973,6.059999942779541,ESR2_B,IC50,IC50 5.13,0.421,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Bisfenol S,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.346,,,negativo,2,2,0,TOX21_PPARG_agonista_HEK293,0.02,classificacao,,,,,,,1.0,,
+Bisfenol S,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Bisfenol S,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.231,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Bisfenol S,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.1080000028014183,classificacao,,,,,,,1.0,,
+Cafeina,AR,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,3,0,0,,,,,,,,,,0.17,,,negativo,4,4,0,TOX21_AR_antagonista_HEK293T,0.0219999998807907,classificacao,,,,,,,1.0,,
+Cafeina,ESR1,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.23,,,negativo,4,4,0,TOX21_ESR1_agonista_VM7,0.015,classificacao,,,,,,,1.0,,
+Cafeina,ESR2,sem cobertura,nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.224,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Cafeina,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.172,,,negativo,2,2,0,TOX21_PPARG_agonista_HEK293,0.002,classificacao,,,,,,,1.0,,
+Cafeina,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Cafeina,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.123,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Cafeina,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.1110000014305114,classificacao,,,,,,,0.553,,
+DBP,AR,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,3,0,0,,,,,,,,,,0.292,,,negativo,4,4,0,TOX21_AR_antagonista_HEK293T,0.1120000034570694,classificacao,,,,,,,1.0,,
+DBP,ESR1,convergente negativo,nao determinada,negativo,4,1,0,ESR1_EC50_B,0.286,classificacao,5.6,4.45,6.74,ESR1_EC50_B,EC50,EC50 5.60,0.35,,,negativo,4,4,0,TOX21_ESR1_agonista_VM7,0.08,classificacao,,,,,,,1.0,,
+DBP,ESR2,sem cobertura,nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.35,,,sem_modelo,0,0,0,,,,,,,,,,,,
+DBP,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.419,,,negativo,2,2,0,TOX21_PPARG_antagonista_HEK293,0.0299999993294477,classificacao,,,,,,,1.0,,
+DBP,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+DBP,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.347,,,sem_modelo,0,0,0,,,,,,,,,,,,
+DBP,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.0289999991655349,classificacao,,,,,,,1.0,,
+DEHP,AR,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,3,0,0,,,,,,,,,,0.238,,,negativo,4,4,0,TOX21_AR_antagonista_HEK293T,0.0879999995231628,classificacao,,,,,,,1.0,,
+DEHP,ESR1,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.283,,,negativo,4,4,0,TOX21_ESR1_antagonista_HEK293T,0.0160000007599592,classificacao,,,,,,,1.0,,
+DEHP,ESR2,sem cobertura,nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.279,,,sem_modelo,0,0,0,,,,,,,,,,,,
+DEHP,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.346,,,negativo,2,2,0,TOX21_PPARG_agonista_HEK293,0.005,classificacao,,,,,,,1.0,,
+DEHP,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+DEHP,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.288,,,sem_modelo,0,0,0,,,,,,,,,,,,
+DEHP,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.0240000002086162,classificacao,,,,,,,1.0,,
+Flutamida,AR,convergente positivo,antagonista,positivo,3,2,2,AR_Ki_B,0.894,classificacao,7.51,6.79,8.24,AR_Ki_B,Ki,IC50 5.92; Ki 7.51,0.612,"IC50, Ki",,positivo,4,4,2,TOX21_AR_antagonista_MDA,0.6710000038146973,classificacao,,,,,,,1.0,AC50,antagonista
+Flutamida,ESR1,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,4,0,0,,,,,,,,,,0.276,,,positivo,4,4,2,TOX21_ESR1_antagonista_HEK293T,0.8140000104904175,classificacao,,,,,,,1.0,AC50,antagonista
+Flutamida,ESR2,sem cobertura,nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.234,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Flutamida,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.273,,,negativo,2,2,0,TOX21_PPARG_antagonista_HEK293,0.061999998986721,classificacao,,,,,,,1.0,,
+Flutamida,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Flutamida,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.247,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Flutamida,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.7139999866485596,classificacao,,,,,,,1.0,AC50,antagonista
+Genisteina,AR,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,3,0,0,,,,,,,,,,0.37,,,positivo,4,4,1,TOX21_AR_antagonista_HEK293T,0.9070000052452089,classificacao,,,,,,,1.0,AC50,antagonista
+Genisteina,ESR1,convergente positivo,"agonista, antagonista",positivo,4,4,2,ESR1_EC50_F,0.9819999933242798,classificacao,6.829999923706055,6.03000020980835,7.639999866485596,ESR1_Ki_B,Ki,EC50 6.24; IC50 4.94; Ki 6.83,1.0,"EC50, Ki",,positivo,4,4,3,TOX21_ESR1_agonista_VM7,0.968,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+Genisteina,ESR2,só farmacologico positivo (sem cobertura de triagem),nao determinada,positivo,4,3,3,ESR2_Ki_B,0.933,classificacao,7.43,6.43,8.43,ESR2_Ki_B,Ki,EC50 6.87; IC50 5.88; Ki 7.43,0.684,"EC50, IC50, Ki",,sem_modelo,0,0,0,,,,,,,,,,,,
+Genisteina,PPARG,"divergente: triagem positivo, farmacologico negativo",antagonista,negativo,5,1,0,PPARG_B,0.0,classificacao,4.610000133514404,3.7899999618530273,5.429999828338623,PPARG_B,IC50,IC50 4.61,0.561,,,positivo,2,2,1,TOX21_PPARG_antagonista_HEK293,0.8610000014305115,classificacao,,,,,,,1.0,AC50,antagonista
+Genisteina,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Genisteina,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.259,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Genisteina,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.6949999928474426,classificacao,,,,,,,0.75,AC50,antagonista
+Ibuprofeno,AR,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,3,0,0,,,,,,,,,,0.306,,,negativo,4,4,0,TOX21_AR_antagonista_HEK293T,0.0359999984502792,classificacao,,,,,,,1.0,,
+Ibuprofeno,ESR1,"divergente: farmacologico positivo, triagem negativo",nao determinada,positivo,4,3,1,ESR1_EC50_F,0.859000027179718,classificacao,7.090000152587891,6.110000133514404,8.069999694824219,ESR1_EC50_F,EC50,EC50 7.09; IC50 5.10,0.424,EC50,,negativo,4,4,0,TOX21_ESR1_agonista_VM7,0.042,classificacao,,,,,,,1.0,,
+Ibuprofeno,ESR2,só farmacologico positivo (sem cobertura de triagem),nao determinada,positivo,4,1,1,ESR2_EC50_B,0.534,classificacao,5.840000152587891,4.590000152587891,7.090000152587891,ESR2_EC50_B,EC50,EC50 5.84,0.424,EC50,,sem_modelo,0,0,0,,,,,,,,,,,,
+Ibuprofeno,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.46,,,negativo,2,2,0,TOX21_PPARG_agonista_HEK293,0.01,classificacao,,,,,,,1.0,,
+Ibuprofeno,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Ibuprofeno,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.277,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Ibuprofeno,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.0419999994337558,classificacao,,,,,,,1.0,,
+Metoxicloro,AR,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,3,0,0,,,,,,,,,,0.333,,,positivo,4,4,2,TOX21_AR_antagonista_HEK293T,0.6959999799728394,classificacao,,,,,,,1.0,AC50,antagonista
+Metoxicloro,ESR1,convergente positivo,"agonista, antagonista",positivo,4,2,1,ESR1_EC50_B,0.542,classificacao,6.369999885559082,5.539999961853027,7.210000038146973,ESR1_B,IC50,EC50 6.32; IC50 6.37,0.519,EC50,,positivo,4,4,2,TOX21_ESR1_antagonista_HEK293T,0.8840000033378601,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+Metoxicloro,ESR2,negativo só no eixo farmacologico (cobertura parcial),nao determinada,negativo,4,1,0,ESR2_B,0.335,classificacao,5.949999809265137,5.019999980926514,6.869999885559082,ESR2_B,IC50,IC50 5.95,0.519,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Metoxicloro,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.333,,,negativo,2,2,0,TOX21_PPARG_agonista_HEK293,0.042,classificacao,,,,,,,1.0,,
+Metoxicloro,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Metoxicloro,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.204,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Metoxicloro,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.5830000042915344,classificacao,,,,,,,0.5,AC50,antagonista
+Rosiglitazona,AR,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,3,0,0,,,,,,,,,,0.239,,,negativo,4,4,0,TOX21_AR_antagonista_HEK293T,0.1190000027418136,classificacao,,,,,,,1.0,,
+Rosiglitazona,ESR1,"divergente: triagem positivo, farmacologico negativo",antagonista,negativo,4,1,0,ESR1_EC50_B,0.138,classificacao,5.21,4.06,6.35,ESR1_EC50_B,EC50,EC50 5.21,0.377,,,positivo,4,4,1,TOX21_ESR1_antagonista_HEK293T,0.7710000276565552,classificacao,,,,,,,1.0,AC50,antagonista
+Rosiglitazona,ESR2,negativo só no eixo farmacologico (cobertura parcial),nao determinada,negativo,4,1,0,ESR2_B,0.242,classificacao,5.340000152587891,4.420000076293945,6.269999980926514,ESR2_B,IC50,IC50 5.34,0.338,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Rosiglitazona,PPARG,convergente positivo,agonista,positivo,5,5,1,PPARG_F,0.96,classificacao,6.650000095367432,5.630000114440918,7.670000076293945,PPARG_F,IC50,EC50 6.11; IC50 6.65; Ki 5.94,1.0,IC50,,positivo,2,2,1,TOX21_PPARG_agonista_HEK293,0.722,classificacao,,,,,,,1.0,AC50,agonista
+Rosiglitazona,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Rosiglitazona,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.269,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Rosiglitazona,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.2560000121593475,classificacao,,,,,,,0.408,,
+Sacarose,AR,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,3,0,0,,,,,,,,,,0.125,,,negativo,4,4,0,TOX21_AR_antagonista_HEK293T,0.0350000001490116,classificacao,,,,,,,1.0,,
+Sacarose,ESR1,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.311,,,negativo,4,4,0,TOX21_ESR1_agonista_VM7,0.01,classificacao,,,,,,,1.0,,
+Sacarose,ESR2,negativo só no eixo farmacologico (cobertura parcial),nao determinada,negativo,4,1,0,ESR2_B,0.447,classificacao,5.110000133514404,4.179999828338623,6.03000020980835,ESR2_B,IC50,IC50 5.11,0.311,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Sacarose,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.317,,,negativo,2,2,0,TOX21_PPARG_antagonista_HEK293,0.0010000000474974,classificacao,,,,,,,1.0,,
+Sacarose,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Sacarose,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.101,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Sacarose,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.0939999967813491,classificacao,,,,,,,1.0,,
+Triclosan,AR,só triagem positivo (sem cobertura farmacologica),"agonista, antagonista",nao_avaliado,3,0,0,,,,,,,,,,0.333,,,positivo,4,4,3,TOX21_AR_agonista_HEK293T,0.652,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+Triclosan,ESR1,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,4,0,0,,,,,,,,,,0.294,,,positivo,4,4,2,TOX21_ESR1_antagonista_HEK293T,0.9300000071525574,classificacao,,,,,,,1.0,AC50,antagonista
+Triclosan,ESR2,sem cobertura,nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.294,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Triclosan,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.333,,,negativo,2,2,0,TOX21_PPARG_antagonista_HEK293,0.0790000036358833,classificacao,,,,,,,1.0,,
+Triclosan,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Triclosan,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.245,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Triclosan,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.7720000147819519,classificacao,,,,,,,1.0,AC50,antagonista
+Vinclozolina,AR,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,3,0,0,,,,,,,,,,0.388,,,positivo,4,4,2,TOX21_AR_antagonista_MDA,0.8320000171661377,classificacao,,,,,,,1.0,AC50,antagonista
+Vinclozolina,ESR1,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,4,0,0,,,,,,,,,,0.197,,,positivo,4,4,1,TOX21_ESR1_antagonista_HEK293T,0.1199999973177909,classificacao,,,,,,,1.0,AC50,antagonista
+Vinclozolina,ESR2,sem cobertura,nao determinada,nao_avaliado,4,0,0,,,,,,,,,,0.197,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Vinclozolina,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.188,,,negativo,2,2,0,TOX21_PPARG_antagonista_HEK293,0.0649999976158142,classificacao,,,,,,,1.0,,
+Vinclozolina,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Vinclozolina,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.16,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Vinclozolina,TR,negativo só no eixo de triagem (cobertura parcial),nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,negativo,1,1,0,TOX21_TR_antagonista_GH3,0.2179999947547912,classificacao,,,,,,,1.0,,
+Zearalenona,AR,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,3,0,0,,,,,,,,,,0.222,,,positivo,4,3,1,TOX21_AR_antagonista_HEK293T,0.2540000081062317,classificacao,,,,,,,1.0,AC50,antagonista
+Zearalenona,ESR1,"divergente: triagem positivo, farmacologico negativo","agonista, antagonista",negativo,4,2,0,ESR1_EC50_B,0.24,classificacao,5.72,4.57,6.86,ESR1_EC50_B,EC50,EC50 5.72; IC50 4.94,0.725,,,positivo,4,4,4,TOX21_ESR1_antagonista_HEK293T,0.8560000061988831,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+Zearalenona,ESR2,só farmacologico positivo (sem cobertura de triagem),nao determinada,positivo,4,1,1,ESR2_EC50_F,0.92,classificacao,6.929999828338623,5.920000076293945,7.949999809265137,ESR2_EC50_F,EC50,EC50 6.93,1.0,EC50,,sem_modelo,0,0,0,,,,,,,,,,,,
+Zearalenona,PPARG,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,5,0,0,,,,,,,,,,0.226,,,positivo,2,2,1,TOX21_PPARG_antagonista_HEK293,0.3880000114440918,classificacao,,,,,,,1.0,AC50,antagonista
+Zearalenona,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Zearalenona,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.161,,,sem_modelo,0,0,0,,,,,,,,,,,,
+Zearalenona,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.6159999966621399,classificacao,,,,,,,0.574,AC50,antagonista
+p-p-DDT,AR,só triagem positivo (sem cobertura farmacologica),antagonista,nao_avaliado,3,0,0,,,,,,,,,,0.222,,,positivo,4,4,1,TOX21_AR_antagonista_HEK293T,0.4699999988079071,classificacao,,,,,,,1.0,AC50,antagonista
+p-p-DDT,ESR1,convergente positivo,"agonista, antagonista",positivo,4,2,1,ESR1_EC50_B,0.558,classificacao,6.38,5.24,7.53,ESR1_EC50_B,EC50,EC50 6.38; IC50 5.77,0.609,EC50,,positivo,4,4,2,TOX21_ESR1_agonista_VM7,0.832,classificacao,,,,,,,1.0,AC50,"agonista, antagonista"
+p-p-DDT,ESR2,negativo só no eixo farmacologico (cobertura parcial),nao determinada,negativo,4,1,0,ESR2_B,0.42,classificacao,5.78000020980835,4.860000133514404,6.710000038146973,ESR2_B,IC50,IC50 5.78,0.609,,,sem_modelo,0,0,0,,,,,,,,,,,,
+p-p-DDT,PPARG,negativo só no eixo de triagem (cobertura parcial),nao determinada,nao_avaliado,5,0,0,,,,,,,,,,0.279,,,negativo,2,2,0,TOX21_PPARG_agonista_HEK293,0.03,classificacao,,,,,,,1.0,,
+p-p-DDT,THRA,sem cobertura,nao determinada,sem_modelo,0,0,0,,,,,,,,,,,,,sem_modelo,0,0,0,,,,,,,,,,,,
+p-p-DDT,THRB,sem cobertura,nao determinada,nao_avaliado,1,0,0,,,,,,,,,,0.122,,,sem_modelo,0,0,0,,,,,,,,,,,,
+p-p-DDT,TR,só triagem positivo (sem cobertura farmacologica),antagonista,sem_modelo,0,0,0,,,,,,,,,,,,,positivo,1,1,1,TOX21_TR_antagonista_GH3,0.6449999809265137,classificacao,,,,,,,0.444,AC50,antagonista

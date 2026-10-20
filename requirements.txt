@@ -1,12 +1,20 @@
-# Python 3.11
+# Python 3.11 ou 3.12 (verificado nas duas; o 3.12.3 reproduz as previsoes do 3.11.16
+# com diferenca 0,0 nos 1.098 valores do painel de referencia).
 #
-# rdkit, scikit-learn e xgboost devem ser EXATAMENTE estas versoes: os modelos (.joblib)
-# sao serializados com elas, e o numero de descritores do RDKit define o vetor de features
+# rdkit e scikit-learn devem ser EXATAMENTE estas versoes: os modelos (.joblib) sao
+# serializados com elas, e o numero de descritores do RDKit define o vetor de features
 # (2048 bits ECFP4 + 132 descritores = 2180). Com outra versao do RDKit o preditor falha
 # com "Feature shape mismatch".
 rdkit==2026.3.6
 scikit-learn==1.9.1
-xgboost==3.4.2
+
+# xgboost: os 21 modelos XGBoost foram treinados com a 3.4.2, que vem do conda-forge e
+# NAO existe no PyPI (a ultima publicada la e a 3.4.1). A 3.4.1 foi verificada: carrega
+# os 61 modelos e reproduz as 1.098 previsoes do painel com diferenca 0,0, emitindo apenas
+# um aviso cosmetico sobre configuracao gerada por versao anterior. Instalando por conda,
+# prefira a 3.4.2. A dependencia nvidia-nccl-cu13 (305 MB) que o pip arrasta junto so
+# serve para GPU e pode ser desinstalada: a previsao em CPU continua identica.
+xgboost==3.4.1
 
 # Versoes com que o pipeline foi testado
 numpy==2.4.6

@@ -11,19 +11,23 @@ DESC_NAMES = [n for n, _ in Descriptors._descList if not n.startswith("fr_")]
 _DESC_FUNCS = [f for n, f in Descriptors._descList if n in set(DESC_NAMES)]
 
 
+# Parse a SMILES into an RDKit molecule, or None when parsing fails.
 def mol_from_smiles(s):
     return Chem.MolFromSmiles(s)
 
 
+# 2048-dimension ECFP4 count fingerprint, used as model input.
 def ecfp4_counts(mol):
     fp = FPGEN.GetCountFingerprintAsNumPy(mol)
     return fp.astype(np.float32)
 
 
+# 2048-bit binary ECFP4 fingerprint, used only for Tanimoto similarity and the applicability domain.
 def ecfp4_bits(mol):
     return FPGEN.GetFingerprintAsNumPy(mol).astype(np.uint8)
 
 
+# The 132 RDKit 2D descriptors; failures and non-finite values become zero.
 def descriptors(mol):
     out = np.empty(len(_DESC_FUNCS), dtype=np.float64)
     for i, f in enumerate(_DESC_FUNCS):
@@ -34,6 +38,7 @@ def descriptors(mol):
     return out
 
 
+# Build the 2180-column feature matrix (2048 fingerprint counts + 132 descriptors) and flag unparsable SMILES.
 def featurize(smiles_list):
     mols = [mol_from_smiles(s) for s in smiles_list]
     ok = np.array([m is not None for m in mols])
@@ -45,6 +50,7 @@ def featurize(smiles_list):
     return np.hstack([fp, de]).astype(np.float32), bits, names, ok
 
 
+# Bemis-Murcko scaffold as SMILES; returns an empty string for acyclic molecules, which therefore share one pseudo-group.
 def murcko_scaffold(smiles):
     m = Chem.MolFromSmiles(smiles)
     if m is None:
@@ -55,6 +61,7 @@ def murcko_scaffold(smiles):
         return ""
 
 
+# Split by Bemis-Murcko scaffold. NOTE: the code fills the TEST set with the largest groups, contrary to the docstring below.
 def scaffold_split(smiles, test_size=0.2, seed=0):
     """Split por scaffold de Bemis-Murcko: scaffolds maiores vão para treino."""
     from collections import defaultdict
@@ -76,6 +83,7 @@ def scaffold_split(smiles, test_size=0.2, seed=0):
     return np.array(sorted(train)), np.array(sorted(test))
 
 
+# Highest Tanimoto similarity of each query compound to the training set, computed in blocks.
 def tanimoto_max_to_train(bits_query, bits_train, block=512):
     """Maior similaridade de Tanimoto de cada consulta ao conjunto de treino."""
     q = bits_query.astype(np.float32)

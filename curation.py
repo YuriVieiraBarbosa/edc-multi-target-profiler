@@ -20,6 +20,7 @@ _te = rdMolStandardize.TautomerEnumerator()
 _te.SetMaxTautomers(200)
 
 
+# Standardise one SMILES (salt stripped, neutralised, canonical tautomer) and return the InChIKey or the rejection reason.
 def standardize(smiles):
     """Devolve dict com SMILES padronizado, InChIKey e o motivo de rejeição."""
     res = {"std_smiles": None, "inchikey": None, "mw": np.nan,
@@ -77,6 +78,7 @@ def standardize(smiles):
     return res
 
 
+# Standardise the unique SMILES in parallel; returns one row per distinct input structure.
 def standardize_frame(smiles_series, n_jobs=8):
     from joblib import Parallel, delayed
     uniq = pd.Index(smiles_series.dropna().unique())
@@ -86,12 +88,14 @@ def standardize_frame(smiles_series, n_jobs=8):
     return out.reset_index()
 
 
+# Convert a concentration in nM into its negative log10 (pActivity).
 def to_pic50(value_nm):
     v = pd.to_numeric(value_nm, errors="coerce")
     v = v.where(v > 0)
     return 9.0 - np.log10(v)
 
 
+# Median per group, discarding any group whose replicates span more than max_spread log units.
 def aggregate_replicates(df, keys, value_col="pIC50", max_spread=1.0):
     """Mediana por grupo; descarta grupos com amplitude > max_spread unidades log."""
     g = df.groupby(keys, dropna=False)[value_col]

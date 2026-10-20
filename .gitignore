@@ -3,6 +3,14 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
+# Ambiente virtual local e o bootstrap do virtualenv (ver secao Instalacao do README).
+# O proprio virtualenv ja grava um .gitignore com '*' dentro de .venv/, mas a regra fica
+# aqui tambem para o caso de o ambiente ser recriado por outra ferramenta.
+.venv/
+.tools/
+venv/
+env/
+
 # Resultados gerados a cada execucao (rodar_edc.py grava em resultados/AAAAMMDD_HHMMSS_<nome>/)
 resultados/
 

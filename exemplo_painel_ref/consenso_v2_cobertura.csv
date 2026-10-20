@@ -1,0 +1,7 @@
+receptor,farmacologico,triagem,medidas_farmacologicas,modos_triagem
+AR,3,4,"EC50, IC50, Ki","agonista, antagonista"
+ESR1,4,4,"EC50, IC50, Ki","agonista, antagonista"
+ESR2,4,0,"EC50, IC50, Ki",
+PPARG,5,2,"EC50, IC50, Ki","agonista, antagonista"
+THRB,1,0,IC50,
+TR,0,1,,antagonista

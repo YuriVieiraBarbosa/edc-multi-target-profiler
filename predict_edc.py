@@ -25,6 +25,7 @@ ROTULOS = {"AR": "Receptor de andrógeno", "ESR1": "Receptor de estrógeno alfa"
 ENSAIO = {"B": "ligação", "F": "funcional"}
 
 
+# Load the regression models of the earlier single-layer run.
 def carregar_modelos(model_dir="models"):
     mods = {}
     for p in sorted(glob.glob(os.path.join(model_dir, "*_regressao.joblib"))):
@@ -36,6 +37,7 @@ def carregar_modelos(model_dir="models"):
     return mods
 
 
+# Predict pIC50 for a list of SMILES using those models.
 def prever(smiles_list, model_dir="models"):
     mods = carregar_modelos(model_dir)
     if not mods:
@@ -72,6 +74,7 @@ def prever(smiles_list, model_dir="models"):
     return base
 
 
+# Command-line entry point of the first predictor, kept for reference only.
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)

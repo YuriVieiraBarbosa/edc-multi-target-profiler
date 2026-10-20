@@ -40,6 +40,7 @@ plt.rcParams.update({
 })
 
 
+# Extract the bare alert level from the summary text; anything unrecognised becomes 'sem alerta'.
 def _nivel(texto):
     texto = str(texto)
     for n in ("alto", "moderado", "baixo"):
@@ -48,6 +49,7 @@ def _nivel(texto):
     return "sem alerta"
 
 
+# Load the predictor outputs and build the molecule x receptor matrices; None when there is no data.
 def carregar(out):
     """Devolve dict com resumo, matriz de niveis e ordenacoes; None se nao houver dados."""
     f_res, f_det = f"{out}_resumo.csv", f"{out}_detalhado.csv"
@@ -76,6 +78,7 @@ def carregar(out):
             "sem_evidencia": sem_evidencia}
 
 
+# Draw a matrix of coloured cells with a text label inside each cell.
 def _celulas(ax, mols, recs, cor, texto, cor_texto, hachura=None):
     """Desenha uma matriz de celulas coloridas com texto em cada celula."""
     for i in range(len(mols)):
@@ -96,6 +99,7 @@ def _celulas(ax, mols, recs, cor, texto, cor_texto, hachura=None):
         s.set_visible(False)
 
 
+# Shared figure legend with one patch per alert category.
 def _legenda(fig, nota):
     handles = [Patch(facecolor=COR[c], edgecolor="#888888", linewidth=0.6,
                      hatch="////" if c == "n.d." else None, label=c) for c in CATEGORIAS]
@@ -108,6 +112,7 @@ NOTA = ("n.d.: nenhuma camada em domínio de aplicabilidade. Alertas usam apenas
         "domínio e implantáveis.")
 
 
+# Alert dashboard: one cell per molecule x receptor, coloured by alert level.
 def gerar_dashboard(out):
     d = carregar(out)
     if d is None:
@@ -201,6 +206,7 @@ def gerar_dashboard(out):
     return arq
 
 
+# Heat map of the active-vote fraction per molecule x receptor.
 def gerar_fracao_ativa(out):
     d = carregar(out)
     if d is None:
@@ -210,19 +216,23 @@ def gerar_fracao_ativa(out):
     idx = {(r.nome, r.receptor): r for r in res.itertuples()}
     cmap = plt.get_cmap("Blues")
 
+    # Summary row for cell (i, j), or None when that pair received no votes.
     def dado(i, j):
         return idx.get((mols[i], recs[j]))
 
+    # Cell colour, scaled by the active-vote fraction.
     def cor(i, j):
         r = dado(i, j)
         return COR["n.d."] if r is None else cmap(0.08 + 0.92 * r.fracao_ativa)
 
+    # Cell label: the active-vote fraction and the underlying vote counts.
     def texto(i, j):
         r = dado(i, j)
         if r is None:
             return "n.d."
         return f"{r.fracao_ativa:.2f}\n{int(r.camadas_ativas)}/{int(r.camadas_avaliadas)}"
 
+    # Text colour chosen for contrast against the cell background.
     def cor_txt(i, j):
         r = dado(i, j)
         if r is None:
@@ -253,6 +263,7 @@ def gerar_fracao_ativa(out):
     return arq
 
 
+# Generate every figure for one prediction run.
 def gerar_todas(out):
     print("\n" + "=" * 60)
     print("GERANDO GRÁFICOS")

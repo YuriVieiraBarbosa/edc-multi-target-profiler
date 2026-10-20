@@ -24,7 +24,7 @@ As camadas nunca são fundidas, porque medem coisas diferentes e os ensaios não
 |---|---|---|---|
 | ChEMBL IC50 | `models_final/` | 18 | regressão de pIC50 e classificação, por alvo e tipo de ensaio (ligação `B` ou funcional `F`) |
 | ChEMBL Ki, EC50 e Kd | `models_layers/` | 32 | mesmos alvos, cada medida em seu próprio modelo |
-| Tox21 qHTS | `models_tox21/` | 11 | classificação por ensaio (química ambiental), com contra-ensaios de viabilidade |
+| Tox21 qHTS | `models_tox21/` | 11 | classificação por ensaio (química ambiental). São 12 ensaios curados e 11 com modelo: o de TR agonista tem só 27 ativos e fica de fora. O contra-ensaio de viabilidade só se aplica aos modos antagonistas, e o de autofluorescência só aos ensaios BLA |
 
 ### Regra de alerta
 
@@ -43,20 +43,71 @@ Um par em que nenhuma camada está no domínio aparece como `-` na tabela e como
 
 ## Instalação
 
-Requer Python 3.11.
+Requer Python 3.11 ou 3.12.
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-
-# conferir: deve imprimir 2180
-python -c "import features as F; print(2048 + len(F.DESC_NAMES))"
+cd ~/Downloads/pipeline_edc_qsar
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 ```
 
-As versões de `rdkit`, `scikit-learn` e `xgboost` precisam ser as de `requirements.txt`. Com outra versão
-do RDKit o número de descritores muda e o preditor falha com `Feature shape mismatch`.
+Se o `python3 -m venv` falhar com `No module named 'ensurepip'` (acontece no Ubuntu, onde o módulo vem
+no pacote `python3-venv`), use o `virtualenv`, que traz o `pip` embutido e não precisa de `sudo`:
+
+```bash
+python3 -m pip install --target .tools virtualenv
+PYTHONPATH=.tools python3 -m virtualenv -p python3 .venv
+.venv/bin/pip install -r requirements.txt
+```
+
+Depois disso a pasta `.tools/` pode ser apagada: ela só serve para criar o ambiente.
+
+Conferência da instalação:
+
+```bash
+# deve imprimir 2180
+.venv/bin/python -c "import features as F; print(2048 + len(F.DESC_NAMES))"
+
+# deve imprimir 'carregados 61'
+.venv/bin/python -c "
+import glob, joblib
+print('carregados', sum(bool(joblib.load(f)) for f in glob.glob('models_*/*.joblib')))"
+
+# previsão de referência: o alerta de ERalfa deve sair 'alto'
+.venv/bin/python edc.py testar --smiles 'CC(C)(c1ccc(O)cc1)c1ccc(O)cc1'
+```
+
+As versões de `rdkit` e `scikit-learn` precisam ser as de `requirements.txt`. Com outra versão do RDKit o
+número de descritores muda e o preditor falha com `Feature shape mismatch`. O `requirements.txt` explica a
+situação do `xgboost`, cuja versão de treino (3.4.2) só existe no conda-forge.
+
+### Atalho
+
+O executável `edc` na raiz chama o `edc.py` com o ambiente da pasta, de qualquer diretório:
+
+```bash
+./edc ajuda
+~/Downloads/pipeline_edc_qsar/edc testar --arquivo moleculas.csv --coluna-nome nome
+```
 
 ## Uso
+
+O ponto de entrada é o `edc.py`, com três comandos:
+
+```bash
+python edc.py ajuda                                              # lista os comandos
+python edc.py explicar                                           # como usar e como interpretar
+python edc.py testar --smiles "CC(C)(c1ccc(O)cc1)c1ccc(O)cc1"    # uma molécula
+python edc.py testar --smiles "SMILES_1" "SMILES_2"              # várias moléculas
+python edc.py testar --arquivo moleculas.csv --coluna-nome nome  # uma lista
+python edc.py testar --arquivo moleculas.csv --eixos             # com a leitura em dois eixos
+```
+
+Sem argumentos, `python edc.py` mostra a lista de comandos. Com `--saida PREFIXO` você escolhe onde
+gravar; sem ele, a saída vai para `resultados/AAAAMMDD_HHMMSS_predicoes/`. O comando `explicar` também
+conta quantos modelos estão instalados em cada camada.
+
+Para a execução arquivada, que além da previsão gera os gráficos:
 
 ```bash
 python rodar_edc.py --input demo_edcs.csv --name-col nome --out demo
@@ -101,11 +152,68 @@ datasets curados da camada IC50.
 
 ## Protocolo de validação
 
-- Divisão externa por scaffold de Bemis-Murcko (80/20) e seleção de modelo por validação cruzada 5-fold no treino.
-- Modelo final reajustado em 100% dos dados curados, com as métricas vindas do teste externo por scaffold.
+- Divisão externa por scaffold de Bemis-Murcko (80/20) e seleção de modelo por validação cruzada 5-fold no treino. **Atenção:** o código preenche o *teste* com os **maiores** grupos de scaffold (o docstring de `features.scaffold_split` afirma o contrário). O teste externo é, portanto, extrapolação para as famílias químicas dominantes, concentrada em poucos scaffolds (de 2 a 15 nos endpoints de Ki/Kd/EC50), e as métricas de teste são um limite inferior de alta variância. A validação cruzada do treino, ao contrário, é aleatória e não aninhada, então o `Q2_cv` é otimista.
+- Modelo final reajustado em 100% dos dados curados, com as métricas vindas do teste externo por scaffold. As métricas gravadas dentro do artefato de produção (`Q2_cv`, `R2_teste_scaffold`) são, portanto, de **outro** ajuste: o de 80%. O limiar de domínio gravado no artefato também é recalculado sobre 100% dos dados, então é mais largo que o limiar validado.
 - Y-scrambling e domínio de aplicabilidade por similaridade de Tanimoto.
-- Predição conformal indutiva com cobertura nominal de 80%, e limiar de decisão escolhido por validação cruzada (máximo MCC) em vez de 0,5.
-- Curadoria: estruturas válidas, SMILES padronizados, remoção de sais e solventes, detecção de duplicatas e conferência de estereoquímica. Tipos de medida (IC50, Ki, Kd, EC50) e tipos de ensaio nunca são misturados.
+- Predição conformal indutiva com cobertura nominal de 80%, e limiar de decisão otimizado por MCC em vez de 0,5. Duas ressalvas medidas: a cobertura **empírica** fica abaixo de 0,80 em 8 dos 9 endpoints de IC50; e o quantil conformal é calibrado num modelo ajustado em 75% do treino, mas aplicado ao modelo de produção ajustado em 100%, de modo que a garantia de cobertura não vale para o modelo implantado.
+- Curadoria: estruturas válidas, SMILES padronizados, remoção de sais e solventes e deduplicação por InChIKey, com a mediana das réplicas e descarte do composto quando elas variam mais de 1 unidade log. Tipos de medida (IC50, Ki, Kd, EC50) e tipos de ensaio nunca são misturados. A estereoquímica é apenas **registrada** (coluna `undefined_stereo`, que conta centros sem atribuição) e nunca filtra. A deduplicação usa o InChIKey completo, que inclui a camada estereoquímica, então estereoisômeros definidos permanecem como compostos distintos, e um composto com estereoquímica indefinida convive como linha separada dos seus enantiômeros resolvidos.
+
+## Problemas conhecidos
+
+Verificados no código e nos dados. O detalhamento, com os números e os arquivos de diagnóstico, está em
+`documentos/verificacao_auditoria_codigo.md`.
+
+**Impedem reproduzir o que está implantado**
+
+- Os 18 modelos de `models_final/` **não são regeráveis por nenhum script da pasta**. O
+  `LEIAME_calibracao.csv` tem 5 colunas (`limiar_producao`, `ganho_limiar`, `conformal_modo`,
+  `cobertura_scaffold`, `nao_implantavel`) que o `conformal.py` não produz; ele grava outro arquivo,
+  `results/conformal_e_limiares.csv`. O script que fecha essa etapa não está no repositório.
+- `finalize_models.py` e `conformal.py` dependem de `data/dataset_*.csv` (datasets curados de IC50) e de
+  `results/desempenho_modelos.csv`, ambos ausentes.
+- O caminho do BindingDB não roda de ponta a ponta: `extract_bindingdb.py` grava
+  `cache/bindingdb_ic50_raw.parquet` e `pipeline_curate.py` lê `.pkl`; e `cache/bindingdb_std_lookup.pkl`
+  é lido sem que nenhum script o crie.
+- `modeling_layers.py` e `modeling_tox21.py` leem de `data_layers/` e `data_tox21/`, que é onde os
+  `pipeline_*` gravam. As pastas entregues têm outros nomes (`datasets_camadas_por_endpoint/`,
+  `datasets_tox21_por_ensaio/`), então é preciso renomear ou criar atalhos antes de retreinar.
+
+**Produzem resultado errado sem avisar**
+
+- `predict_edc2.py` identifica a camada de cada modelo comparando o **nome da pasta** como texto. Passar
+  `--model-dirs` com caminho absoluto rotula a camada Tox21 como ChEMBL e corrompe todos os votos, sem
+  erro. Rode sempre da raiz do projeto, com os caminhos padrão.
+- O agrupamento é por `nome`. Duas moléculas com o mesmo valor nessa coluna são fundidas numa linha só
+  (sem `--name-col`, `nome` é o próprio SMILES, então SMILES repetido tem o mesmo efeito). O
+  `consenso_v2/consenso_v2.py` passou a levantar erro explícito nesse caso; o `predict_edc2.py` não.
+- Moléculas sem scaffold de Bemis-Murcko (acíclicas, ou falha da função) caem todas num pseudo-grupo
+  único, que é tratado como se fosse uma família química. No Tox21 isso é de 18% a 23% de cada ensaio.
+  O efeito é bimodal: em 15 dos 18 endpoints com acíclicas o teste externo fica com **zero** delas, mas
+  em `TOX21_AR_antagonista_HEK293T` o teste é 95% acíclico (944 de 992) e em `TOX21_TR_antagonista_GH3`,
+  92% (654 de 712). Nesses dois, o teste externo é degenerado.
+- `features.scaffold_split` cai em silêncio para divisão aleatória quando o teste guloso fica abaixo de
+  metade do alvo. Conferido nos 38 endpoints com dataset na pasta: **não dispara em nenhum**, então
+  nenhuma métrica atual vem de divisão aleatória. Fica como risco para datasets novos.
+
+**Afetam a leitura do alerta**
+
+- Regressão e classificação do mesmo endpoint contam como **duas** camadas na regra de alerta, embora
+  usem os mesmos compostos, as mesmas features e difiram só pela binarização em pAct ≥ 6.
+- Um modelo fora do domínio **desaparece** da conta em vez de contar como "não avaliado", então a fração
+  de camadas ativas depende de quantos modelos cobrem a molécula. O mesmo sinal do Tox21 pode virar
+  "moderado" ou "baixo" conforme a cobertura do ChEMBL.
+- O teto do alerta depende do receptor: "alto" só é atingível em AR, ERα e PPARγ, porque exige um voto de
+  cada camada. ERβ não tem ensaio Tox21 e chega no máximo a "moderado"; THRβ chega a "baixo"; THRα não
+  tem nenhum modelo ChEMBL implantável e não aparece no resumo. Um "sem alerta" não significa o mesmo em
+  receptores diferentes.
+- O alerta soma votos agonistas e antagonistas, e não indica o sentido do efeito.
+- "Ativo" não quer dizer o mesmo em cada camada: no ChEMBL é potência de até 1 µM com limiar de
+  probabilidade 0,5; no Tox21 é a chamada do depositante, com limiares otimizados de 0,11 a 0,40.
+- Os ensaios Tox21 de um mesmo receptor são os mesmos modos em linhagens celulares diferentes, então
+  "2 de 4 ensaios ativos" pode ser o mesmo modo contado duas vezes.
+
+O `consenso_v2/` reescreve só a agregação e deixa esses três últimos pontos explícitos no relatório, sem
+retreinar nada. Veja `documentos/consenso_v2_especificacao.md`.
 
 ## Limitações
 

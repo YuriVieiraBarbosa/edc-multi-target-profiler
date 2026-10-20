@@ -53,6 +53,7 @@ raw = raw.merge(single[["target_chembl_id", "accession", "target_label"]].drop_d
                 on="target_chembl_id", how="left")
 
 log = []
+# Record the record count after one filtering step, for the curation funnel log.
 def note(step, df):
     log.append({"etapa": step, "registros": len(df)})
     print(f"{step:50s} n={len(df):7d}")
