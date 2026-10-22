@@ -1,4 +1,4 @@
-# EDCQSAR Endocrine Disruption Chemical Quantitative Structure-Activity Relatioinship
+# EDCQSAR Endocrine Disruption Chemical Quantitative Structure-Activity Relationship
 
 Preditor de consenso multicamada que estima o potencial de moléculas interagirem com receptores
 nucleares envolvidos em desregulação endócrina. O projeto cobre a curadoria de dados públicos
