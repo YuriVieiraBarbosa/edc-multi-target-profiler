@@ -2,7 +2,7 @@
 
 Le <out>_resumo.csv e <out>_detalhado.csv (gerados por predict_edc2.py) e produz:
   <out>_dashboard.png      painel com 4 graficos de alertas
-  <out>_fracao_ativa.png   mapa de calor da fração de camadas ativas
+  <out>_fracao_ativa.png   mapa de calor da fração de unidades de evidência positivas
 
 Todos os valores usam somente camadas em domínio de aplicabilidade e implantáveis
 (coluna 'conta' = no_dominio & ~nao_implantavel), a mesma regra do _resumo.csv.
@@ -24,13 +24,15 @@ from matplotlib.patches import Patch, Rectangle
 
 BASE, MEDIO, PEQ = 10, 9, 8          # escala de fontes (titulo/eixos, legenda, ticks)
 ORDEM_REC = ["AR", "ESR1", "ESR2", "PPARG", "THRA", "THRB", "TR"]
-CATEGORIAS = ["n.d.", "sem alerta", "baixo", "moderado", "alto"]
+CATEGORIAS = ["n.d.", "nao avaliado", "sem alerta", "baixo", "moderado", "alto"]
 NIVEIS_ALERTA = ["baixo", "moderado", "alto"]
 # rampa sequencial de um unico matiz (segura para daltonismo); n.d. em cinza hachurado
-COR = {"n.d.": "#D9D9D9", "sem alerta": "#EEF3F8", "baixo": "#A7C7E7",
-       "moderado": "#4F8BC9", "alto": "#1B3A6B"}
-COR_TEXTO = {"n.d.": "#555555", "sem alerta": "#333333", "baixo": "#1A1A1A",
-             "moderado": "#FFFFFF", "alto": "#FFFFFF"}
+# "nao avaliado" sai da rampa azul de proprio proposito: nao e um grau de alerta, e a
+# ausencia de evidencia, e confundi-lo com "sem alerta" era o defeito da regra anterior.
+COR = {"n.d.": "#D9D9D9", "nao avaliado": "#EADCF0", "sem alerta": "#EEF3F8",
+       "baixo": "#A7C7E7", "moderado": "#4F8BC9", "alto": "#1B3A6B"}
+COR_TEXTO = {"n.d.": "#555555", "nao avaliado": "#4A2B5A", "sem alerta": "#333333",
+             "baixo": "#1A1A1A", "moderado": "#FFFFFF", "alto": "#FFFFFF"}
 
 plt.rcParams.update({
     "font.size": PEQ, "axes.titlesize": BASE, "axes.labelsize": BASE,
@@ -43,7 +45,7 @@ plt.rcParams.update({
 # Extract the bare alert level from the summary text; anything unrecognised becomes 'sem alerta'.
 def _nivel(texto):
     texto = str(texto)
-    for n in ("alto", "moderado", "baixo"):
+    for n in ("alto", "moderado", "baixo", "nao avaliado"):
         if texto.startswith(n):
             return n
     return "sem alerta"
@@ -223,21 +225,21 @@ def gerar_fracao_ativa(out):
     # Cell colour, scaled by the active-vote fraction.
     def cor(i, j):
         r = dado(i, j)
-        return COR["n.d."] if r is None else cmap(0.08 + 0.92 * r.fracao_ativa)
+        return COR["n.d."] if r is None else cmap(0.08 + 0.92 * r.fracao_positiva)
 
     # Cell label: the active-vote fraction and the underlying vote counts.
     def texto(i, j):
         r = dado(i, j)
         if r is None:
             return "n.d."
-        return f"{r.fracao_ativa:.2f}\n{int(r.camadas_ativas)}/{int(r.camadas_avaliadas)}"
+        return f"{r.fracao_positiva:.2f}\n{int(r.unidades_positivas)}/{int(r.unidades_avaliadas)}"
 
     # Text colour chosen for contrast against the cell background.
     def cor_txt(i, j):
         r = dado(i, j)
         if r is None:
             return COR_TEXTO["n.d."]
-        return "#FFFFFF" if r.fracao_ativa >= 0.55 else "#1A1A1A"
+        return "#FFFFFF" if r.fracao_positiva >= 0.55 else "#1A1A1A"
 
     nm, nr = len(mols), len(recs)
     fig, ax = plt.subplots(figsize=(max(8.5, 1.35 * nr + 3.5), max(6.0, 0.62 * nm + 2.6)))

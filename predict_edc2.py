@@ -24,7 +24,21 @@ ENSAIO = {"B": "ligacao", "F": "funcional"}
 
 
 # Load every .joblib model and tag it with its layer, receptor and task.
+# Deployability verdicts from criterio_implantacao.csv, keyed by model id. That table is the
+# auditable source (see criterio_implantacao.py); the flag baked into each .joblib came from a
+# script that is not in the repository. Falls back to the baked flag when the table is absent.
+def _criterio(raiz=None):
+    raiz = raiz or os.path.dirname(os.path.abspath(__file__))
+    p = os.path.join(raiz, "criterio_implantacao.csv")
+    if not os.path.exists(p):
+        return {}
+    t = pd.read_csv(p)
+    return {r.modelo_id: (bool(r.nao_implantavel), str(r.motivo)) for r in t.itertuples()}
+
+
+# Load every .joblib, tagging each with its layer, receptor and deployability verdict.
 def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
+    crit = _criterio()
     camadas = []
     for d in model_dirs:
         # The layer is identified by the FOLDER NAME, and each layer has its own filename
@@ -43,10 +57,12 @@ def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
         for p in arquivos:
             m = joblib.load(p)
             base = os.path.basename(p)[:-7]
+            rep, motivo = crit.get(base, (bool(m.get("nao_implantavel", False)), ""))
             if pasta == "models_tox21":
                 _, rec, modo, cel = base.split("_", 3)
                 camadas.append({"camada": "Tox21", "receptor": rec, "detalhe": f"{modo}/{cel}",
-                                "tarefa": "classificacao", "modelo": m, "chave": base})
+                                "tarefa": "classificacao", "modelo": m, "chave": base,
+                                "reprovado": rep, "motivo_reprovacao": motivo})
             else:
                 partes = base.split("_")
                 tarefa = partes[-1]
@@ -57,7 +73,8 @@ def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
                 camadas.append({"camada": f"ChEMBL {medida}", "receptor": rec,
                                 "detalhe": ENSAIO.get(atype, atype),
                                 "tarefa": "regressao" if tarefa == "regressao" else "classificacao",
-                                "modelo": m, "chave": base})
+                                "modelo": m, "chave": base,
+                                "reprovado": rep, "motivo_reprovacao": motivo})
     return camadas
 
 
@@ -73,7 +90,8 @@ def _dificuldade(est, X):
 
 
 # Score the molecules with all models and aggregate the per-model votes for each receptor.
-def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers", "models_tox21")):
+def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers", "models_tox21"),
+           incluir_reprovados=False):
     camadas = carregar(model_dirs)
     if not camadas:
         raise SystemExit("nenhum modelo encontrado")
@@ -109,7 +127,8 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
                           "detalhe": c["detalhe"], "tarefa": c["tarefa"],
                           "endpoint": c["chave"], "tanimoto_viz": sim.round(3),
                           "no_dominio": dentro,
-                          "nao_implantavel": bool(m.get("nao_implantavel", False))})
+                          "nao_implantavel": c["reprovado"],
+                          "motivo_reprovacao": c["motivo_reprovacao"]})
         if c["tarefa"] == "regressao":
             yh = m["model"].predict(X)
             d["valor_previsto"] = yh.round(2)
@@ -132,41 +151,90 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
     det = det.merge(base[["nome", "smiles_entrada", "inchikey"]].reset_index()
                     .rename(columns={"index": "idx"}), on="idx", how="left")
 
-    # Usable evidence: in-domain prediction from a deployable model.
-    # One model = one vote. Regression and classification of the same endpoint are two
-    # independent votes, since `endpoint` already carries the task suffix.
+    # --- unidades de evidencia ------------------------------------------------------
+    # One model is NOT one piece of evidence. Two kinds of redundancy were measured in this
+    # project: regression and classification of one ChEMBL endpoint are the SAME compounds
+    # and features differing only by binarisation at pAct >= 6; and the Tox21 assays of one
+    # receptor+mode are the same compound library (up to 99.8% shared) run in different cell
+    # lines. Counting raw model votes therefore overstates the evidence, so votes are first
+    # collapsed into units: one unit per ChEMBL endpoint (receptor x measure x assay type)
+    # and one unit per Tox21 receptor+mode.
     det["conta"] = det["no_dominio"] & ~det["nao_implantavel"]
+    det["motivo_nao_voto"] = np.where(
+        det["nao_implantavel"],
+        "modelo reprovado (" + det["motivo_reprovacao"].fillna("sem motivo registrado") + ")",
+        np.where(~det["no_dominio"], "molecula fora do dominio de aplicabilidade", ""))
+    det["eixo"] = np.where(det["camada"].str.startswith("ChEMBL"), "farmacologico", "triagem")
+    det["unidade"] = np.where(
+        det["eixo"].eq("farmacologico"), det["endpoint"].str.rsplit("_", n=1).str[0],
+        det["receptor"] + " " + det["detalhe"].str.split("/").str[0])
+
     ev = det[det["conta"]].copy()
-    ev["farmacologica"] = ev["camada"].str.startswith("ChEMBL")
-    resumo = (ev.groupby(["nome", "receptor"])
-                .agg(camadas_avaliadas=("endpoint", "nunique"),
-                     camadas_ativas=("ativo", "sum"),
-                     evidencia_farmacologica=("farmacologica", lambda s: int((s & ev.loc[s.index, "ativo"]).sum())),
-                     evidencia_tox21=("farmacologica", lambda s: int((~s & ev.loc[s.index, "ativo"]).sum())))
-                .reset_index())
-    # Deployable models per receptor: the ceiling of votes, identical for every molecule.
-    # A model left out by the domain filter is NOT counted as an inactive vote; it simply
-    # does not vote, which is why the two denominators below differ.
-    teto = (det[~det["nao_implantavel"]].groupby("receptor").endpoint.nunique()
-            .rename("modelos_implantaveis_receptor").reset_index())
-    resumo = resumo.merge(teto, on="receptor", how="left")
-    # Two readings of "votes received / number of models", kept side by side:
-    #   fracao_ativa              -> denominator = models that actually voted (previous scheme)
-    #   fracao_sobre_implantaveis -> denominator = all deployable models of the receptor
-    # The gap between them is the applicability-domain coverage for this molecule.
-    resumo["fracao_ativa"] = (resumo.camadas_ativas / resumo.camadas_avaliadas).round(2)
-    resumo["fracao_sobre_implantaveis"] = (resumo.camadas_ativas
-                                           / resumo.modelos_implantaveis_receptor).round(2)
-    resumo["cobertura_dominio"] = (resumo.camadas_avaliadas
-                                   / resumo.modelos_implantaveis_receptor).round(2)
-    resumo["votos"] = (resumo.camadas_ativas.astype(str) + "/" + resumo.camadas_avaliadas.astype(str)
-                       + " votantes (" + resumo.camadas_ativas.astype(str) + "/"
-                       + resumo.modelos_implantaveis_receptor.astype(str) + " implantaveis)")
-    # Direction of effect. The alert itself adds agonist and antagonist votes together, so
-    # it cannot tell them apart; only the Tox21 assays carry the mode (in `detalhe`, as
-    # "modo/linhagem"), and the ChEMBL layer carries none. This column reports the modes of
-    # the ACTIVE screening votes, and stays "nao determinada" when no such vote exists.
-    tox_at = ev[(~ev["farmacologica"]) & ev["ativo"]].copy()
+    ev["eh_cls"] = ev["tarefa"].eq("classificacao")
+    ev["cls_ativo"] = ev["ativo"] & ev["eh_cls"]
+    # A unit is positive when: on the pharmacological axis the CLASSIFIER decides (regression
+    # supplies potency, not the call) and the regression only decides where no classifier is
+    # deployable; on the screening axis any cell line calling it active makes the unit positive.
+    u = (ev.groupby(["nome", "receptor", "eixo", "unidade"], as_index=False)
+           .agg(n_modelos=("ativo", "size"), algum_ativo=("ativo", "any"),
+                tem_cls=("eh_cls", "any"), cls_ativo=("cls_ativo", "any")))
+    u["positiva"] = np.where(u["eixo"].eq("farmacologico"),
+                             np.where(u["tem_cls"], u["cls_ativo"], u["algum_ativo"]),
+                             u["algum_ativo"])
+
+    # Pivot the units onto one column per axis, always returning both even when empty.
+    def _por_eixo(coluna, func):
+        t = u.pivot_table(index=["nome", "receptor"], columns="eixo", values=coluna,
+                          aggfunc=func, fill_value=0)
+        for e in ("farmacologico", "triagem"):
+            if e not in t.columns:
+                t[e] = 0
+        return t[["farmacologico", "triagem"]].astype(int)
+
+    pos, aval = _por_eixo("positiva", "sum"), _por_eixo("unidade", "nunique")
+    resumo = pd.DataFrame({
+        "unidades_farm_positivas": pos["farmacologico"], "unidades_tri_positivas": pos["triagem"],
+        "unidades_farm_avaliadas": aval["farmacologico"], "unidades_tri_avaliadas": aval["triagem"],
+    }).reset_index()
+    resumo["unidades_positivas"] = resumo.unidades_farm_positivas + resumo.unidades_tri_positivas
+    resumo["unidades_avaliadas"] = resumo.unidades_farm_avaliadas + resumo.unidades_tri_avaliadas
+
+    # Ceiling: units a receptor could offer at all, identical for every molecule. A unit left
+    # out by the domain filter does NOT become a negative; it simply was not assessed, which
+    # is why coverage is reported next to the level instead of being folded into it.
+    todas = det[~det["nao_implantavel"]].drop_duplicates(["receptor", "eixo", "unidade"])
+    teto = (todas.groupby(["receptor", "eixo"]).unidade.nunique().unstack(fill_value=0))
+    for e in ("farmacologico", "triagem"):
+        if e not in teto.columns:
+            teto[e] = 0
+    teto = teto.rename(columns={"farmacologico": "teto_farm", "triagem": "teto_tri"}).reset_index()
+    resumo = resumo.merge(teto[["receptor", "teto_farm", "teto_tri"]], on="receptor", how="left")
+    resumo["unidades_implantaveis"] = resumo.teto_farm + resumo.teto_tri
+    resumo["cobertura"] = (resumo.unidades_avaliadas / resumo.unidades_implantaveis).round(2)
+
+    # Agreement between the two axes, reported beside the level instead of altering it.
+    f_pos, t_pos = resumo.unidades_farm_positivas > 0, resumo.unidades_tri_positivas > 0
+    f_av, t_av = resumo.unidades_farm_avaliadas > 0, resumo.unidades_tri_avaliadas > 0
+    resumo["concordancia"] = np.select(
+        [f_pos & t_pos, f_pos & t_av & ~t_pos, t_pos & f_av & ~f_pos, f_pos | t_pos,
+         f_av & t_av, f_av | t_av],
+        ["convergente", "divergente (farmacologico positivo, triagem negativa)",
+         "divergente (triagem positiva, farmacologico negativo)", "eixo unico (outro sem cobertura)",
+         "negativo nos dois eixos", "negativo (so um eixo avaliado)"],
+        default="sem cobertura")
+
+    # Level ladder. "nao avaliado" is a state the previous rule did not have: it separates
+    # "tested and negative" from "nobody could test", which the old "sem alerta" merged.
+    A, P = resumo.unidades_avaliadas, resumo.unidades_positivas
+    resumo["alerta"] = np.select(
+        [(A == 0) | ((P == 0) & (A == 1)), P == 0, f_pos & t_pos, P >= 2],
+        ["nao avaliado (cobertura insuficiente)", "sem alerta (negativo nas unidades avaliadas)",
+         "alto (convergencia entre os dois eixos)", "moderado (2+ unidades independentes)"],
+        default="baixo (evidencia isolada)")
+
+    # Direction of effect: only the screening assays carry the mode, so it is reported from
+    # the ACTIVE screening votes and stays undetermined when there is none.
+    tox_at = ev[ev["eixo"].eq("triagem") & ev["ativo"]].copy()
     if len(tox_at):
         tox_at["modo"] = tox_at["detalhe"].str.split("/").str[0]
         direcao = (tox_at.groupby(["nome", "receptor"]).modo
@@ -175,13 +243,23 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
     else:
         resumo["direcao"] = np.nan
     resumo["direcao"] = resumo["direcao"].fillna("nao determinada")
-    resumo["alerta"] = np.select(
-        [(resumo.camadas_ativas >= 2) & (resumo.evidencia_farmacologica >= 1) & (resumo.evidencia_tox21 >= 1),
-         (resumo.fracao_ativa >= 0.5) & (resumo.camadas_avaliadas >= 3),
-         resumo.camadas_ativas >= 1],
-        ["alto (farmacologico + ambiental)", "moderado (maioria das camadas)", "baixo (evidencia isolada)"],
-        default="sem alerta")
-    return det, resumo
+    resumo["fracao_positiva"] = (resumo.unidades_positivas
+                                 / resumo.unidades_avaliadas.replace(0, np.nan)).round(2)
+    resumo["evidencia"] = (resumo.unidades_positivas.astype(str) + "/"
+                           + resumo.unidades_avaliadas.astype(str) + " unidades ("
+                           + resumo.unidades_avaliadas.astype(str) + "/"
+                           + resumo.unidades_implantaveis.astype(str) + " cobertas)")
+    cols = ["nome", "receptor", "evidencia", "unidades_positivas", "unidades_avaliadas",
+            "unidades_implantaveis", "fracao_positiva", "cobertura", "unidades_farm_positivas",
+            "unidades_tri_positivas", "unidades_farm_avaliadas", "unidades_tri_avaliadas",
+            "concordancia", "direcao", "alerta"]
+    # Rejected models never vote, so by default they stay out of the detail table; what the
+    # summary reports is how many of the DEPLOYED models actually voted.
+    if not incluir_reprovados:
+        # as linhas saem, as COLUNAS ficam: consenso_v2.py e plot_edc_results.py leem
+        # nao_implantavel, e remove-la quebraria os dois
+        det = det[~det["nao_implantavel"]].reset_index(drop=True)
+    return det, resumo[cols]
 
 
 # Command-line entry point of the multi-layer consensus predictor.

@@ -163,75 +163,120 @@ datasets curados da camada IC50.
 Verificados no código e nos dados. O detalhamento, com os números e os arquivos de diagnóstico, está em
 `documentos/verificacao_auditoria_codigo.md`.
 
-### Corrigidos em 20/10/2026
+### Corrigidos
 
-Nenhuma correção altera a previsão dos modelos implantados: o alerta e as contagens dos 83 pares do
-`painel_ref.csv` saem idênticos aos anteriores.
+Nenhuma correção altera a previsão de modelo nenhum: o que muda é quais modelos votam, como
+os votos são agregados e o que a saída informa.
+
+**Critério de implantação, agora auditável** — `criterio_implantacao.py`
+
+O flag `nao_implantavel` gravado nos `.joblib` de `models_final/` vinha de um script ausente do
+repositório, e não era auditável: `ESR2_B` passava com R² de 0,098 e `AR_F` era reprovado com 0,076,
+sem regra escrita em lugar nenhum. O critério foi reconstruído a partir das métricas que os próprios
+artefatos guardam:
+
+| Condição | Veredito |
+|---|---|
+| `n_train < 200` | reprovado, em qualquer camada |
+| regressão com `Q2_cv < 0,30` | reprovado |
+| regressão com `R2_teste_scaffold < 0` | reprovado (pior que prever a média) |
+| classificação com `ROC_AUC_teste < 0,60` | reprovado |
+
+Ele reproduz 59 dos 61 flags gravados, divergindo só em `AR_F` (n = 618, Q² = 0,450, R² = 0,076,
+ROC-AUC = 0,772), que passa a ser implantado. Resultado: **47 implantados de 61 treinados**.
+`criterio_implantacao.csv` traz o motivo de cada reprovação.
+
+Ressalva importante: **os 11 modelos do Tox21 contam como implantados por ausência de critério**, não
+por terem passado em um — nem os `.joblib` nem o `LEIAME_modelos_tox21.csv` guardam métrica de
+validação. Isso precisa ser dito em qualquer relatório que use a camada de triagem.
+
+**Nova regra de níveis, baseada em unidades de evidência**
+
+Um modelo não é uma evidência. Duas redundâncias foram medidas: regressão e classificação do mesmo
+endpoint usam os mesmos compostos e as mesmas features, diferindo só pela binarização em pAct ≥ 6; e
+os ensaios Tox21 de um mesmo receptor e modo são a mesma biblioteca (até 99,8% em comum) em linhagens
+celulares diferentes. Os votos passam a ser colapsados antes de qualquer contagem:
+
+- **eixo farmacológico:** 1 unidade por endpoint do ChEMBL (receptor × medida × tipo de ensaio). A
+  classificação decide a positividade; a regressão entra como potência, não como voto separado.
+- **eixo de triagem:** 1 unidade por receptor e modo, colapsando linhagens.
+
+A escada passou a ser:
+
+| Nível | Condição |
+|---|---|
+| `nao avaliado` | nenhuma unidade avaliada, ou uma só e negativa |
+| `sem alerta` | todas as unidades avaliadas negativas (2 ou mais) |
+| `alto` | os **dois** eixos positivos (convergência) |
+| `moderado` | ≥ 2 unidades independentes positivas num eixo só |
+| `baixo` | exatamente 1 unidade positiva |
+
+O estado `nao avaliado` é o ganho principal: a regra anterior chamava de "sem alerta" tanto a molécula
+testada e negativa quanto aquela que modelo nenhum conseguiu avaliar. No `painel_ref.csv`, **14 dos 40
+pares que eram "sem alerta" eram, na verdade, não avaliados**. Os 10 "alto" permaneceram "alto", todos
+por convergência.
+
+**Saída**
+
+- O `_detalhado.csv` traz **apenas os modelos implantados**; `--incluir-reprovados` restaura os 61.
+- Coluna nova `motivo_nao_voto`: `modelo reprovado (<motivo>)` ou `molecula fora do dominio`.
+- O `_resumo.csv` passou a `evidencia`, `unidades_positivas`, `unidades_avaliadas`,
+  `unidades_implantaveis`, `fracao_positiva`, `cobertura`, `concordancia`, `direcao` e `alerta`.
+- A tela informa quantas unidades de evidência puderam votar, do total disponível.
 
 **Produziam resultado errado sem avisar**
 
 - **Camada identificada pelo nome da pasta.** A comparação passou a usar o nome *base*
   (`os.path.basename`), então `--model-dirs` com caminho absoluto funciona, e uma pasta com nome
-  desconhecido levanta erro em vez de ser interpretada errado. Antes, `--model-dirs
-  /abs/.../models_tox21` rotulava os 11 modelos do Tox21 como `ChEMBL AR/ESR1/PPARG/TR`, com o modo do
-  ensaio virando nome de receptor, e corrompia todos os votos em silêncio.
-- **Nomes repetidos na entrada.** O `predict_edc2.py` agora levanta erro explícito, como o
-  `consenso_v2.py` já fazia, em vez de fundir moléculas diferentes numa linha do resumo.
-- **Moléculas sem scaffold de Bemis-Murcko.** Cada uma passou a receber o próprio grupo, em vez de todas
-  caírem num pseudo-grupo tratado como família química. Medido: o teste externo de
-  `TOX21_AR_antagonista_HEK293T` caiu de 95,2% para 0,0% de acíclicas e o de `TOX21_TR_antagonista_GH3`
-  de 91,9% para 0,1%; nenhum endpoint fica mais com teste majoritariamente acíclico. A mudança também
-  destravou `PPARG_Kd_B`, cujo teste tinha uma **única classe** (ROC-AUC indefinido). Afeta apenas
-  retreino — os `.joblib` implantados não mudam.
-- **Queda silenciosa para divisão aleatória.** `features.scaffold_split` levanta erro quando o teste
-  guloso não alcança metade do alvo, e só faz divisão aleatória com `permitir_aleatorio=True`. Uma
-  divisão aleatória rotulada como "por scaffold" dá métricas otimistas sob um nome errado.
+  desconhecido levanta erro. Antes, `--model-dirs /abs/.../models_tox21` rotulava os 11 modelos do
+  Tox21 como `ChEMBL AR/ESR1/PPARG/TR`, com o modo do ensaio virando nome de receptor.
+- **Nomes repetidos na entrada.** O `predict_edc2.py` agora levanta erro explícito, em vez de fundir
+  moléculas diferentes numa linha do resumo.
+- **Moléculas sem scaffold de Bemis-Murcko.** Cada uma passou a receber o próprio grupo. O teste
+  externo de `TOX21_AR_antagonista_HEK293T` caiu de 95,2% para 0,0% de acíclicas e o de
+  `TOX21_TR_antagonista_GH3` de 91,9% para 0,1%; `PPARG_Kd_B`, cujo teste tinha uma **única classe**,
+  passou a ter duas. Afeta apenas retreino.
+- **Queda silenciosa para divisão aleatória.** `features.scaffold_split` levanta erro, e só aceita
+  divisão aleatória com `permitir_aleatorio=True`.
 
 **Impediam rodar de ponta a ponta**
 
-- **BindingDB.** O `pipeline_curate.py` passou a ler o `.parquet` que o `extract_bindingdb.py` de fato
-  grava (aceitando `.pkl` para caches antigos) e a **construir** o `cache/bindingdb_std_lookup.pkl` com a
-  mesma função de padronização usada no ChEMBL, em vez de ler um arquivo que nenhum script criava.
-- **Nomes das pastas de dados.** `modeling_layers.py` e `modeling_tox21.py` aceitam tanto `data_layers/` e
-  `data_tox21/` (onde os `pipeline_*` gravam) quanto `datasets_camadas_por_endpoint/` e
-  `datasets_tox21_por_ensaio/` (os nomes entregues), e imprimem de qual pasta leram. Se nenhuma das duas
-  existir, o erro é explícito, em vez de um glob vazio que parece "nenhum dataset".
-
-**Afetavam a leitura do alerta**
-
-- **Direção do efeito.** O `_resumo.csv` ganhou a coluna `direcao`, com os modos dos votos **ativos** do
-  Tox21 (`agonista`, `antagonista`, ou ambos). Fica `nao determinada` quando não há voto de triagem
-  ativo, porque o eixo ChEMBL não carrega modo de ensaio.
-- **Cobertura invisível.** O `_resumo.csv` ganhou `modelos_implantaveis_receptor`,
-  `fracao_sobre_implantaveis` e `cobertura_dominio`. Um modelo fora do domínio continua **não** contando
-  como voto inativo, mas a diferença entre as duas frações agora mostra quanta evidência faltou.
+- **BindingDB.** O `pipeline_curate.py` lê o `.parquet` que o `extract_bindingdb.py` grava e
+  **constrói** o `cache/bindingdb_std_lookup.pkl`, em vez de ler um arquivo que nenhum script criava.
+- **Nomes das pastas de dados.** `modeling_layers.py` e `modeling_tox21.py` aceitam tanto `data_layers/`
+  e `data_tox21/` quanto `datasets_camadas_por_endpoint/` e `datasets_tox21_por_ensaio/`.
 
 ### Em aberto
 
 **Reprodutibilidade do que está implantado** — não é corrigível por mudança de código:
 
 - Os 18 modelos de `models_final/` **não são regeráveis por nenhum script da pasta**. O
-  `LEIAME_calibracao.csv` tem 5 colunas (`limiar_producao`, `ganho_limiar`, `conformal_modo`,
-  `cobertura_scaffold`, `nao_implantavel`) que o `conformal.py` não produz; ele grava outro arquivo,
+  `LEIAME_calibracao.csv` tem colunas (`limiar_producao`, `ganho_limiar`, `conformal_modo`,
+  `cobertura_scaffold`) que o `conformal.py` não produz; ele grava outro arquivo,
   `results/conformal_e_limiares.csv`. O script que fecha essa etapa não está no repositório, e reescrevê-lo
-  produziria modelos equivalentes, não os mesmos.
+  produziria modelos equivalentes, não os mesmos. (A quinta coluna, `nao_implantavel`, deixou de depender
+  desse script: o `criterio_implantacao.py` a reconstrói com regra escrita.)
 - `finalize_models.py` e `conformal.py` dependem de `data/dataset_*.csv` (datasets curados de IC50) e de
   `results/desempenho_modelos.csv`, ambos ausentes. Os datasets de IC50 ficaram deliberadamente fora do
   repositório.
 
 **Limites estruturais do consenso** — dependem de retreino ou de dados novos, não de código:
 
-- Regressão e classificação do mesmo endpoint contam como **duas** camadas, embora usem os mesmos
-  compostos e difiram só pela binarização em pAct ≥ 6. É decisão mantida: o voto é por modelo. O
-  `consenso_v2.py` oferece `unidade="endpoint"` para colapsar as duas tarefas numa evidência só.
+- Os votos continuam sem peso: duas unidades positivas valem o mesmo, venham de 2.700 compostos
+  (`ESR1_B`) ou de 232 (`AR_EC50_B`). Ponderar exigiria uma medida de confiança comparável entre as
+  camadas, que a de triagem não tem.
 - O teto do alerta depende do receptor: "alto" só é atingível em AR, ERα e PPARγ, porque exige um voto de
   cada camada. ERβ não tem ensaio Tox21 e chega no máximo a "moderado"; THRβ chega a "baixo"; THRα não
   tem nenhum modelo ChEMBL implantável e não aparece no resumo. Um "sem alerta" não significa o mesmo em
   receptores diferentes. A coluna `modelos_implantaveis_receptor` deixa esse teto visível.
 - "Ativo" não quer dizer o mesmo em cada camada: no ChEMBL é potência de até 1 µM com limiar de
-  probabilidade 0,5; no Tox21 é a chamada do depositante, com limiares otimizados de 0,11 a 0,40.
-- Os ensaios Tox21 de um mesmo receptor são os mesmos modos em linhagens celulares diferentes, então
-  "2 de 4 ensaios ativos" pode ser o mesmo modo contado duas vezes.
+  probabilidade 0,5; no Tox21 é a chamada do depositante, com limiares otimizados de 0,11 a 0,40. Por
+  isso os dois eixos nunca são somados numa fração única.
+- A camada Tox21 não tem métrica de validação gravada, então seus 11 modelos nunca foram submetidos ao
+  critério de implantação. São 11 das 47 unidades que votam.
+- O `painel_ref.csv` **não é um conjunto de avaliação cego**: 59,9% dos votos que contam vêm de modelos
+  que já tinham a molécula no próprio treino (84,3% no eixo de triagem). Ele serve para conferir o
+  mecanismo do consenso, nunca para estimar acerto em moléculas novas.
 
 O `consenso_v2/` reescreve só a agregação e deixa esses pontos explícitos no relatório, sem retreinar
 nada. Veja `documentos/consenso_v2_especificacao.md`.

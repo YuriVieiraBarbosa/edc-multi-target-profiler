@@ -28,7 +28,19 @@ ROTULO_CAMADA = {"models_final": "ChEMBL IC50", "models_layers": "ChEMBL Ki/Kd/E
 
 # Count the .joblib files of each model directory, without loading them.
 def _inventario():
-    return {d: len(glob.glob(os.path.join(AQUI, d, "*.joblib"))) for d in PASTAS_MODELO}
+    """Por pasta: (treinados, implantados). Treinado nao e implantado - os reprovados
+    por criterio_implantacao.csv ficam no disco mas nunca votam."""
+    import pandas as pd
+    p = os.path.join(AQUI, "criterio_implantacao.csv")
+    rep = set()
+    if os.path.exists(p):
+        t = pd.read_csv(p)
+        rep = set(t.loc[t.nao_implantavel, "modelo_id"])
+    inv = {}
+    for d in PASTAS_MODELO:
+        ids = [os.path.basename(f)[:-7] for f in glob.glob(os.path.join(AQUI, d, "*.joblib"))]
+        inv[d] = (len(ids), sum(1 for i in ids if i not in rep))
+    return inv
 
 
 # Resolve the output prefix; with no --saida, create resultados/<timestamp>_<name>/.
@@ -74,7 +86,8 @@ RESET = "\033[0m"
 COR_ALERTA = {"alto": "\033[1;97;41m",      # branco sobre vermelho
               "moderado": "\033[1;33m",      # amarelo
               "baixo": "\033[36m",           # ciano
-              "sem alerta": "\033[90m"}      # cinza
+              "sem alerta": "\033[90m",      # cinza
+              "nao avaliado": "\033[35m"}    # magenta: ausencia de evidencia, nao evidencia de ausencia
 COR_LEITURA = (("convergente positivo", "\033[1;97;41m"),
                ("divergente", "\033[1;35m"),
                ("positivo", "\033[1;33m"),
@@ -128,7 +141,7 @@ def _mostrar(df, coluna_cor=None, usar_cor=False, limite=25, arquivo=""):
 # One-line colour legend, printed only when colour is on.
 def _legenda_cores(coluna):
     if coluna == "alerta":
-        itens = [(n, COR_ALERTA[n]) for n in ("alto", "moderado", "baixo", "sem alerta")]
+        itens = [(n, COR_ALERTA[n]) for n in ("alto", "moderado", "baixo", "sem alerta", "nao avaliado")]
     else:
         itens = [("convergente positivo", COR_LEITURA[0][1]), ("divergente", COR_LEITURA[1][1]),
                  ("so um eixo positivo", COR_LEITURA[2][1]), ("negativo / sem cobertura", COR_LEITURA[3][1])]
@@ -146,7 +159,8 @@ def cmd_testar(a, ap):
     os.chdir(AQUI)
     try:
         import predict_edc2
-        det, res = predict_edc2.prever(smi, nomes)
+        det, res = predict_edc2.prever(smi, nomes,
+                                       incluir_reprovados=a.incluir_reprovados)
     finally:
         os.chdir(anterior)
 
@@ -182,14 +196,18 @@ def cmd_testar(a, ap):
         print("Nenhum modelo pode votar: todas as moleculas ficaram fora do dominio "
               "de aplicabilidade de todos os modelos implantaveis.")
     else:
-        colunas = ["nome", "receptor", "votos", "fracao_ativa",
-                   "fracao_sobre_implantaveis", "cobertura_dominio", "alerta"]
+        colunas = ["nome", "receptor", "evidencia", "fracao_positiva", "cobertura",
+                   "concordancia", "direcao", "alerta"]
         print()
+        votaram = int(res.unidades_avaliadas.sum())
+        teto = int(res.unidades_implantaveis.sum())
+        print(f"{votaram} de {teto} unidades de evidencia disponiveis puderam votar "
+              f"({votaram / teto:.0%} de cobertura); o resto ficou fora do dominio.")
         _mostrar(res[colunas], coluna_cor="alerta", usar_cor=cor,
                  arquivo=f"{prefixo}_resumo.csv")
         if cor:
             _legenda_cores("alerta")
-        sem_cobertura = res[res.camadas_avaliadas == 0]
+        sem_cobertura = res[res.unidades_avaliadas == 0]
         if len(sem_cobertura):
             print(f"\nAtencao: {len(sem_cobertura)} par(es) molecula-receptor sem nenhum voto "
                   "(molecula fora do dominio de todos os modelos daquele receptor).")
@@ -246,55 +264,67 @@ COMO O RESULTADO E FORMADO
   Cada modelo implantavel da um voto binario (ativo / inativo):
     - regressao     vota ativo se o valor previsto for >= 6,0 (potencia <= 1 uM)
     - classificacao vota ativo se a probabilidade passar o limiar do modelo
-  Regressao e classificacao do mesmo endpoint sao DOIS votos independentes.
   So vota o modelo que for implantavel E cuja molecula esteja dentro do seu
   dominio de aplicabilidade. Um modelo fora do dominio NAO vota, e tambem NAO
-  conta como voto inativo.
+  conta como voto inativo - por isso a cobertura aparece ao lado do nivel.
 
-UNIDADE DE VOTO E OS DOIS EIXOS - sao coisas diferentes
-  Uma duvida comum: se o voto e de cada modelo, por que o programa fala em dois
-  eixos? Porque as duas ideias respondem a perguntas distintas.
-    - A UNIDADE DE VOTO diz QUANTOS votos existem. E o modelo: cada modelo
-      implantavel e dentro do dominio vota uma vez, e regressao e classificacao
-      do mesmo endpoint contam como dois votos.
-    - O EIXO diz DE ONDE vem cada voto: do ChEMBL (farmacologico, afinidade e
-      potencia medidas em ensaio dirigido) ou do Tox21 (triagem, qHTS em celula).
-  O eixo nunca muda o numero de votos; ele so classifica a procedencia de cada um.
+UNIDADES DE EVIDENCIA - por que um modelo nao e uma evidencia
+  Contar um voto por modelo exagera a evidencia, porque ha duas redundancias
+  medidas neste projeto:
+    - regressao e classificacao do mesmo endpoint usam os MESMOS compostos e as
+      mesmas features, diferindo so pela binarizacao em pAct >= 6;
+    - os ensaios Tox21 de um mesmo receptor e modo sao a MESMA biblioteca de
+      compostos (ate 99,8% em comum) rodada em linhagens celulares diferentes.
+  Por isso os votos sao primeiro colapsados em UNIDADES:
+    - eixo farmacologico: 1 unidade por endpoint ChEMBL (receptor x medida x
+      tipo de ensaio). A classificacao decide se a unidade e positiva; a
+      regressao entra como potencia prevista, nao como voto separado.
+    - eixo de triagem: 1 unidade por receptor e modo (agonista / antagonista),
+      colapsando as linhagens. A unidade e positiva se qualquer linhagem acusar.
 
-  Essa separacao ja esta DENTRO da regra de alerta padrao: o nivel alto exige
-  >= 2 votos ativos com pelo menos 1 de cada eixo. Ou seja, dois votos do mesmo
-  eixo nao bastam, porque dois ensaios da mesma origem nao se corroboram.
-  O que o --eixos acrescenta e parar de fundir os dois numa fracao unica: em vez
-  de "3 de 8 votos ativos", ele mostra o estado de cada eixo em separado, o que
-  distingue "os dois concordam" de "um deles nem tinha modelo para opinar".
+OS DOIS EIXOS
+  O eixo diz DE ONDE vem a evidencia: ChEMBL (farmacologico, afinidade e
+  potencia em ensaio dirigido) ou Tox21 (triagem, qHTS em celula). As duas
+  coisas nao se substituem, e por isso o nivel mais alto exige as duas.
 
 COLUNAS DO _resumo.csv
-  votos                      leitura direta, ex. "5/6 votantes (5/10 implantaveis)"
-  camadas_ativas             numero de votos ativos
-  camadas_avaliadas          numero de modelos que de fato votaram
-  modelos_implantaveis_receptor  teto de votos daquele receptor
-  fracao_ativa               votos ativos / modelos que votaram
-  fracao_sobre_implantaveis  votos ativos / modelos implantaveis do receptor
-  cobertura_dominio          modelos que votaram / implantaveis  (0 a 1)
-  alerta                     alto, moderado, baixo ou sem alerta
+  evidencia                leitura direta, ex. "3/6 unidades (6/9 cobertas)"
+  unidades_positivas       unidades de evidencia positivas
+  unidades_avaliadas       unidades que puderam ser avaliadas
+  unidades_implantaveis    teto do receptor: unidades que existem
+  fracao_positiva          positivas / avaliadas
+  cobertura                avaliadas / implantaveis  (0 a 1)
+  unidades_farm_*          o mesmo, so no eixo farmacologico
+  unidades_tri_*           o mesmo, so no eixo de triagem
+  concordancia             convergente, divergente, eixo unico ou negativo
+  direcao                  agonista / antagonista, dos votos ATIVOS do Tox21
+  alerta                   alto, moderado, baixo, sem alerta ou nao avaliado
 
-  A DIFERENCA entre 'fracao_ativa' e 'fracao_sobre_implantaveis' e a cobertura
-  do dominio: se poucos modelos puderam votar, a primeira fracao fica alta por
-  falta de evidencia, nao por forca de evidencia. Leia sempre as duas.
+  LEIA SEMPRE 'cobertura' JUNTO DO NIVEL. Uma fracao positiva de 1,00 com
+  cobertura 0,17 quer dizer que uma unica unidade de sete opinou, nao que a
+  evidencia seja unanime.
 
 NIVEIS DE ALERTA (vale a primeira regra que se aplica)
-  alto        >= 2 votos ativos, com pelo menos 1 do ChEMBL e 1 do Tox21
-  moderado    fracao ativa >= 0,5 com 3 ou mais modelos votando
-  baixo       pelo menos 1 voto ativo
-  sem alerta  nenhum voto ativo
+  nao avaliado  nenhuma unidade avaliada, ou uma so unidade e negativa -
+                cobertura insuficiente para afirmar qualquer coisa
+  sem alerta    todas as unidades avaliadas sao negativas (2 ou mais)
+  alto          os DOIS eixos positivos (convergencia)
+  moderado      2 ou mais unidades independentes positivas num eixo so
+  baixo         exatamente 1 unidade positiva
+
+  'nao avaliado' e um estado que a regra anterior nao tinha: ela chamava de
+  "sem alerta" tanto a molecula testada e negativa quanto aquela que modelo
+  nenhum conseguiu avaliar. Sao coisas opostas.
 
 COMO INTERPRETAR - o que o alerta NAO diz
-  1. Nao indica o sentido do efeito. Votos agonistas e antagonistas somam.
-     Use --eixos para ver a direcao, que vem dos ensaios Tox21.
-  2. "Sem alerta" nao vale o mesmo em todo receptor. O nivel alto so e
-     atingivel em AR, ERalfa e PPARgama; ERbeta chega no maximo a moderado
-     (nao ha ensaio Tox21 de ERbeta) e THRbeta a baixo. THRalfa nao tem
-     nenhum modelo ChEMBL implantavel.
+  1. A direcao vem SO do Tox21, que e quem registra o modo do ensaio. No eixo
+     farmacologico ela fica "nao determinada", e o nivel em si nao separa
+     agonismo de antagonismo.
+  2. O teto depende do receptor. "Alto" exige convergencia entre os dois
+     eixos, entao so e atingivel onde existem os dois: AR, ERalfa e PPARgama.
+     ERbeta nao tem ensaio Tox21 e para em moderado; THRalfa nao tem nenhum
+     modelo implantavel e nao aparece. A coluna unidades_implantaveis mostra
+     esse teto, e por isso ela deve ser lida junto do nivel.
   3. "Ativo" nao significa o mesmo em cada camada. No ChEMBL e potencia de
      ate 1 uM; no Tox21 e a chamada ativo/inativo do ensaio, com limiar de
      probabilidade mais permissivo.
@@ -331,11 +361,16 @@ OUTROS PROGRAMAS DA PASTA
 def cmd_explicar(a, ap):
     print(TEXTO_EXPLICACAO.strip())
     inv = _inventario()
-    total = sum(inv.values())
-    print("\nMODELOS INSTALADOS NESTA PASTA")
-    for d, n in inv.items():
-        print(f"  {ROTULO_CAMADA[d]:22s} {n:3d} modelos  ({d}/)")
-    print(f"  {'TOTAL':22s} {total:3d} modelos")
+    total = sum(t for t, _ in inv.values())
+    impl = sum(i for _, i in inv.values())
+    print("\nMODELOS INSTALADOS NESTA PASTA  (implantados / treinados)")
+    for d, (t, i) in inv.items():
+        print(f"  {ROTULO_CAMADA[d]:22s} {i:3d} / {t:<3d}  ({d}/)")
+    print(f"  {'TOTAL':22s} {impl:3d} / {total:<3d}")
+    print("  Treinado nao e implantado: os reprovados ficam no disco e nunca votam.")
+    print("  Os do Tox21 contam como implantados por AUSENCIA de metrica de validacao")
+    print("  gravada, nao por terem passado em um criterio. Motivo por modelo em")
+    print("  criterio_implantacao.csv.")
     if total == 0:
         print("\n  ATENCAO: nenhum modelo encontrado. Rode este comando a partir da raiz do"
               "\n  pipeline, ou verifique se as pastas models_* estao no lugar.")
@@ -363,6 +398,7 @@ EDC-QSAR - comandos disponiveis
        --eixos                tambem grava a leitura em dois eixos
        --unidade modelo|endpoint   unidade de voto com --eixos (padrao: modelo)
        --sem-cor              desliga as cores (ja desligadas ao redirecionar)
+       --incluir-reprovados   inclui os modelos reprovados no _detalhado.csv
 
   2) explicar   como usar o programa e como ler o resultado
        python edc.py explicar
@@ -396,6 +432,8 @@ def construir_parser():
                     help="tambem grava a leitura em dois eixos (farmacologico x triagem)")
     p1.add_argument("--unidade", choices=("modelo", "endpoint"), default="modelo",
                     help="unidade de voto usada com --eixos (padrao: modelo)")
+    p1.add_argument("--incluir-reprovados", action="store_true",
+                    help="inclui no _detalhado.csv os modelos reprovados, que nunca votam")
     p1.add_argument("--sem-cor", action="store_true", dest="sem_cor",
                     help="desliga as cores do terminal (ja desligadas ao redirecionar a saida)")
     p1.set_defaults(func=cmd_testar)
