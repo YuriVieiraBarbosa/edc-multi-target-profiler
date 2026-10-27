@@ -40,7 +40,12 @@ def carregar(path):
     # aceita o caminho do CSV ou o proprio DataFrame completo, porque o detalhado GRAVADO
     # pode estar filtrado so nos votantes e a cobertura daqui precisa da tabela inteira
     d = path.copy() if isinstance(path, pd.DataFrame) else pd.read_csv(path)
+    # um _detalhado.csv gravado com --detalhe votantes ja vem filtrado e nao traz todas
+    # estas colunas; nesse caso a cobertura relatada aqui sera a do que sobrou no arquivo
+    PADRAO = {"conta": True, "ativo": False, "no_dominio": True, "nao_implantavel": False}
     for c in BOOL:
+        if c not in d.columns:
+            d[c] = PADRAO[c]
         d[c] = d[c].astype(str).str.lower().eq("true")
     # colunas opcionais: o predict_edc2.py só cria intervalo_inf/sup quando há calibração conformal,
     # e prob_ativo/limiar só quando há classificador. Sem isto, um arquivo sem conformal quebra abaixo.

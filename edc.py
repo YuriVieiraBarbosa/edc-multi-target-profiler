@@ -120,7 +120,11 @@ def _mostrar(df, coluna_cor=None, usar_cor=False, limite=25, arquivo=""):
     cols = list(vis.columns)
     # float com 2 casas; o resto como texto. str(1.0) sairia "1.0" e quebraria a coluna.
     def _fmt(v):
-        return f"{v:.2f}" if isinstance(v, float) and v == v else str(v)
+        if isinstance(v, float):
+            # v != v e NaN: aparece quando nada foi avaliado (0 de 0), e "nan" na tela
+            # parece defeito em vez de ausencia
+            return f"{v:.2f}" if v == v else "-"
+        return str(v)
     txt = {c: [_fmt(v) for v in vis[c]] for c in cols}
     larg = {c: max([len(c)] + [len(v) for v in txt[c]]) for c in cols}
     print("  ".join(c.rjust(larg[c]) for c in cols))

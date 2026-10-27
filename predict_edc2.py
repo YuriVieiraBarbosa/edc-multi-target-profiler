@@ -274,14 +274,16 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
 #   implantados os modelos implantados, votando ou nao
 #   todos       os 61, inclusive os reprovados
 def filtrar_detalhe(det, modo="votantes"):
+    if modo not in ("votantes", "implantados", "todos"):
+        raise SystemExit(f"modo de detalhe invalido: {modo!r} "
+                         "(esperado votantes, implantados ou todos)")
     if modo == "todos":
         return det
-    if modo == "implantados":
-        return det[~det["nao_implantavel"]].reset_index(drop=True)
-    if modo == "votantes":
-        return det[det["conta"]].reset_index(drop=True)
-    raise SystemExit(f"modo de detalhe invalido: {modo!r} "
-                     "(esperado votantes, implantados ou todos)")
+    d = det[~det["nao_implantavel"]] if modo == "implantados" else det[det["conta"]]
+    # colunas que so existem para explicar quem NAO votou ficam constantes depois do
+    # filtro, entao saem junto em vez de virar uma coluna vazia no CSV
+    sobra = ["motivo_reprovacao"] + (["motivo_nao_voto"] if modo == "votantes" else [])
+    return d.drop(columns=[c for c in sobra if c in d.columns]).reset_index(drop=True)
 
 
 # Command-line entry point of the multi-layer consensus predictor.
