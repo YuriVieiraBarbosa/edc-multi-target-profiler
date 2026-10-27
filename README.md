@@ -218,8 +218,16 @@ por convergência.
 
 **Saída**
 
-- O `_detalhado.csv` traz **apenas os modelos implantados**; `--incluir-reprovados` restaura os 61.
+- O `_detalhado.csv` traz **apenas os modelos que votaram**. `--detalhe implantados` acrescenta os que
+  não votaram por estarem fora do domínio, e `--detalhe todos` acrescenta também os reprovados. Para o
+  bisfenol A isso dá 27, 47 e 61 linhas. A tabela completa continua sendo usada internamente pelo
+  `--eixos`, cuja cobertura depende de comparar as unidades implantáveis com as avaliadas.
 - Coluna nova `motivo_nao_voto`: `modelo reprovado (<motivo>)` ou `molecula fora do dominio`.
+- Toda combinação molécula × receptor ganha linha no `_resumo.csv`, inclusive as sem nenhuma cobertura,
+  que saem como `nao avaliado`. Antes, um receptor cujas unidades ficassem todas fora do domínio
+  desaparecia da saída.
+- A coluna `evidencia` rotula as duas frações (`positivas 1/3  ·  cobertas 3/6`), porque o formato
+  anterior repetia o mesmo número com dois sentidos.
 - O `_resumo.csv` passou a `evidencia`, `unidades_positivas`, `unidades_avaliadas`,
   `unidades_implantaveis`, `fracao_positiva`, `cobertura`, `concordancia`, `direcao` e `alerta`.
 - A tela informa quantas unidades de evidência puderam votar, do total disponível.

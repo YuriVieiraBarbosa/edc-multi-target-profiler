@@ -159,12 +159,13 @@ def cmd_testar(a, ap):
     os.chdir(AQUI)
     try:
         import predict_edc2
-        det, res = predict_edc2.prever(smi, nomes,
-                                       incluir_reprovados=a.incluir_reprovados)
+        det, res = predict_edc2.prever(smi, nomes)
     finally:
         os.chdir(anterior)
 
     prefixo = _prefixo_saida(a.saida)
+    det_completo = det
+    det = predict_edc2.filtrar_detalhe(det, a.detalhe)
     det.to_csv(f"{prefixo}_detalhado.csv", index=False)
     res.to_csv(f"{prefixo}_resumo.csv", index=False)
 
@@ -201,8 +202,13 @@ def cmd_testar(a, ap):
         print()
         votaram = int(res.unidades_avaliadas.sum())
         teto = int(res.unidades_implantaveis.sum())
-        print(f"{votaram} de {teto} unidades de evidencia disponiveis puderam votar "
-              f"({votaram / teto:.0%} de cobertura); o resto ficou fora do dominio.")
+        impl = int((~det_completo["nao_implantavel"]).sum())
+        vot = int(det_completo["conta"].sum())
+        print(f"Votaram {vot} de {impl} modelos implantados, que formam {votaram} de {teto} "
+              f"unidades de evidencia ({votaram / teto:.0%} de cobertura).")
+        if a.detalhe == "votantes":
+            print(f"O _detalhado.csv traz so esses {vot}. Use --detalhe implantados ou "
+                  "--detalhe todos para ver os que nao votaram e por que.")
         _mostrar(res[colunas], coluna_cor="alerta", usar_cor=cor,
                  arquivo=f"{prefixo}_resumo.csv")
         if cor:
@@ -219,8 +225,8 @@ def cmd_testar(a, ap):
         else:
             sys.path.insert(0, os.path.dirname(caminho_v2))
             import consenso_v2
-            e = consenso_v2.por_endpoint(consenso_v2.carregar(f"{prefixo}_detalhado.csv"),
-                                         unidade=a.unidade)
+            # a tabela COMPLETA, porque a cobertura do v2 compara implantaveis com avaliados
+            e = consenso_v2.por_endpoint(consenso_v2.carregar(det_completo), unidade=a.unidade)
             r = consenso_v2.resumir(e)
             r.to_csv(f"{prefixo}_eixos_resumo.csv", index=False)
             e.to_csv(f"{prefixo}_eixos_unidades.csv", index=False)
@@ -267,6 +273,10 @@ COMO O RESULTADO E FORMADO
   So vota o modelo que for implantavel E cuja molecula esteja dentro do seu
   dominio de aplicabilidade. Um modelo fora do dominio NAO vota, e tambem NAO
   conta como voto inativo - por isso a cobertura aparece ao lado do nivel.
+
+  O _detalhado.csv traz por padrao SO os modelos que votaram. Para ver os que
+  ficaram de fora e o motivo de cada um (coluna motivo_nao_voto), use
+  --detalhe implantados (os 47) ou --detalhe todos (os 61, com os reprovados).
 
 UNIDADES DE EVIDENCIA - por que um modelo nao e uma evidencia
   Contar um voto por modelo exagera a evidencia, porque ha duas redundancias
@@ -400,7 +410,8 @@ EDC-QSAR - comandos disponiveis
        --eixos                tambem grava a leitura em dois eixos
        --unidade modelo|endpoint   unidade de voto com --eixos (padrao: modelo)
        --sem-cor              desliga as cores (ja desligadas ao redirecionar)
-       --incluir-reprovados   inclui os modelos reprovados no _detalhado.csv
+       --detalhe MODO         linhas do _detalhado.csv: votantes (padrao),
+                              implantados ou todos
 
   2) explicar   como usar o programa e como ler o resultado
        python edc.py explicar
@@ -434,8 +445,9 @@ def construir_parser():
                     help="tambem grava a leitura em dois eixos (farmacologico x triagem)")
     p1.add_argument("--unidade", choices=("modelo", "endpoint"), default="modelo",
                     help="unidade de voto usada com --eixos (padrao: modelo)")
-    p1.add_argument("--incluir-reprovados", action="store_true",
-                    help="inclui no _detalhado.csv os modelos reprovados, que nunca votam")
+    p1.add_argument("--detalhe", choices=("votantes", "implantados", "todos"),
+                    default="votantes",
+                    help="quais modelos vao para o _detalhado.csv (padrao: votantes)")
     p1.add_argument("--sem-cor", action="store_true", dest="sem_cor",
                     help="desliga as cores do terminal (ja desligadas ao redirecionar a saida)")
     p1.set_defaults(func=cmd_testar)

@@ -37,7 +37,9 @@ BOOL = ("conta", "ativo", "no_dominio", "nao_implantavel")
 
 # Read the predictor's _detalhado.csv and normalise its boolean, optional and derived columns.
 def carregar(path):
-    d = pd.read_csv(path)
+    # aceita o caminho do CSV ou o proprio DataFrame completo, porque o detalhado GRAVADO
+    # pode estar filtrado so nos votantes e a cobertura daqui precisa da tabela inteira
+    d = path.copy() if isinstance(path, pd.DataFrame) else pd.read_csv(path)
     for c in BOOL:
         d[c] = d[c].astype(str).str.lower().eq("true")
     # colunas opcionais: o predict_edc2.py só cria intervalo_inf/sup quando há calibração conformal,

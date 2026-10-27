@@ -90,8 +90,7 @@ def _dificuldade(est, X):
 
 
 # Score the molecules with all models and aggregate the per-model votes for each receptor.
-def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers", "models_tox21"),
-           incluir_reprovados=False):
+def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers", "models_tox21")):
     camadas = carregar(model_dirs)
     if not camadas:
         raise SystemExit("nenhum modelo encontrado")
@@ -265,13 +264,24 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
             "unidades_implantaveis", "fracao_positiva", "cobertura", "unidades_farm_positivas",
             "unidades_tri_positivas", "unidades_farm_avaliadas", "unidades_tri_avaliadas",
             "concordancia", "direcao", "alerta"]
-    # Rejected models never vote, so by default they stay out of the detail table; what the
-    # summary reports is how many of the DEPLOYED models actually voted.
-    if not incluir_reprovados:
-        # as linhas saem, as COLUNAS ficam: consenso_v2.py e plot_edc_results.py leem
-        # nao_implantavel, e remove-la quebraria os dois
-        det = det[~det["nao_implantavel"]].reset_index(drop=True)
     return det, resumo[cols]
+
+
+# Narrow the detail table for writing. The COMPLETE frame is what prever() returns and what
+# consenso_v2 needs (its coverage comes from comparing deployable units against assessed
+# ones); the narrowing is a presentation choice applied at write time.
+#   votantes    linhas que de fato votaram: no dominio e implantavel  (padrao)
+#   implantados os modelos implantados, votando ou nao
+#   todos       os 61, inclusive os reprovados
+def filtrar_detalhe(det, modo="votantes"):
+    if modo == "todos":
+        return det
+    if modo == "implantados":
+        return det[~det["nao_implantavel"]].reset_index(drop=True)
+    if modo == "votantes":
+        return det[det["conta"]].reset_index(drop=True)
+    raise SystemExit(f"modo de detalhe invalido: {modo!r} "
+                     "(esperado votantes, implantados ou todos)")
 
 
 # Command-line entry point of the multi-layer consensus predictor.
@@ -285,6 +295,9 @@ def main():
     ap.add_argument("--model-dirs", nargs="+",
                     default=["models_final", "models_layers", "models_tox21"])
     ap.add_argument("--out", default="predicoes_consenso")
+    ap.add_argument("--detalhe", choices=("votantes", "implantados", "todos"),
+                    default="votantes",
+                    help="quais modelos vao para o _detalhado.csv (padrao: votantes)")
     a = ap.parse_args()
     if a.input:
         df = pd.read_csv(a.input)
@@ -295,6 +308,7 @@ def main():
     else:
         ap.error("informe --smiles ou --input")
     det, res = prever(smi, nomes, tuple(a.model_dirs))
+    det = filtrar_detalhe(det, a.detalhe)
     det.to_csv(f"{a.out}_detalhado.csv", index=False)
     res.to_csv(f"{a.out}_resumo.csv", index=False)
     print(f"{len(smi)} moléculas -> {a.out}_detalhado.csv / {a.out}_resumo.csv")

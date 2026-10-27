@@ -68,7 +68,8 @@ def carregar(out):
     if res.empty or det.empty:
         print("AVISO: nenhuma molécula avaliada; gráficos não gerados")
         return None
-    mols = list(dict.fromkeys(det["nome"].astype(str)))
+    # do RESUMO, nao do detalhado: o detalhado gravado pode trazer so os votantes
+    mols = list(dict.fromkeys(res["nome"].astype(str)))
     res["nome"] = res["nome"].astype(str)
     presentes = set(res["receptor"])
     recs = [r for r in ORDEM_REC if r in presentes] + sorted(presentes - set(ORDEM_REC))
