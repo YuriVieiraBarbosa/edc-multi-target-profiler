@@ -192,6 +192,15 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
         return t[["farmacologico", "triagem"]].astype(int)
 
     pos, aval = _por_eixo("positiva", "sum"), _por_eixo("unidade", "nunique")
+    # Every molecule x receptor gets a row, including the pairs where NOTHING could be
+    # assessed. Grouping only the voting units would drop those pairs from the output
+    # entirely - the same "absence disappears silently" defect the ladder exists to avoid,
+    # just moved up to the receptor level.
+    pares = pd.MultiIndex.from_product(
+        [det["nome"].drop_duplicates().tolist(),
+         det.loc[~det["nao_implantavel"], "receptor"].drop_duplicates().sort_values().tolist()],
+        names=["nome", "receptor"])
+    pos, aval = pos.reindex(pares, fill_value=0), aval.reindex(pares, fill_value=0)
     resumo = pd.DataFrame({
         "unidades_farm_positivas": pos["farmacologico"], "unidades_tri_positivas": pos["triagem"],
         "unidades_farm_avaliadas": aval["farmacologico"], "unidades_tri_avaliadas": aval["triagem"],
