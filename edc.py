@@ -201,7 +201,7 @@ def cmd_testar(a, ap):
         print("Nenhum modelo pode votar: todas as moleculas ficaram fora do dominio "
               "de aplicabilidade de todos os modelos implantaveis.")
     else:
-        colunas = ["nome", "receptor", "evidencia", "fracao_positiva", "cobertura",
+        colunas = ["nome", "receptor", "evidencia", "fracao_positiva",
                    "concordancia", "direcao", "alerta"]
         print()
         votaram = int(res.unidades_avaliadas.sum())
@@ -302,9 +302,8 @@ OS DOIS EIXOS
   coisas nao se substituem, e por isso o nivel mais alto exige as duas.
 
 COLUNAS DO _resumo.csv
-  evidencia                leitura direta, ex. "positivas 1/3  ·  cobertas 3/6":
-                           1 unidade positiva entre as 3 avaliadas, e 3 unidades
-                           avaliadas entre as 6 que existem para aquele receptor
+  evidencia                ex. "positivas 1/3": 1 unidade positiva entre as 3
+                           que puderam ser avaliadas
   unidades_positivas       unidades de evidencia positivas
   unidades_avaliadas       unidades que puderam ser avaliadas
   unidades_implantaveis    teto do receptor: unidades que existem
@@ -316,9 +315,12 @@ COLUNAS DO _resumo.csv
   direcao                  agonista / antagonista, dos votos ATIVOS do Tox21
   alerta                   alto, moderado, baixo, sem alerta ou nao avaliado
 
-  LEIA SEMPRE 'cobertura' JUNTO DO NIVEL. Uma fracao positiva de 1,00 com
-  cobertura 0,17 quer dizer que uma unica unidade de sete opinou, nao que a
-  evidencia seja unanime.
+  A tabela impressa mostra so o que foi avaliado. As colunas 'cobertura' e
+  'unidades_implantaveis' nao aparecem na tela, mas estao no _resumo.csv - e
+  vale consulta-las antes de comparar duas moleculas: uma fracao positiva de
+  1,00 com cobertura 0,17 quer dizer que uma unica unidade de sete opinou, nao
+  que a evidencia seja unanime. A linha impressa logo acima da tabela da a
+  cobertura agregada da execucao.
 
 NIVEIS DE ALERTA (vale a primeira regra que se aplica)
   nao avaliado  nenhuma unidade avaliada, ou uma so unidade e negativa -

@@ -253,13 +253,11 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
     resumo["direcao"] = resumo["direcao"].fillna("nao determinada")
     resumo["fracao_positiva"] = (resumo.unidades_positivas
                                  / resumo.unidades_avaliadas.replace(0, np.nan)).round(2)
-    # Two different fractions in one string, so each one carries its own label: the same
-    # number appearing twice with different meanings ("1/3 unidades (3/6 cobertas)") reads
-    # as if 3 of 6 units had been positive.
+    # So o que foi de fato avaliado. A cobertura (quantas unidades existiam e quantas
+    # puderam opinar) fica nas colunas numericas unidades_implantaveis e cobertura, que
+    # continuam no CSV mas saem da tabela impressa.
     resumo["evidencia"] = ("positivas " + resumo.unidades_positivas.astype(str) + "/"
-                           + resumo.unidades_avaliadas.astype(str) + "  ·  cobertas "
-                           + resumo.unidades_avaliadas.astype(str) + "/"
-                           + resumo.unidades_implantaveis.astype(str))
+                           + resumo.unidades_avaliadas.astype(str))
     cols = ["nome", "receptor", "evidencia", "unidades_positivas", "unidades_avaliadas",
             "unidades_implantaveis", "fracao_positiva", "cobertura", "unidades_farm_positivas",
             "unidades_tri_positivas", "unidades_farm_avaliadas", "unidades_tri_avaliadas",

@@ -226,8 +226,12 @@ por convergência.
 - Toda combinação molécula × receptor ganha linha no `_resumo.csv`, inclusive as sem nenhuma cobertura,
   que saem como `nao avaliado`. Antes, um receptor cujas unidades ficassem todas fora do domínio
   desaparecia da saída.
-- A coluna `evidencia` rotula as duas frações (`positivas 1/3  ·  cobertas 3/6`), porque o formato
-  anterior repetia o mesmo número com dois sentidos.
+- A coluna `evidencia` fala só do que foi avaliado (`positivas 1/3`). A cobertura continua no CSV, nas
+  colunas `unidades_implantaveis` e `cobertura`, mas sai da tabela impressa — a decisão foi deixar a
+  tela com o que de fato foi medido. Vale consultá-las antes de comparar duas moléculas: no painel, 33
+  dos 83 pares avaliados pertencem a grupos de mesmo nível e mesma fração positiva cuja cobertura varia
+  mais de 0,40 (`Ibuprofeno · ERβ` tem cobertura 0,25 e `17β-Estradiol · TR` tem 1,00, e ambos saem
+  "positivas 1/1"). A linha impressa acima da tabela dá a cobertura agregada da execução.
 - O `_resumo.csv` passou a `evidencia`, `unidades_positivas`, `unidades_avaliadas`,
   `unidades_implantaveis`, `fracao_positiva`, `cobertura`, `concordancia`, `direcao` e `alerta`.
 - A tela informa quantas unidades de evidência puderam votar, do total disponível.
