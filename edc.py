@@ -288,7 +288,9 @@ OS DOIS EIXOS
   coisas nao se substituem, e por isso o nivel mais alto exige as duas.
 
 COLUNAS DO _resumo.csv
-  evidencia                leitura direta, ex. "3/6 unidades (6/9 cobertas)"
+  evidencia                leitura direta, ex. "positivas 1/3  ·  cobertas 3/6":
+                           1 unidade positiva entre as 3 avaliadas, e 3 unidades
+                           avaliadas entre as 6 que existem para aquele receptor
   unidades_positivas       unidades de evidencia positivas
   unidades_avaliadas       unidades que puderam ser avaliadas
   unidades_implantaveis    teto do receptor: unidades que existem
