@@ -1,0 +1,10 @@
+etapa,registros
+"0. brutos (4 medidas, 7 alvos)",31792
+1. alvo de cadeia unica,31148
+2. organismo humano,29427
+3. uma linha por registro x medida,29952
+4. valor nao censurado (sem < nem >),25835
+5. faixa plausivel (1e-3 a 1e7 nM),25788
+6. com estrutura,25788
+7. procedencia fora do ChEMBL,6694
+8. estrutura padronizada valida,6684
