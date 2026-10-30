@@ -42,6 +42,14 @@ models_layers,PPARG_Kd_B_classificacao,classificacao,True,65,,,True,n=65 < 200,F
 models_layers,PPARG_Kd_B_regressao,regressao,True,65,0.727,,True,n=65 < 200,False
 models_layers,PPARG_Ki_B_classificacao,classificacao,False,466,,,False,aprovado,False
 models_layers,PPARG_Ki_B_regressao,regressao,False,466,0.609,,False,aprovado,False
+models_layers,PXR_EC50_A_classificacao,classificacao,False,298,,,False,aprovado,False
+models_layers,PXR_EC50_A_regressao,regressao,False,298,0.612,,False,aprovado,False
+models_layers,PXR_EC50_B_classificacao,classificacao,False,267,,,False,aprovado,False
+models_layers,PXR_EC50_B_regressao,regressao,False,267,0.354,,False,aprovado,False
+models_layers,PXR_EC50_F_classificacao,classificacao,True,62,,,True,n=62 < 200,False
+models_layers,PXR_EC50_F_regressao,regressao,True,62,0.62,,True,n=62 < 200,False
+models_layers,PXR_IC50_B_classificacao,classificacao,True,176,,,True,n=176 < 200,False
+models_layers,PXR_IC50_B_regressao,regressao,True,176,0.477,,True,n=176 < 200,False
 models_layers,THRA_EC50_B_classificacao,classificacao,True,111,,,True,n=111 < 200,False
 models_layers,THRA_EC50_B_regressao,regressao,True,111,0.471,,True,n=111 < 200,False
 models_layers,THRA_Ki_B_classificacao,classificacao,True,80,,,True,n=80 < 200,False
@@ -59,4 +67,5 @@ models_tox21,TOX21_ESR1_antagonista_HEK293T,classificacao,False,4870,,,False,sem
 models_tox21,TOX21_ESR1_antagonista_VM7,classificacao,False,4816,,,False,sem metrica de validacao gravada (nao avaliavel),False
 models_tox21,TOX21_PPARG_agonista_HEK293,classificacao,False,5776,,,False,sem metrica de validacao gravada (nao avaliavel),False
 models_tox21,TOX21_PPARG_antagonista_HEK293,classificacao,False,4522,,,False,sem metrica de validacao gravada (nao avaliavel),False
+models_tox21,TOX21_PXR_agonista_HepG2,classificacao,False,5924,,,False,sem metrica de validacao gravada (nao avaliavel),False
 models_tox21,TOX21_TR_antagonista_GH3,classificacao,False,3457,,,False,sem metrica de validacao gravada (nao avaliavel),False

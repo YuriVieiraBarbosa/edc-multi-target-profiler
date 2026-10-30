@@ -6,6 +6,10 @@ Camadas independentes, nunca fundidas:
   - ChEMBL Ki/EC50 (models_layers/) regressão de pKi / pEC50 + classificação
   - Tox21 qHTS     (models_tox21/)  classificação por ensaio, química ambiental
 
+Receptores cobertos: AR, ERalfa, ERbeta, PPARgama, THRalfa, THRbeta e PXR. O PXR entrou
+depois dos demais (pipeline_pxr.py e pipeline_pxr_tox21.py) e tem os dois eixos, mas só em
+modo agonista no Tox21 — não há contra-ensaio de antagonismo de PXR no programa.
+
 Uso:
     python predict_edc2.py --smiles "CC(C)(c1ccc(O)cc1)c1ccc(O)cc1"
     python predict_edc2.py --input moleculas.csv --smiles-col smiles --name-col nome
@@ -19,8 +23,13 @@ import curation
 import features as F
 
 RECEPTOR = {"AR": "AR", "ESR1": "ERalfa", "ESR2": "ERbeta", "PPARG": "PPARgama",
-            "THRA": "THRalfa", "THRB": "THRbeta", "TR": "THR (nao resolve alfa/beta)"}
-ENSAIO = {"B": "ligacao", "F": "funcional"}
+            "THRA": "THRalfa", "THRB": "THRbeta", "TR": "THR (nao resolve alfa/beta)",
+            "PXR": "PXR (receptor de pregnano X)"}
+# Sufixo de tipo de ensaio do ChEMBL. ATENCAO: o campo assay_type separa mal ligacao de
+# funcional - ha ensaios de reporter em celula rotulados 'B' em todos os alvos, e no PXR o
+# maior grupo funcional vem rotulado 'A'. O rotulo abaixo e o do campo, nao uma garantia do
+# que o ensaio mede; a descricao de cada ensaio esta no dataset curado.
+ENSAIO = {"B": "ligacao", "F": "funcional", "A": "ADMET/reporter", "T": "transativacao"}
 
 
 # Load every .joblib model and tag it with its layer, receptor and task.

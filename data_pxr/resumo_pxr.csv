@@ -1,0 +1,5 @@
+endpoint,medida,assay_type,registros,compostos,descartados_discordantes,compostos_finais,pAct_mediana,frac_ativos,frac_antagonista,ensaios
+PXR_EC50_A,EC50,A,412,308,10,298,5.55,0.309,0.0,35
+PXR_EC50_B,EC50,B,297,270,3,267,5.7,0.352,0.019,58
+PXR_IC50_B,IC50,B,340,202,26,176,5.89,0.443,0.438,22
+PXR_EC50_F,EC50,F,64,62,0,62,6.41,0.629,0.194,9

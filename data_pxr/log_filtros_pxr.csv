@@ -1,0 +1,9 @@
+etapa,registros
+"0. brutos (IC50/Ki/Kd/EC50, PXR humano)",1931
+1. confidence_score >= 8,1931
+2. relacao '=',1165
+3. unidade conversivel para nM,1164
+4. faixa plausivel,1164
+5. validade ok,1157
+6. com estrutura,1157
+7. estrutura padronizada valida,1154

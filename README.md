@@ -13,8 +13,31 @@ prever novas moléculas.
 | Receptor de estrógeno alfa / beta | ESR1 / ESR2 |
 | Receptor do hormônio tireoidiano alfa / beta | THRA / THRB (Tox21: TR, sem distinção alfa/beta) |
 | PPAR gama | PPARG |
+| Receptor de pregnano X | PXR (NR1I2) |
 
 O receptor de insulina (IR) ainda não é coberto.
+
+O **PXR** entrou depois dos demais, por `pipeline_pxr.py` (ChEMBL) e `pipeline_pxr_tox21.py` (Tox21).
+Ele não é um receptor hormonal como os outros: é o xenossensor que regula a CYP3A4, e entra porque
+medeia parte do efeito dos desreguladores por indução enzimática e compartilha ligantes com ER, AR e
+PPARγ. Três particularidades dele, todas medidas:
+
+- **O sufixo de tipo de ensaio não indica o que o ensaio mede.** O campo `assay_type` do ChEMBL separa
+  mal ligação de funcional em todos os alvos, mas no PXR isso é extremo: o maior grupo funcional
+  (repórter de CYP3A4 em HepG2/DPX-2) vem rotulado `A` (ADMET), e o `B` mistura deslocamento de BODIPY
+  FL vindoline, que é ligação de verdade, com repórter de luciferase. Descartar o `A`, como o funil das
+  outras camadas faz, jogaria fora 36% dos registros do alvo; fundi-lo ao `B` violaria a regra de nunca
+  misturar ensaios incompatíveis. A saída adotada foi a terceira: **cada `assay_type` é seu próprio
+  endpoint**, que é a mesma regra já aplicada a `B` e `F`, só que estendida. Nenhum endpoint de PXR pode
+  ser chamado de "ligação" ou "funcional" pelo sufixo.
+- **Só há modo agonista na triagem.** O programa Tox21 não tem contra-ensaio de antagonismo de PXR, então
+  a `direcao` do PXR nunca sai como antagonista. A máscara de citotoxicidade **não** é aplicada, porque o
+  projeto só a aplica aos modos antagonistas; as colunas `citotoxico` e `citotox_confunde` são calculadas
+  e gravadas assim mesmo, e 774 dos 2.759 ativos (28%) coincidem com perda de viabilidade.
+- **O BindingDB não acrescenta camada de PXR.** São 2.036 registros, mas 1.530 são reimportação do ChEMBL
+  e, depois do funil, sobram 215 medidas com apenas **31 moléculas** ausentes da camada do ChEMBL. A
+  fração de literatura, a única que a medição do projeto mostrou melhorar o balanço de classes, são 14
+  registros. Abaixo do mínimo de 50 do funil, então nenhum dataset foi gerado.
 
 ## Arquitetura: três camadas independentes
 
@@ -23,8 +46,10 @@ As camadas nunca são fundidas, porque medem coisas diferentes e os ensaios não
 | Camada | Pasta | Modelos | Conteúdo |
 |---|---|---|---|
 | ChEMBL IC50 | `models_final/` | 18 | regressão de pIC50 e classificação, por alvo e tipo de ensaio (ligação `B` ou funcional `F`) |
-| ChEMBL Ki, EC50 e Kd | `models_layers/` | 32 | mesmos alvos, cada medida em seu próprio modelo |
-| Tox21 qHTS | `models_tox21/` | 11 | classificação por ensaio (química ambiental). São 12 ensaios curados e 11 com modelo: o de TR agonista tem só 27 ativos e fica de fora. O contra-ensaio de viabilidade só se aplica aos modos antagonistas, e o de autofluorescência só aos ensaios BLA |
+| ChEMBL Ki, EC50 e Kd | `models_layers/` | 40 | mesmos alvos, cada medida em seu próprio modelo. Inclui os 8 modelos de PXR (`EC50_A`, `EC50_B`, `IC50_B`, `EC50_F`), que não têm medida de Ki nem Kd aproveitável |
+| Tox21 qHTS | `models_tox21/` | 12 | classificação por ensaio (química ambiental). São 13 ensaios curados e 12 com modelo: o de TR agonista tem só 27 ativos e fica de fora. O contra-ensaio de viabilidade só se aplica aos modos antagonistas, e o de autofluorescência só aos ensaios BLA |
+
+São **70 modelos treinados**, dos quais **52 implantáveis**.
 
 ### Regra de alerta
 
@@ -68,7 +93,7 @@ Conferência da instalação:
 # deve imprimir 2180
 .venv/bin/python -c "import features as F; print(2048 + len(F.DESC_NAMES))"
 
-# deve imprimir 'carregados 61'
+# deve imprimir 'carregados 70'
 .venv/bin/python -c "
 import glob, joblib
 print('carregados', sum(bool(joblib.load(f)) for f in glob.glob('models_*/*.joblib')))"
@@ -182,8 +207,10 @@ artefatos guardam:
 | regressão com `R2_teste_scaffold < 0` | reprovado (pior que prever a média) |
 | classificação com `ROC_AUC_teste < 0,60` | reprovado |
 
-Ele reproduz 59 dos 61 flags gravados, divergindo só em `AR_F` (n = 618, Q² = 0,450, R² = 0,076,
-ROC-AUC = 0,772), que passa a ser implantado. Resultado: **47 implantados de 61 treinados**.
+Ele reproduz todos os flags gravados menos dois, divergindo só em `AR_F` (n = 618, Q² = 0,450,
+R² = 0,076, ROC-AUC = 0,772), que passa a ser implantado. Resultado: **52 implantados de 70 treinados**,
+já com os 9 modelos de PXR (5 implantáveis: `PXR_EC50_A` e `PXR_EC50_B` nas duas tarefas, mais o ensaio
+Tox21; `PXR_IC50_B` com n = 176 e `PXR_EC50_F` com n = 62 são reprovados por tamanho).
 `criterio_implantacao.csv` traz o motivo de cada reprovação.
 
 Ressalva importante: **os 11 modelos do Tox21 contam como implantados por ausência de critério**, não
@@ -277,10 +304,17 @@ por convergência.
 - Os votos continuam sem peso: duas unidades positivas valem o mesmo, venham de 2.700 compostos
   (`ESR1_B`) ou de 232 (`AR_EC50_B`). Ponderar exigiria uma medida de confiança comparável entre as
   camadas, que a de triagem não tem.
-- O teto do alerta depende do receptor: "alto" só é atingível em AR, ERα e PPARγ, porque exige um voto de
-  cada camada. ERβ não tem ensaio Tox21 e chega no máximo a "moderado"; THRβ chega a "baixo"; THRα não
-  tem nenhum modelo ChEMBL implantável e não aparece no resumo. Um "sem alerta" não significa o mesmo em
+- O teto do alerta depende do receptor: "alto" só é atingível em AR, ERα, PPARγ e PXR, porque exige um
+  voto de cada camada. ERβ não tem ensaio Tox21 e chega no máximo a "moderado"; THRβ chega a "baixo";
+  THRα não tem nenhum modelo ChEMBL implantável e não aparece no resumo. O PXR é o mais magro dos que
+  alcançam "alto": 2 unidades farmacológicas e 1 de triagem, contra 4 e 4 do ERα. Um "sem alerta" não significa o mesmo em
   receptores diferentes. A coluna `modelos_implantaveis_receptor` deixa esse teto visível.
+- **No PXR, os dois eixos não estão em pé de igualdade no painel de referência.** Das 18 moléculas do
+  `painel_ref.csv`, **14 estão no conjunto de treino do Tox21 PXR e nenhuma no do ChEMBL PXR** (Tanimoto
+  mediano ao vizinho de treino: 1,00 na triagem contra 0,28 no eixo farmacológico). Por isso 13 das 18
+  aparecem como "divergente: triagem positiva, farmacológico negativo" — o modelo de triagem reconhece
+  compostos que já viu, e os farmacológicos estão extrapolando. Esse padrão é da composição do painel, não
+  uma propriedade do PXR, e o painel não serve para estimar desempenho do PXR em moléculas novas.
 - "Ativo" não quer dizer o mesmo em cada camada: no ChEMBL é potência de até 1 µM com limiar de
   probabilidade 0,5; no Tox21 é a chamada do depositante, com limiares otimizados de 0,11 a 0,40. Por
   isso os dois eixos nunca são somados numa fração única.
