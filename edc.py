@@ -254,8 +254,14 @@ O QUE O PROGRAMA FAZ
   possivel desregulacao endocrina. Ele NAO mede nada: e uma triagem
   computacional para priorizar compostos, nunca uma prova de atividade.
 
-  Receptores cobertos: AR, ERalfa (ESR1), ERbeta (ESR2), PPARgama, THRalfa e
-  THRbeta.
+  Receptores cobertos: AR, ERalfa (ESR1), ERbeta (ESR2), PPARgama, THRalfa,
+  THRbeta e PXR (receptor de pregnano X, NR1I2).
+
+  O PXR nao e um receptor hormonal como os outros: e o xenossensor que regula a
+  CYP3A4. Ele entra porque medeia parte do efeito dos desreguladores por inducao
+  enzimatica e compartilha ligantes com ER, AR e PPARgama. No PXR a triagem so
+  tem modo agonista, entao a direcao dele nunca sai como antagonista, e o sufixo
+  de tipo de ensaio (A, B, F) nao indica se o ensaio e de ligacao ou funcional.
 
 COMO USAR
   1) Uma molecula:
@@ -339,7 +345,9 @@ COMO INTERPRETAR - o que o alerta NAO diz
      farmacologico ela fica "nao determinada", e o nivel em si nao separa
      agonismo de antagonismo.
   2. O teto depende do receptor. "Alto" exige convergencia entre os dois
-     eixos, entao so e atingivel onde existem os dois: AR, ERalfa e PPARgama.
+     eixos, entao so e atingivel onde existem os dois: AR, ERalfa, PPARgama e
+     PXR - este ultimo o mais magro dos quatro, com 2 unidades farmacologicas e
+     1 de triagem, contra 4 e 4 do ERalfa.
      ERbeta nao tem ensaio Tox21 e para em moderado; THRalfa nao tem nenhum
      modelo implantavel e nao aparece. A coluna unidades_implantaveis mostra
      esse teto, e por isso ela deve ser lida junto do nivel.
