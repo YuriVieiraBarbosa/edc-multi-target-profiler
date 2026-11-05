@@ -158,11 +158,20 @@ def _estado(g):
 
 
 # One row per molecule x receptor, with both axes side by side and the joint reading.
-def resumir(e):
+# receptores_sem_modelo: receptors that were trained but have NO deployable model, so no unit of
+# theirs reaches `e`. They still get a row (state sem_modelo on both axes, reading "sem cobertura")
+# so that a missing receptor is visible instead of silently absent.
+def resumir(e, receptores_sem_modelo=()):
     # indexa uma vez por (nome, receptor, eixo) em vez de refiltrar o frame a cada par
     blocos = {k: g for k, g in e.groupby(["nome", "receptor", "eixo"], sort=False)}
     vazio = e.iloc[0:0]
-    pares = e[["nome", "receptor"]].drop_duplicates().sort_values(["nome", "receptor"])
+    pares = e[["nome", "receptor"]].drop_duplicates()
+    faltam = [x for x in receptores_sem_modelo if x not in set(e.receptor)]
+    if faltam:
+        extra = pd.DataFrame([(mol, x) for mol in pares.nome.unique() for x in faltam],
+                             columns=["nome", "receptor"])
+        pares = pd.concat([pares, extra], ignore_index=True)
+    pares = pares.sort_values(["nome", "receptor"])
     out = []
     for _, (nome, rec) in pares.iterrows():
         r = dict(nome=nome, receptor=rec)

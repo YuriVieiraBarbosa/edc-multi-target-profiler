@@ -46,9 +46,13 @@ def _criterio(raiz=None):
 
 
 # Load every .joblib, tagging each with its layer, receptor and deployability verdict.
+# A model the criterion rejects is NOT loaded: it never votes, so scoring it would only cost
+# time. They live in models_reprovados/ (documentation only; see arquivar_reprovados.py). If one
+# turns up in a run folder anyway, for example after retraining, it is skipped with a warning.
 def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
     crit = _criterio()
     camadas = []
+    ignorados = []
     for d in model_dirs:
         # The layer is identified by the FOLDER NAME, and each layer has its own filename
         # grammar. Comparing the path as given would mislabel every absolute path, silently
@@ -67,6 +71,9 @@ def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
             m = joblib.load(p)
             base = os.path.basename(p)[:-7]
             rep, motivo = crit.get(base, (bool(m.get("nao_implantavel", False)), ""))
+            if rep:
+                ignorados.append(base)
+                continue
             if pasta == "models_tox21":
                 _, rec, modo, cel = base.split("_", 3)
                 camadas.append({"camada": "Tox21", "receptor": rec, "detalhe": f"{modo}/{cel}",
@@ -84,6 +91,10 @@ def carregar(model_dirs=("models_final", "models_layers", "models_tox21")):
                                 "tarefa": "regressao" if tarefa == "regressao" else "classificacao",
                                 "modelo": m, "chave": base,
                                 "reprovado": rep, "motivo_reprovacao": motivo})
+    if ignorados:
+        print(f"aviso: {len(ignorados)} modelo(s) reprovado(s) estavam nas pastas de execucao e "
+              f"foram ignorados ({', '.join(ignorados[:3])}{', ...' if len(ignorados) > 3 else ''}). "
+              "Rode python arquivar_reprovados.py --aplicar.", file=sys.stderr)
     return camadas
 
 
@@ -278,8 +289,10 @@ def prever(smiles_list, nomes=None, model_dirs=("models_final", "models_layers",
 # consenso_v2 needs (its coverage comes from comparing deployable units against assessed
 # ones); the narrowing is a presentation choice applied at write time.
 #   votantes    linhas que de fato votaram: no dominio e implantavel  (padrao)
-#   implantados os modelos implantados, votando ou nao
-#   todos       os 61, inclusive os reprovados
+#   implantados todos os modelos carregados, votando ou nao
+#   todos       o mesmo que implantados: os reprovados nao sao mais carregados
+#               (ficam em models_reprovados/), entao nao ha o que acrescentar. O nome
+#               continua aceito para nao quebrar quem ja o usa.
 def filtrar_detalhe(det, modo="votantes"):
     if modo not in ("votantes", "implantados", "todos"):
         raise SystemExit(f"modo de detalhe invalido: {modo!r} "
@@ -306,7 +319,8 @@ def main():
     ap.add_argument("--out", default="predicoes_consenso")
     ap.add_argument("--detalhe", choices=("votantes", "implantados", "todos"),
                     default="votantes",
-                    help="quais modelos vao para o _detalhado.csv (padrao: votantes)")
+                    help="quais modelos vao para o _detalhado.csv: votantes (padrao), ou "
+                         "implantados/todos para incluir tambem os que ficaram fora do dominio")
     a = ap.parse_args()
     if a.input:
         df = pd.read_csv(a.input)

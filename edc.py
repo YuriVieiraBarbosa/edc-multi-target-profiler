@@ -29,7 +29,8 @@ ROTULO_CAMADA = {"models_final": "ChEMBL IC50", "models_layers": "ChEMBL Ki/Kd/E
 # Count the .joblib files of each model directory, without loading them.
 def _inventario():
     """Por pasta: (treinados, implantados). Treinado nao e implantado - os reprovados
-    por criterio_implantacao.csv ficam no disco mas nunca votam."""
+    por criterio_implantacao.csv ficam em models_reprovados/, so como documentacao, e
+    nunca sao carregados. 'Treinados' soma as duas pastas; 'implantados' so a de execucao."""
     import pandas as pd
     p = os.path.join(AQUI, "criterio_implantacao.csv")
     rep = set()
@@ -39,8 +40,20 @@ def _inventario():
     inv = {}
     for d in PASTAS_MODELO:
         ids = [os.path.basename(f)[:-7] for f in glob.glob(os.path.join(AQUI, d, "*.joblib"))]
-        inv[d] = (len(ids), sum(1 for i in ids if i not in rep))
+        arq = glob.glob(os.path.join(AQUI, "models_reprovados", d, "*.joblib"))
+        inv[d] = (len(ids) + len(arq), sum(1 for i in ids if i not in rep))
     return inv
+
+
+# Receptors that were trained but have no deployable model, read from the archive's documentation.
+def _receptores_sem_modelo(det):
+    import pandas as pd
+    p = os.path.join(AQUI, "models_reprovados", "LEIAME_reprovados.csv")
+    if not os.path.exists(p):
+        return []
+    # o receptor e o primeiro trecho do id do modelo, a mesma regra de predict_edc2.carregar
+    documentados = {m.split("_")[0] for m in pd.read_csv(p).modelo_id}
+    return sorted(documentados - set(det.receptor))
 
 
 # Resolve the output prefix; with no --saida, create resultados/<timestamp>_<name>/.
@@ -211,8 +224,8 @@ def cmd_testar(a, ap):
         print(f"Votaram {vot} de {impl} modelos implantados, que formam {votaram} de {teto} "
               f"unidades de evidencia ({votaram / teto:.0%} de cobertura).")
         if a.detalhe == "votantes":
-            print(f"O _detalhado.csv traz so esses {vot}. Use --detalhe implantados ou "
-                  "--detalhe todos para ver os que nao votaram e por que.")
+            print(f"O _detalhado.csv traz so esses {vot}. Use --detalhe implantados "
+                  "para ver os que ficaram fora do dominio e por que.")
         _mostrar(res[colunas], coluna_cor="alerta", usar_cor=cor,
                  arquivo=f"{prefixo}_resumo.csv")
         if cor:
@@ -231,7 +244,7 @@ def cmd_testar(a, ap):
             import consenso_v2
             # a tabela COMPLETA, porque a cobertura do v2 compara implantaveis com avaliados
             e = consenso_v2.por_endpoint(consenso_v2.carregar(det_completo), unidade=a.unidade)
-            r = consenso_v2.resumir(e)
+            r = consenso_v2.resumir(e, receptores_sem_modelo=_receptores_sem_modelo(det_completo))
             r.to_csv(f"{prefixo}_eixos_resumo.csv", index=False)
             e.to_csv(f"{prefixo}_eixos_unidades.csv", index=False)
             print(f"\nLeitura em dois eixos (unidade de voto: {a.unidade}):")
@@ -284,9 +297,10 @@ COMO O RESULTADO E FORMADO
   dominio de aplicabilidade. Um modelo fora do dominio NAO vota, e tambem NAO
   conta como voto inativo - por isso a cobertura aparece ao lado do nivel.
 
-  O _detalhado.csv traz por padrao SO os modelos que votaram. Para ver os que
-  ficaram de fora e o motivo de cada um (coluna motivo_nao_voto), use
-  --detalhe implantados (os 47) ou --detalhe todos (os 61, com os reprovados).
+  O _detalhado.csv traz por padrao SO os modelos que votaram. Para ver tambem os
+  que ficaram de fora do dominio e o motivo (coluna motivo_nao_voto), use
+  --detalhe implantados. Os modelos reprovados nao sao carregados: ficam em
+  models_reprovados/ so como documentacao, com o motivo de cada um.
 
 UNIDADES DE EVIDENCIA - por que um modelo nao e uma evidencia
   Contar um voto por modelo exagera a evidencia, porque ha duas redundancias
@@ -393,7 +407,8 @@ def cmd_explicar(a, ap):
     for d, (t, i) in inv.items():
         print(f"  {ROTULO_CAMADA[d]:22s} {i:3d} / {t:<3d}  ({d}/)")
     print(f"  {'TOTAL':22s} {impl:3d} / {total:<3d}")
-    print("  Treinado nao e implantado: os reprovados ficam no disco e nunca votam.")
+    print("  Treinado nao e implantado: os reprovados ficam em models_reprovados/ so como")
+    print("  documentacao e nunca sao carregados.")
     print("  Os do Tox21 contam como implantados por AUSENCIA de metrica de validacao")
     print("  gravada, nao por terem passado em um criterio. Motivo por modelo em")
     print("  criterio_implantacao.csv.")

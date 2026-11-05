@@ -1,0 +1,19 @@
+modelo_id,pasta_de_origem,tarefa,n,metrica_cv,metrica_teste,motivo
+ESR1_F_classificacao,models_final,classificacao,156,0.871658483360611,0.9402173913043478,n=156 < 200
+ESR1_F_regressao,models_final,regressao,156,0.5892318500573945,-0.2568154101678048,n=156 < 200
+THRA_B_classificacao,models_final,classificacao,220,0.9573253193087904,0.5279411764705881,ROC_AUC_teste=0.528 < 0.60
+THRA_B_regressao,models_final,regressao,220,0.7199904085447797,-0.0647787039891398,R2_teste_scaffold=-0.065 < 0.00
+AR_EC50_F_regressao,models_layers,regressao,271,0.276,,Q2_cv=0.276 < 0.30
+PPARG_Kd_B_classificacao,models_layers,classificacao,65,,,n=65 < 200
+PPARG_Kd_B_regressao,models_layers,regressao,65,0.727,,n=65 < 200
+PXR_EC50_F_classificacao,models_layers,classificacao,62,,,n=62 < 200
+PXR_EC50_F_regressao,models_layers,regressao,62,0.62,,n=62 < 200
+PXR_IC50_B_classificacao,models_layers,classificacao,176,,,n=176 < 200
+PXR_IC50_B_regressao,models_layers,regressao,176,0.477,,n=176 < 200
+THRA_EC50_B_classificacao,models_layers,classificacao,111,,,n=111 < 200
+THRA_EC50_B_regressao,models_layers,regressao,111,0.471,,n=111 < 200
+THRA_Ki_B_classificacao,models_layers,classificacao,80,,,n=80 < 200
+THRA_Ki_B_regressao,models_layers,regressao,80,0.361,,n=80 < 200
+THRB_EC50_B_classificacao,models_layers,classificacao,134,,,n=134 < 200
+THRB_EC50_B_regressao,models_layers,regressao,134,0.678,,n=134 < 200
+THRB_Ki_B_regressao,models_layers,regressao,104,0.54,,n=104 < 200

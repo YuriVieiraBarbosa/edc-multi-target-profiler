@@ -45,11 +45,14 @@ As camadas nunca são fundidas, porque medem coisas diferentes e os ensaios não
 
 | Camada | Pasta | Modelos | Conteúdo |
 |---|---|---|---|
-| ChEMBL IC50 | `models_final/` | 18 | regressão de pIC50 e classificação, por alvo e tipo de ensaio (ligação `B` ou funcional `F`) |
-| ChEMBL Ki, EC50 e Kd | `models_layers/` | 40 | mesmos alvos, cada medida em seu próprio modelo. Inclui os 8 modelos de PXR (`EC50_A`, `EC50_B`, `IC50_B`, `EC50_F`), que não têm medida de Ki nem Kd aproveitável |
+| ChEMBL IC50 | `models_final/` | 14 (+4 arquivados) | regressão de pIC50 e classificação, por alvo e tipo de ensaio (ligação `B` ou funcional `F`) |
+| ChEMBL Ki, EC50 e Kd | `models_layers/` | 26 (+14 arquivados) | mesmos alvos, cada medida em seu próprio modelo. O PXR tem 4 modelos aqui (`EC50_A`, `EC50_B`) e 4 arquivados (`IC50_B`, `EC50_F`); ele não tem medida de Ki nem Kd aproveitável |
 | Tox21 qHTS | `models_tox21/` | 12 | classificação por ensaio (química ambiental). São 13 ensaios curados e 12 com modelo: o de TR agonista tem só 27 ativos e fica de fora. O contra-ensaio de viabilidade só se aplica aos modos antagonistas, e o de autofluorescência só aos ensaios BLA |
 
-São **70 modelos treinados**, dos quais **52 implantáveis**.
+São **70 modelos treinados**. Os **52 implantáveis** ficam nas três pastas acima e são os únicos que o
+programa carrega. Os **18 reprovados** ficam em `models_reprovados/`, **só como documentação**: o
+preditor não os lê, então eles não custam tempo de execução. Cada um está descrito em
+`models_reprovados/LEIAME_reprovados.csv`.
 
 ### Regra de alerta
 
@@ -93,7 +96,7 @@ Conferência da instalação:
 # deve imprimir 2180
 .venv/bin/python -c "import features as F; print(2048 + len(F.DESC_NAMES))"
 
-# deve imprimir 'carregados 70'
+# deve imprimir 'carregados 52' (os 18 reprovados ficam em models_reprovados/ e nao entram na conta)
 .venv/bin/python -c "
 import glob, joblib
 print('carregados', sum(bool(joblib.load(f)) for f in glob.glob('models_*/*.joblib')))"
@@ -170,7 +173,9 @@ python predict_edc2.py --smiles "CC(C)(c1ccc(O)cc1)c1ccc(O)cc1"           # uma 
 | `modeling.py`, `modeling_layers.py`, `modeling_tox21.py` | treino e validação por camada |
 | `finalize_models.py`, `conformal.py` | modelos finais e predição conformal com limiar de decisão otimizado |
 | `datasets_camadas_por_endpoint/`, `datasets_tox21_por_ensaio/` | datasets curados de Ki/EC50/Kd e de Tox21 usados no treino |
-| `models_final/`, `models_layers/`, `models_tox21/` | modelos treinados (cerca de 110 MB) |
+| `models_final/`, `models_layers/`, `models_tox21/` | os 52 modelos implantáveis, os únicos que o programa carrega (cerca de 110 MB) |
+| `models_reprovados/` | os 18 modelos reprovados, só como documentação, com `LEIAME_reprovados.csv` (cerca de 11 MB) |
+| `arquivar_reprovados.py` | move os reprovados para `models_reprovados/` e devolve à execução os que passarem a ser aprovados |
 
 Não estão incluídos: os dumps brutos do ChEMBL e do BindingDB, necessários para refazer a extração, e os
 datasets curados da camada IC50.
@@ -211,9 +216,16 @@ Ele reproduz todos os flags gravados menos dois, divergindo só em `AR_F` (n = 6
 R² = 0,076, ROC-AUC = 0,772), que passa a ser implantado. Resultado: **52 implantados de 70 treinados**,
 já com os 9 modelos de PXR (5 implantáveis: `PXR_EC50_A` e `PXR_EC50_B` nas duas tarefas, mais o ensaio
 Tox21; `PXR_IC50_B` com n = 176 e `PXR_EC50_F` com n = 62 são reprovados por tamanho).
-`criterio_implantacao.csv` traz o motivo de cada reprovação.
+`criterio_implantacao.csv` traz o motivo de cada reprovação e, na coluna `local`, onde o modelo está.
 
-Ressalva importante: **os 11 modelos do Tox21 contam como implantados por ausência de critério**, não
+**Os reprovados não são carregados.** Um modelo reprovado nunca vota, então carregá-lo e aplicá-lo a toda
+molécula só para descartar o resultado era custo sem uso (324 das 1.260 previsões do painel). Eles ficam em
+`models_reprovados/`, e o `predict_edc2.py` ignora com aviso qualquer reprovado que reapareça nas pastas de
+execução. "Reprovado" quase sempre quer dizer **pouco dado**, e não modelo ruim: 15 dos 18 falham só em
+`n < 200`, um corte do projeto que não foi validado. Depois de retreinar, o fluxo é
+`python criterio_implantacao.py` e `python arquivar_reprovados.py --aplicar`.
+
+Ressalva importante: **os 12 modelos do Tox21 contam como implantados por ausência de critério**, não
 por terem passado em um — nem os `.joblib` nem o `LEIAME_modelos_tox21.csv` guardam métrica de
 validação. Isso precisa ser dito em qualquer relatório que use a camada de triagem.
 
@@ -246,8 +258,8 @@ por convergência.
 **Saída**
 
 - O `_detalhado.csv` traz **apenas os modelos que votaram**. `--detalhe implantados` acrescenta os que
-  não votaram por estarem fora do domínio, e `--detalhe todos` acrescenta também os reprovados. Para o
-  bisfenol A isso dá 27, 47 e 61 linhas. A tabela completa continua sendo usada internamente pelo
+  não votaram por estarem fora do domínio. `--detalhe todos` é aceito e dá o mesmo resultado, porque os
+  reprovados não são mais carregados. A tabela completa continua sendo usada internamente pelo
   `--eixos`, cuja cobertura depende de comparar as unidades implantáveis com as avaliadas.
 - Coluna nova `motivo_nao_voto`: `modelo reprovado (<motivo>)` ou `molecula fora do dominio`.
 - Toda combinação molécula × receptor ganha linha no `_resumo.csv`, inclusive as sem nenhuma cobertura,
@@ -289,7 +301,7 @@ por convergência.
 
 **Reprodutibilidade do que está implantado** — não é corrigível por mudança de código:
 
-- Os 18 modelos de `models_final/` **não são regeráveis por nenhum script da pasta**. O
+- Os 18 modelos de `models_final/` (14 em execução e 4 arquivados em `models_reprovados/`) **não são regeráveis por nenhum script da pasta**. O
   `LEIAME_calibracao.csv` tem colunas (`limiar_producao`, `ganho_limiar`, `conformal_modo`,
   `cobertura_scaffold`) que o `conformal.py` não produz; ele grava outro arquivo,
   `results/conformal_e_limiares.csv`. O script que fecha essa etapa não está no repositório, e reescrevê-lo
@@ -306,7 +318,8 @@ por convergência.
   camadas, que a de triagem não tem.
 - O teto do alerta depende do receptor: "alto" só é atingível em AR, ERα, PPARγ e PXR, porque exige um
   voto de cada camada. ERβ não tem ensaio Tox21 e chega no máximo a "moderado"; THRβ chega a "baixo";
-  THRα não tem nenhum modelo ChEMBL implantável e não aparece no resumo. O PXR é o mais magro dos que
+  THRα não tem nenhum modelo ChEMBL implantável e não aparece no `_resumo.csv` (a leitura em dois eixos, com
+  `--eixos`, mostra o THRα como `sem cobertura`, porque sabe pela documentação dos arquivados que ele existe). O PXR é o mais magro dos que
   alcançam "alto": 2 unidades farmacológicas e 1 de triagem, contra 4 e 4 do ERα. Um "sem alerta" não significa o mesmo em
   receptores diferentes. A coluna `modelos_implantaveis_receptor` deixa esse teto visível.
 - **No PXR, os dois eixos não estão em pé de igualdade no painel de referência.** Das 18 moléculas do
@@ -318,8 +331,8 @@ por convergência.
 - "Ativo" não quer dizer o mesmo em cada camada: no ChEMBL é potência de até 1 µM com limiar de
   probabilidade 0,5; no Tox21 é a chamada do depositante, com limiares otimizados de 0,11 a 0,40. Por
   isso os dois eixos nunca são somados numa fração única.
-- A camada Tox21 não tem métrica de validação gravada, então seus 11 modelos nunca foram submetidos ao
-  critério de implantação. São 11 das 47 unidades que votam.
+- A camada Tox21 não tem métrica de validação gravada, então seus 12 modelos nunca foram submetidos ao
+  critério de implantação. São 12 das 52 unidades que votam.
 - O `painel_ref.csv` **não é um conjunto de avaliação cego**: 59,9% dos votos que contam vêm de modelos
   que já tinham a molécula no próprio treino (84,3% no eixo de triagem). Ele serve para conferir o
   mecanismo do consenso, nunca para estimar acerto em moléculas novas.
