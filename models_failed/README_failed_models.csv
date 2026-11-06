@@ -1,0 +1,19 @@
+model_id,origin_folder,task,n,cv_metric,test_metric,reason
+ESR1_F_classification,models_final,classification,156,0.871658483360611,0.9402173913043478,n=156 < 200
+ESR1_F_regression,models_final,regression,156,0.5892318500573945,-0.2568154101678048,n=156 < 200
+THRA_B_classification,models_final,classification,220,0.9573253193087904,0.5279411764705881,ROC_AUC_test=0.528 < 0.60
+THRA_B_regression,models_final,regression,220,0.7199904085447797,-0.0647787039891398,R2_test_scaffold=-0.065 < 0.00
+AR_EC50_F_regression,models_layers,regression,271,0.276,,Q2_cv=0.276 < 0.30
+PPARG_Kd_B_classification,models_layers,classification,65,,,n=65 < 200
+PPARG_Kd_B_regression,models_layers,regression,65,0.727,,n=65 < 200
+PXR_EC50_F_classification,models_layers,classification,62,,,n=62 < 200
+PXR_EC50_F_regression,models_layers,regression,62,0.62,,n=62 < 200
+PXR_IC50_B_classification,models_layers,classification,176,,,n=176 < 200
+PXR_IC50_B_regression,models_layers,regression,176,0.477,,n=176 < 200
+THRA_EC50_B_classification,models_layers,classification,111,,,n=111 < 200
+THRA_EC50_B_regression,models_layers,regression,111,0.471,,n=111 < 200
+THRA_Ki_B_classification,models_layers,classification,80,,,n=80 < 200
+THRA_Ki_B_regression,models_layers,regression,80,0.361,,n=80 < 200
+THRB_EC50_B_classification,models_layers,classification,134,,,n=134 < 200
+THRB_EC50_B_regression,models_layers,regression,134,0.678,,n=134 < 200
+THRB_Ki_B_regression,models_layers,regression,104,0.54,,n=104 < 200

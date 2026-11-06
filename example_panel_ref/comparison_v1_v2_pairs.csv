@@ -1,0 +1,127 @@
+name,receptor,reading,direction,pharm_state,pharm_endpoints_available,pharm_endpoints_assessed,pharm_endpoints_positive,pharm_best_endpoint,pharm_best_prob,pharm_best_base,pharm_pAct_best,pharm_pAct_best_inf,pharm_pAct_best_sup,pharm_tanimoto_max,pharm_positive_measures,pharm_positive_modes,tox_state,tox_endpoints_available,tox_endpoints_assessed,tox_endpoints_positive,tox_best_endpoint,tox_best_prob,tox_best_base,tox_pAct_best,tox_pAct_best_inf,tox_pAct_best_sup,tox_tanimoto_max,tox_positive_measures,tox_positive_modes,alert_n,layers_assessed,layers_active,active_fraction
+Bisphenol A,AR,"divergent: screening positive, pharmacological negative",antagonist,negative,3,1,0,AR_B,0.0590000003576278,classification,5.28000020980835,4.480000019073486,6.079999923706055,1.0,,,positive,4,4,2,TOX21_AR_antagonist_HEK293T,0.9319999814033508,classification,,,,1.0,AC50,antagonist,low,6.0,2.0,0.33
+Bisphenol S,AR,only screening positive (no pharmacological coverage),antagonist,not_assessed,3,0,0,,,,,,,0.333,,,positive,4,4,1,TOX21_AR_antagonist_HEK293T,0.7960000038146973,classification,,,,1.0,AC50,antagonist,low,4.0,1.0,0.25
+4-Nonylphenol,AR,only screening positive (no pharmacological coverage),antagonist,not_assessed,3,0,0,,,,,,,0.31,,,positive,4,4,1,TOX21_AR_antagonist_HEK293T,0.796999990940094,classification,,,,1.0,AC50,antagonist,low,4.0,1.0,0.25
+DEHP,AR,negative only on the screening axis (partial coverage),undetermined,not_assessed,3,0,0,,,,,,,0.238,,,negative,4,4,0,TOX21_AR_antagonist_HEK293T,0.0879999995231628,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+DBP,AR,negative only on the screening axis (partial coverage),undetermined,not_assessed,3,0,0,,,,,,,0.292,,,negative,4,4,0,TOX21_AR_antagonist_HEK293T,0.1120000034570694,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+p-p-DDT,AR,only screening positive (no pharmacological coverage),antagonist,not_assessed,3,0,0,,,,,,,0.222,,,positive,4,4,1,TOX21_AR_antagonist_HEK293T,0.4699999988079071,classification,,,,1.0,AC50,antagonist,low,4.0,1.0,0.25
+Methoxychlor,AR,only screening positive (no pharmacological coverage),antagonist,not_assessed,3,0,0,,,,,,,0.333,,,positive,4,4,2,TOX21_AR_antagonist_HEK293T,0.6959999799728394,classification,,,,1.0,AC50,antagonist,moderate,4.0,2.0,0.5
+Vinclozolin,AR,only screening positive (no pharmacological coverage),antagonist,not_assessed,3,0,0,,,,,,,0.388,,,positive,4,4,2,TOX21_AR_antagonist_MDA,0.8320000171661377,classification,,,,1.0,AC50,antagonist,moderate,4.0,2.0,0.5
+Atrazine,AR,negative only on the screening axis (partial coverage),undetermined,not_assessed,3,0,0,,,,,,,0.19,,,negative,4,4,0,TOX21_AR_antagonist_HEK293T,0.0740000009536743,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Genistein,AR,only screening positive (no pharmacological coverage),antagonist,not_assessed,3,0,0,,,,,,,0.37,,,positive,4,4,1,TOX21_AR_antagonist_HEK293T,0.9070000052452089,classification,,,,1.0,AC50,antagonist,low,4.0,1.0,0.25
+Zearalenone,AR,only screening positive (no pharmacological coverage),antagonist,not_assessed,3,0,0,,,,,,,0.222,,,positive,4,3,1,TOX21_AR_antagonist_HEK293T,0.2540000081062317,classification,,,,1.0,AC50,antagonist,low,3.0,1.0,0.33
+Triclosan,AR,only screening positive (no pharmacological coverage),"agonist, antagonist",not_assessed,3,0,0,,,,,,,0.333,,,positive,4,4,3,TOX21_AR_agonist_HEK293T,0.652,classification,,,,1.0,AC50,"agonist, antagonist",moderate,4.0,3.0,0.75
+Rosiglitazone,AR,negative only on the screening axis (partial coverage),undetermined,not_assessed,3,0,0,,,,,,,0.239,,,negative,4,4,0,TOX21_AR_antagonist_HEK293T,0.1190000027418136,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Flutamide,AR,convergent positive,antagonist,positive,3,2,2,AR_Ki_B,0.894,classification,7.51,6.79,8.24,0.612,"IC50, Ki",,positive,4,4,2,TOX21_AR_antagonist_MDA,0.6710000038146973,classification,,,,1.0,AC50,antagonist,high,8.0,5.0,0.62
+17beta-Estradiol,AR,convergent positive,"agonist, antagonist",positive,3,1,1,AR_B,0.8690000176429749,classification,7.5,6.699999809265137,8.300000190734863,1.0,IC50,,positive,4,4,3,TOX21_AR_antagonist_HEK293T,0.9480000138282776,classification,,,,1.0,AC50,"agonist, antagonist",high,6.0,5.0,0.83
+Caffeine,AR,negative only on the screening axis (partial coverage),undetermined,not_assessed,3,0,0,,,,,,,0.17,,,negative,4,4,0,TOX21_AR_antagonist_HEK293T,0.0219999998807907,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Sucrose,AR,negative only on the screening axis (partial coverage),undetermined,not_assessed,3,0,0,,,,,,,0.125,,,negative,4,4,0,TOX21_AR_antagonist_HEK293T,0.0350000001490116,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Ibuprofen,AR,negative only on the screening axis (partial coverage),undetermined,not_assessed,3,0,0,,,,,,,0.306,,,negative,4,4,0,TOX21_AR_antagonist_HEK293T,0.0359999984502792,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Bisphenol A,ESR1,convergent positive,"agonist, antagonist",positive,4,4,4,ESR1_Ki_B,0.935,classification,7.070000171661377,6.090000152587891,8.050000190734863,1.0,"EC50, IC50, Ki",,positive,4,4,3,TOX21_ESR1_agonist_VM7,0.99,classification,,,,1.0,AC50,"agonist, antagonist",high,12.0,10.0,0.83
+Bisphenol S,ESR1,convergent positive,agonist,positive,4,3,1,ESR1_EC50_B,0.534,classification,6.349999904632568,5.369999885559082,7.329999923706055,0.464,EC50,,positive,4,4,2,TOX21_ESR1_agonist_VM7,0.772,classification,,,,1.0,AC50,agonist,high,10.0,5.0,0.5
+4-Nonylphenol,ESR1,convergent positive,"agonist, antagonist",positive,4,4,3,ESR1_EC50_F,0.975000023841858,classification,6.989999771118164,6.019999980926514,7.96999979019165,1.0,"EC50, IC50, Ki",,positive,4,4,3,TOX21_ESR1_agonist_VM7,0.962,classification,,,,1.0,AC50,"agonist, antagonist",high,12.0,9.0,0.75
+DEHP,ESR1,negative only on the screening axis (partial coverage),undetermined,not_assessed,4,0,0,,,,,,,0.283,,,negative,4,4,0,TOX21_ESR1_antagonist_HEK293T,0.0160000007599592,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+DBP,ESR1,convergent negative,undetermined,negative,4,1,0,ESR1_EC50_B,0.286,classification,5.6,4.45,6.74,0.35,,,negative,4,4,0,TOX21_ESR1_agonist_VM7,0.08,classification,,,,1.0,,,no alert,6.0,0.0,0.0
+p-p-DDT,ESR1,convergent positive,"agonist, antagonist",positive,4,2,1,ESR1_EC50_B,0.558,classification,6.38,5.24,7.53,0.609,EC50,,positive,4,4,2,TOX21_ESR1_agonist_VM7,0.832,classification,,,,1.0,AC50,"agonist, antagonist",high,8.0,4.0,0.5
+Methoxychlor,ESR1,convergent positive,"agonist, antagonist",positive,4,2,1,ESR1_EC50_B,0.542,classification,6.369999885559082,5.539999961853027,7.210000038146973,0.519,EC50,,positive,4,4,2,TOX21_ESR1_antagonist_HEK293T,0.8840000033378601,classification,,,,1.0,AC50,"agonist, antagonist",high,8.0,5.0,0.62
+Vinclozolin,ESR1,only screening positive (no pharmacological coverage),antagonist,not_assessed,4,0,0,,,,,,,0.197,,,positive,4,4,1,TOX21_ESR1_antagonist_HEK293T,0.1199999973177909,classification,,,,1.0,AC50,antagonist,low,4.0,1.0,0.25
+Atrazine,ESR1,negative only on the screening axis (partial coverage),undetermined,not_assessed,4,0,0,,,,,,,0.351,,,negative,4,4,0,TOX21_ESR1_agonist_VM7,0.058,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Genistein,ESR1,convergent positive,"agonist, antagonist",positive,4,4,2,ESR1_EC50_F,0.9819999933242798,classification,6.829999923706055,6.03000020980835,7.639999866485596,1.0,"EC50, Ki",,positive,4,4,3,TOX21_ESR1_agonist_VM7,0.968,classification,,,,1.0,AC50,"agonist, antagonist",high,12.0,8.0,0.67
+Zearalenone,ESR1,"divergent: screening positive, pharmacological negative","agonist, antagonist",negative,4,2,0,ESR1_EC50_B,0.24,classification,5.72,4.57,6.86,0.725,,,positive,4,4,4,TOX21_ESR1_antagonist_HEK293T,0.8560000061988831,classification,,,,1.0,AC50,"agonist, antagonist",moderate,8.0,4.0,0.5
+Triclosan,ESR1,only screening positive (no pharmacological coverage),antagonist,not_assessed,4,0,0,,,,,,,0.294,,,positive,4,4,2,TOX21_ESR1_antagonist_HEK293T,0.9300000071525574,classification,,,,1.0,AC50,antagonist,moderate,4.0,2.0,0.5
+Rosiglitazone,ESR1,"divergent: screening positive, pharmacological negative",antagonist,negative,4,1,0,ESR1_EC50_B,0.138,classification,5.21,4.06,6.35,0.377,,,positive,4,4,1,TOX21_ESR1_antagonist_HEK293T,0.7710000276565552,classification,,,,1.0,AC50,antagonist,low,6.0,1.0,0.17
+Flutamide,ESR1,only screening positive (no pharmacological coverage),antagonist,not_assessed,4,0,0,,,,,,,0.276,,,positive,4,4,2,TOX21_ESR1_antagonist_HEK293T,0.8140000104904175,classification,,,,1.0,AC50,antagonist,moderate,4.0,2.0,0.5
+17beta-Estradiol,ESR1,convergent positive,"agonist, antagonist",positive,4,4,4,ESR1_B,0.9940000176429749,classification,9.119999885559082,8.319999694824219,9.93000030517578,0.717,"EC50, IC50, Ki",,positive,4,4,3,TOX21_ESR1_agonist_HEK293T,0.988,classification,,,,1.0,AC50,"agonist, antagonist",high,12.0,11.0,0.92
+Caffeine,ESR1,negative only on the screening axis (partial coverage),undetermined,not_assessed,4,0,0,,,,,,,0.23,,,negative,4,4,0,TOX21_ESR1_agonist_VM7,0.015,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Sucrose,ESR1,negative only on the screening axis (partial coverage),undetermined,not_assessed,4,0,0,,,,,,,0.311,,,negative,4,4,0,TOX21_ESR1_agonist_VM7,0.01,classification,,,,1.0,,,no alert,4.0,0.0,0.0
+Ibuprofen,ESR1,"divergent: pharmacological positive, screening negative",undetermined,positive,4,3,1,ESR1_EC50_F,0.859000027179718,classification,7.090000152587891,6.110000133514404,8.069999694824219,0.424,EC50,,negative,4,4,0,TOX21_ESR1_agonist_VM7,0.042,classification,,,,1.0,,,low,10.0,2.0,0.2
+Bisphenol A,ESR2,only pharmacological positive (no screening coverage),undetermined,positive,4,3,3,ESR2_EC50_F,0.954,classification,8.369999885559082,7.360000133514404,9.380000114440918,1.0,"EC50, IC50",,no_model,0,0,0,,,,,,,,,,moderate,6.0,6.0,1.0
+Bisphenol S,ESR2,negative only on the pharmacological axis (partial coverage),undetermined,negative,4,1,0,ESR2_B,0.444,classification,5.130000114440918,4.210000038146973,6.059999942779541,0.421,,,no_model,0,0,0,,,,,,,,,,no alert,2.0,0.0,0.0
+4-Nonylphenol,ESR2,only pharmacological positive (no screening coverage),undetermined,positive,4,3,3,ESR2_EC50_F,0.874,classification,7.489999771118164,6.480000019073486,8.510000228881836,0.565,"EC50, IC50",,no_model,0,0,0,,,,,,,,,,moderate,6.0,6.0,1.0
+DEHP,ESR2,no coverage,undetermined,not_assessed,4,0,0,,,,,,,0.279,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+DBP,ESR2,no coverage,undetermined,not_assessed,4,0,0,,,,,,,0.35,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+p-p-DDT,ESR2,negative only on the pharmacological axis (partial coverage),undetermined,negative,4,1,0,ESR2_B,0.42,classification,5.78000020980835,4.860000133514404,6.710000038146973,0.609,,,no_model,0,0,0,,,,,,,,,,no alert,2.0,0.0,0.0
+Methoxychlor,ESR2,negative only on the pharmacological axis (partial coverage),undetermined,negative,4,1,0,ESR2_B,0.335,classification,5.949999809265137,5.019999980926514,6.869999885559082,0.519,,,no_model,0,0,0,,,,,,,,,,no alert,2.0,0.0,0.0
+Vinclozolin,ESR2,no coverage,undetermined,not_assessed,4,0,0,,,,,,,0.197,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Atrazine,ESR2,no coverage,undetermined,not_assessed,4,0,0,,,,,,,0.239,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Genistein,ESR2,only pharmacological positive (no screening coverage),undetermined,positive,4,3,3,ESR2_Ki_B,0.933,classification,7.43,6.43,8.43,0.684,"EC50, IC50, Ki",,no_model,0,0,0,,,,,,,,,,moderate,6.0,5.0,0.83
+Zearalenone,ESR2,only pharmacological positive (no screening coverage),undetermined,positive,4,1,1,ESR2_EC50_F,0.92,classification,6.929999828338623,5.920000076293945,7.949999809265137,1.0,EC50,,no_model,0,0,0,,,,,,,,,,low,2.0,2.0,1.0
+Triclosan,ESR2,no coverage,undetermined,not_assessed,4,0,0,,,,,,,0.294,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Rosiglitazone,ESR2,negative only on the pharmacological axis (partial coverage),undetermined,negative,4,1,0,ESR2_B,0.242,classification,5.340000152587891,4.420000076293945,6.269999980926514,0.338,,,no_model,0,0,0,,,,,,,,,,no alert,2.0,0.0,0.0
+Flutamide,ESR2,no coverage,undetermined,not_assessed,4,0,0,,,,,,,0.234,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+17beta-Estradiol,ESR2,only pharmacological positive (no screening coverage),undetermined,positive,4,4,4,ESR2_EC50_F,0.996,classification,9.1899995803833,7.929999828338623,10.4399995803833,0.717,"EC50, IC50, Ki",,no_model,0,0,0,,,,,,,,,,moderate,8.0,8.0,1.0
+Caffeine,ESR2,no coverage,undetermined,not_assessed,4,0,0,,,,,,,0.224,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Sucrose,ESR2,negative only on the pharmacological axis (partial coverage),undetermined,negative,4,1,0,ESR2_B,0.447,classification,5.110000133514404,4.179999828338623,6.03000020980835,0.311,,,no_model,0,0,0,,,,,,,,,,no alert,2.0,0.0,0.0
+Ibuprofen,ESR2,only pharmacological positive (no screening coverage),undetermined,positive,4,1,1,ESR2_EC50_B,0.534,classification,5.840000152587891,4.590000152587891,7.090000152587891,0.424,EC50,,no_model,0,0,0,,,,,,,,,,low,2.0,1.0,0.5
+Bisphenol A,PPARG,only screening positive (no pharmacological coverage),antagonist,not_assessed,5,0,0,,,,,,,0.333,,,positive,2,2,1,TOX21_PPARG_antagonist_HEK293,0.9589999914169312,classification,,,,1.0,AC50,antagonist,low,2.0,1.0,0.5
+Bisphenol S,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.346,,,negative,2,2,0,TOX21_PPARG_agonist_HEK293,0.02,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+4-Nonylphenol,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.436,,,negative,2,2,0,TOX21_PPARG_antagonist_HEK293,0.0219999998807907,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+DEHP,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.346,,,negative,2,2,0,TOX21_PPARG_agonist_HEK293,0.005,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+DBP,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.419,,,negative,2,2,0,TOX21_PPARG_antagonist_HEK293,0.0299999993294477,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+p-p-DDT,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.279,,,negative,2,2,0,TOX21_PPARG_agonist_HEK293,0.03,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Methoxychlor,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.333,,,negative,2,2,0,TOX21_PPARG_agonist_HEK293,0.042,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Vinclozolin,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.188,,,negative,2,2,0,TOX21_PPARG_antagonist_HEK293,0.0649999976158142,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Atrazine,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.177,,,negative,2,2,0,TOX21_PPARG_agonist_HEK293,0.002,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Genistein,PPARG,"divergent: screening positive, pharmacological negative",antagonist,negative,5,1,0,PPARG_B,0.0,classification,4.610000133514404,3.7899999618530273,5.429999828338623,0.561,,,positive,2,2,1,TOX21_PPARG_antagonist_HEK293,0.8610000014305115,classification,,,,1.0,AC50,antagonist,low,4.0,1.0,0.25
+Zearalenone,PPARG,only screening positive (no pharmacological coverage),antagonist,not_assessed,5,0,0,,,,,,,0.226,,,positive,2,2,1,TOX21_PPARG_antagonist_HEK293,0.3880000114440918,classification,,,,1.0,AC50,antagonist,low,2.0,1.0,0.5
+Triclosan,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.333,,,negative,2,2,0,TOX21_PPARG_antagonist_HEK293,0.0790000036358833,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Rosiglitazone,PPARG,convergent positive,agonist,positive,5,5,1,PPARG_F,0.96,classification,6.650000095367432,5.630000114440918,7.670000076293945,1.0,IC50,,positive,2,2,1,TOX21_PPARG_agonist_HEK293,0.722,classification,,,,1.0,AC50,agonist,high,12.0,4.0,0.33
+Flutamide,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.273,,,negative,2,2,0,TOX21_PPARG_antagonist_HEK293,0.061999998986721,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+17beta-Estradiol,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.207,,,negative,2,2,0,TOX21_PPARG_antagonist_HEK293,0.0099999997764825,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Caffeine,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.172,,,negative,2,2,0,TOX21_PPARG_agonist_HEK293,0.002,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Sucrose,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.317,,,negative,2,2,0,TOX21_PPARG_antagonist_HEK293,0.0010000000474974,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Ibuprofen,PPARG,negative only on the screening axis (partial coverage),undetermined,not_assessed,5,0,0,,,,,,,0.46,,,negative,2,2,0,TOX21_PPARG_agonist_HEK293,0.01,classification,,,,1.0,,,no alert,2.0,0.0,0.0
+Bisphenol A,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Bisphenol S,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+4-Nonylphenol,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+DEHP,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+DBP,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+p-p-DDT,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Methoxychlor,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Vinclozolin,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Atrazine,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Genistein,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Zearalenone,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Triclosan,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Rosiglitazone,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Flutamide,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+17beta-Estradiol,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Caffeine,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Sucrose,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Ibuprofen,THRA,no coverage,undetermined,no_model,0,0,0,,,,,,,,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Bisphenol A,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.2,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Bisphenol S,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.231,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+4-Nonylphenol,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.545,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+DEHP,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.288,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+DBP,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.347,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+p-p-DDT,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.122,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Methoxychlor,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.204,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Vinclozolin,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.16,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Atrazine,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.15,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Genistein,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.259,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Zearalenone,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.161,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Triclosan,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.245,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Rosiglitazone,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.269,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Flutamide,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.247,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+17beta-Estradiol,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.169,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Caffeine,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.123,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Sucrose,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.101,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Ibuprofen,THRB,no coverage,undetermined,not_assessed,1,0,0,,,,,,,0.277,,,no_model,0,0,0,,,,,,,,,,(no row in v1),,,
+Bisphenol A,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.902999997138977,classification,,,,1.0,AC50,antagonist,low,1.0,1.0,1.0
+Bisphenol S,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.1080000028014183,classification,,,,1.0,,,no alert,1.0,0.0,0.0
+4-Nonylphenol,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.718999981880188,classification,,,,0.826,AC50,antagonist,low,1.0,1.0,1.0
+DEHP,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.0240000002086162,classification,,,,1.0,,,no alert,1.0,0.0,0.0
+DBP,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.0289999991655349,classification,,,,1.0,,,no alert,1.0,0.0,0.0
+p-p-DDT,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.6449999809265137,classification,,,,0.444,AC50,antagonist,low,1.0,1.0,1.0
+Methoxychlor,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.5830000042915344,classification,,,,0.5,AC50,antagonist,low,1.0,1.0,1.0
+Vinclozolin,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.2179999947547912,classification,,,,1.0,,,no alert,1.0,0.0,0.0
+Atrazine,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.0740000009536743,classification,,,,1.0,,,no alert,1.0,0.0,0.0
+Genistein,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.6949999928474426,classification,,,,0.75,AC50,antagonist,low,1.0,1.0,1.0
+Zearalenone,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.6159999966621399,classification,,,,0.574,AC50,antagonist,low,1.0,1.0,1.0
+Triclosan,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.7720000147819519,classification,,,,1.0,AC50,antagonist,low,1.0,1.0,1.0
+Rosiglitazone,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.2560000121593475,classification,,,,0.408,,,no alert,1.0,0.0,0.0
+Flutamide,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.7139999866485596,classification,,,,1.0,AC50,antagonist,low,1.0,1.0,1.0
+17beta-Estradiol,TR,only screening positive (no pharmacological coverage),antagonist,no_model,0,0,0,,,,,,,,,,positive,1,1,1,TOX21_TR_antagonist_GH3,0.8899999856948853,classification,,,,1.0,AC50,antagonist,low,1.0,1.0,1.0
+Caffeine,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.1110000014305114,classification,,,,0.553,,,no alert,1.0,0.0,0.0
+Sucrose,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.0939999967813491,classification,,,,1.0,,,no alert,1.0,0.0,0.0
+Ibuprofen,TR,negative only on the screening axis (partial coverage),undetermined,no_model,0,0,0,,,,,,,,,,negative,1,1,0,TOX21_TR_antagonist_GH3,0.0419999994337558,classification,,,,1.0,,,no alert,1.0,0.0,0.0

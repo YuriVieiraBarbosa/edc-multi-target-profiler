@@ -1,77 +1,71 @@
 # EDCQSAR Endocrine Disruption Chemical Quantitative Structure-Activity Relationship
 
-Preditor de consenso multicamada que estima o potencial de moléculas interagirem com receptores
-nucleares envolvidos em desregulação endócrina. O projeto cobre a curadoria de dados públicos
-(ChEMBL, BindingDB, Tox21), o treino e a validação dos modelos e o uso dos modelos finais para
-prever novas moléculas.
+Multilayer consensus predictor that estimates the potential of molecules to interact with nuclear receptors involved in endocrine disruption. The project covers the curation of public data (ChEMBL, BindingDB, Tox21), the training and validation of the models, and the use of the final models to predict new molecules.
 
-## Alvos cobertos
+## Targets covered
 
-| Receptor | Código |
+| Receptor | Code |
 |---|---|
-| Receptor de andrógeno | AR |
-| Receptor de estrógeno alfa / beta | ESR1 / ESR2 |
-| Receptor do hormônio tireoidiano alfa / beta | THRA / THRB (Tox21: TR, sem distinção alfa/beta) |
-| PPAR gama | PPARG |
-| Receptor de pregnano X | PXR (NR1I2) |
+| Androgen receptor | AR |
+| Estrogen receptor alpha / beta | ESR1 / ESR2 |
+| Thyroid hormone receptor alpha / beta | THRA / THRB (Tox21: TR, no alpha/beta distinction) |
+| PPAR gamma | PPARG |
+| Pregnane X receptor | PXR (NR1I2) |
 
-O receptor de insulina (IR) ainda não é coberto.
+The insulin receptor (IR) is not yet covered.
 
-O **PXR** entrou depois dos demais, por `pipeline_pxr.py` (ChEMBL) e `pipeline_pxr_tox21.py` (Tox21).
-Ele não é um receptor hormonal como os outros: é o xenossensor que regula a CYP3A4, e entra porque
-medeia parte do efeito dos desreguladores por indução enzimática e compartilha ligantes com ER, AR e
-PPARγ. Três particularidades dele, todas medidas:
+The **PXR** was added after the others, via `pipeline_pxr.py` (ChEMBL) and `pipeline_pxr_tox21.py` (Tox21).
+It is not a hormonal receptor like the others: it is the xenosensor that regulates CYP3A4, and it is included because it mediates part of the disruptors' effect via enzymatic induction and shares ligands with ER, AR, and PPARγ. Three particularities of it, all measured:
 
-- **O sufixo de tipo de ensaio não indica o que o ensaio mede.** O campo `assay_type` do ChEMBL separa
-  mal ligação de funcional em todos os alvos, mas no PXR isso é extremo: o maior grupo funcional
-  (repórter de CYP3A4 em HepG2/DPX-2) vem rotulado `A` (ADMET), e o `B` mistura deslocamento de BODIPY
-  FL vindoline, que é ligação de verdade, com repórter de luciferase. Descartar o `A`, como o funil das
-  outras camadas faz, jogaria fora 36% dos registros do alvo; fundi-lo ao `B` violaria a regra de nunca
-  misturar ensaios incompatíveis. A saída adotada foi a terceira: **cada `assay_type` é seu próprio
-  endpoint**, que é a mesma regra já aplicada a `B` e `F`, só que estendida. Nenhum endpoint de PXR pode
-  ser chamado de "ligação" ou "funcional" pelo sufixo.
-- **Só há modo agonista na triagem.** O programa Tox21 não tem contra-ensaio de antagonismo de PXR, então
-  a `direcao` do PXR nunca sai como antagonista. A máscara de citotoxicidade **não** é aplicada, porque o
-  projeto só a aplica aos modos antagonistas; as colunas `citotoxico` e `citotox_confunde` são calculadas
-  e gravadas assim mesmo, e 774 dos 2.759 ativos (28%) coincidem com perda de viabilidade.
-- **O BindingDB não acrescenta camada de PXR.** São 2.036 registros, mas 1.530 são reimportação do ChEMBL
-  e, depois do funil, sobram 215 medidas com apenas **31 moléculas** ausentes da camada do ChEMBL. A
-  fração de literatura, a única que a medição do projeto mostrou melhorar o balanço de classes, são 14
-  registros. Abaixo do mínimo de 50 do funil, então nenhum dataset foi gerado.
+- **The assay-type suffix does not indicate what the assay measures.** ChEMBL's `assay_type` field poorly
+  separates binding from functional across all targets, but in PXR this is extreme: the largest functional
+  group (CYP3A4 reporter in HepG2/DPX-2) is labeled `A` (ADMET), and `B` mixes BODIPY FL vindoline
+  displacement, which is true binding, with luciferase reporter. Discarding `A`, as the funnel of the
+  other layers does, would throw away 36% of the target's records; merging it with `B` would violate the
+  rule of never mixing incompatible assays. The solution adopted was the third: **each `assay_type` is its
+  own endpoint**, which is the same rule already applied to `B` and `F`, only extended. No PXR endpoint can
+  be called "binding" or "functional" based on the suffix.
+- **There is only agonist mode in screening.** The Tox21 program has no PXR antagonism counter-assay, so
+  PXR's `direction` never comes out as antagonist. The cytotoxicity mask is **not** applied, because the
+  project only applies it to antagonist modes; the `cytotoxic` and `cytotox_confounds` columns are
+  calculated and recorded anyway, and 774 of the 2,759 actives (28%) coincide with loss of viability.
+- **BindingDB does not add a PXR layer.** There are 2,036 records, but 1,530 are reimports from ChEMBL
+  and, after the funnel, 215 measurements remain, with only **31 molecules** absent from the ChEMBL
+  layer. The literature fraction, the only one the project's measurement showed to improve class balance,
+  is 14 records. Below the funnel's minimum of 50, so no dataset was generated.
+## Architecture: three independent layers
 
-## Arquitetura: três camadas independentes
+The layers are never merged, because they measure different things and the assays are not comparable to each other.
 
-As camadas nunca são fundidas, porque medem coisas diferentes e os ensaios não são comparáveis entre si.
-
-| Camada | Pasta | Modelos | Conteúdo |
+| Layer | Folder | Models | Contents |
 |---|---|---|---|
-| ChEMBL IC50 | `models_final/` | 14 (+4 arquivados) | regressão de pIC50 e classificação, por alvo e tipo de ensaio (ligação `B` ou funcional `F`) |
-| ChEMBL Ki, EC50 e Kd | `models_layers/` | 26 (+14 arquivados) | mesmos alvos, cada medida em seu próprio modelo. O PXR tem 4 modelos aqui (`EC50_A`, `EC50_B`) e 4 arquivados (`IC50_B`, `EC50_F`); ele não tem medida de Ki nem Kd aproveitável |
-| Tox21 qHTS | `models_tox21/` | 12 | classificação por ensaio (química ambiental). São 13 ensaios curados e 12 com modelo: o de TR agonista tem só 27 ativos e fica de fora. O contra-ensaio de viabilidade só se aplica aos modos antagonistas, e o de autofluorescência só aos ensaios BLA |
+| ChEMBL IC50 | `models_final/` | 14 (+4 archived) | pIC50 regression and classification, by target and assay type (binding `B` or functional `F`) |
+| ChEMBL Ki, EC50, and Kd | `models_layers/` | 26 (+14 archived) | same targets, each measure in its own model. PXR has 4 models here (`EC50_A`, `EC50_B`) and 4 archived (`IC50_B`, `EC50_F`); it has no usable Ki or Kd measure |
+| Tox21 qHTS | `models_tox21/` | 12 | classification by assay (environmental chemistry). There are 13 curated assays and 12 with a model: the TR agonist one has only 27 actives and is left out. The viability counter-assay only applies to antagonist modes, and the autofluorescence one only to BLA assays |
 
-São **70 modelos treinados**. Os **52 implantáveis** ficam nas três pastas acima e são os únicos que o
-programa carrega. Os **18 reprovados** ficam em `models_reprovados/`, **só como documentação**: o
-preditor não os lê, então eles não custam tempo de execução. Cada um está descrito em
-`models_reprovados/LEIAME_reprovados.csv`.
+There are **70 trained models**. The **52 deployable** ones are in the three folders above and are the only ones that the
+program loads. The **18 failed** ones are in `models_failed/`, **only as documentation**: the
+predictor does not read them, so they do not cost execution time. Each one is described in
+`models_failed/README_failed_models.csv`.
 
-### Regra de alerta
+### Alert rule
 
-Para cada par molécula-receptor, só contam as camadas em que a molécula está **dentro do domínio de
-aplicabilidade** (similaridade de Tanimoto máxima ao conjunto de treino maior ou igual ao limiar do
-modelo) e cujo modelo é implantável. Sobre essas camadas:
+For each molecule-receptor pair, only the layers in which the molecule is **inside the applicability
+domain** (maximum Tanimoto similarity to the training set greater than or equal to the model threshold)
+and whose model is deployable count. Regarding these layers:
 
-| Alerta | Critério |
+| Alert | Criterion |
 |---|---|
-| alto (farmacologico + ambiental) | 2 ou mais camadas ativas, com pelo menos uma ChEMBL e uma Tox21 |
-| moderado (maioria das camadas) | fração de camadas ativas de pelo menos 0,5, com 3 ou mais camadas avaliadas |
-| baixo (evidencia isolada) | pelo menos 1 camada ativa |
-| sem alerta | nenhuma camada ativa |
+| high (pharmacological + environmental) | 2 or more active layers, with at least one ChEMBL and one Tox21 |
+| moderate (majority of layers) | fraction of active layers of at least 0.5, with 3 or more layers assessed |
+| low (isolated evidence) | at least 1 active layer |
+| no alert | no active layer |
 
-Um par em que nenhuma camada está no domínio aparece como `-` na tabela e como `n.d.` nos gráficos.
+A pair in which no layer is within the domain appears as `-` in the table and as `n.d.` in the plots.
 
-## Instalação
+## Installation
 
-Requer Python 3.11 ou 3.12.
+Requires Python 3.11 or 3.12.
 
 ```bash
 cd ~/Downloads/pipeline_edc_qsar
@@ -79,8 +73,9 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
-Se o `python3 -m venv` falhar com `No module named 'ensurepip'` (acontece no Ubuntu, onde o módulo vem
-no pacote `python3-venv`), use o `virtualenv`, que traz o `pip` embutido e não precisa de `sudo`:
+If `python3 -m venv` fails with `No module named 'ensurepip'` (this happens on Ubuntu, where the module
+comes in the `python3-venv` package), use `virtualenv`, which brings `pip` built-in and does not need
+`sudo`:
 
 ```bash
 python3 -m pip install --target .tools virtualenv
@@ -88,269 +83,268 @@ PYTHONPATH=.tools python3 -m virtualenv -p python3 .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
-Depois disso a pasta `.tools/` pode ser apagada: ela só serve para criar o ambiente.
+After that the `.tools/` folder can be deleted: it only serves to create the environment.
 
-Conferência da instalação:
+Installation check:
 
 ```bash
-# deve imprimir 2180
+# should print 2180
 .venv/bin/python -c "import features as F; print(2048 + len(F.DESC_NAMES))"
 
-# deve imprimir 'carregados 52' (os 18 reprovados ficam em models_reprovados/ e nao entram na conta)
+# should print 'loaded 52' (the 18 failed models stay in models_failed/ and do not enter the count)
 .venv/bin/python -c "
 import glob, joblib
-print('carregados', sum(bool(joblib.load(f)) for f in glob.glob('models_*/*.joblib')))"
+print('loaded', sum(bool(joblib.load(f)) for f in glob.glob('models_*/*.joblib')))"
 
-# previsão de referência: o alerta de ERalfa deve sair 'alto'
-.venv/bin/python edc.py testar --smiles 'CC(C)(c1ccc(O)cc1)c1ccc(O)cc1'
+# reference prediction: the ERalpha alert should come out 'high'
+.venv/bin/python edc.py predict --smiles 'CC(C)(c1ccc(O)cc1)c1ccc(O)cc1'
 ```
 
-As versões de `rdkit` e `scikit-learn` precisam ser as de `requirements.txt`. Com outra versão do RDKit o
-número de descritores muda e o preditor falha com `Feature shape mismatch`. O `requirements.txt` explica a
-situação do `xgboost`, cuja versão de treino (3.4.2) só existe no conda-forge.
+The versions of `rdkit` and `scikit-learn` must be those in `requirements.txt`. With a different version of RDKit the number of descriptors changes and the predictor fails with `Feature shape mismatch`. The `requirements.txt` explains the situation with `xgboost`, whose training version (3.4.2) only exists on conda-forge.
 
-### Atalho
+### Shortcut
 
-O executável `edc` na raiz chama o `edc.py` com o ambiente da pasta, de qualquer diretório:
+The `edc` executable in the root calls `edc.py` with the folder's environment, from any directory:
 
 ```bash
-./edc ajuda
-~/Downloads/pipeline_edc_qsar/edc testar --arquivo moleculas.csv --coluna-nome nome
+./edc help
+~/Downloads/pipeline_edc_qsar/edc predict --file molecules.csv --name-column name
 ```
+## Usage
 
-## Uso
-
-O ponto de entrada é o `edc.py`, com três comandos:
+The entry point is `edc.py`, with three commands:
 
 ```bash
-python edc.py ajuda                                              # lista os comandos
-python edc.py explicar                                           # como usar e como interpretar
-python edc.py testar --smiles "CC(C)(c1ccc(O)cc1)c1ccc(O)cc1"    # uma molécula
-python edc.py testar --smiles "SMILES_1" "SMILES_2"              # várias moléculas
-python edc.py testar --arquivo moleculas.csv --coluna-nome nome  # uma lista
-python edc.py testar --arquivo moleculas.csv --eixos             # com a leitura em dois eixos
+python edc.py help                                               # lists the commands
+python edc.py explain                                            # how to use and how to interpret
+python edc.py predict --smiles "CC(C)(c1ccc(O)cc1)c1ccc(O)cc1"    # one molecule
+python edc.py predict --smiles "SMILES_1" "SMILES_2"              # several molecules
+python edc.py predict --file molecules.csv --name-column name     # one list
+python edc.py predict --file molecules.csv --axes                 # with the reading in two axes
 ```
 
-Sem argumentos, `python edc.py` mostra a lista de comandos. Com `--saida PREFIXO` você escolhe onde
-gravar; sem ele, a saída vai para `resultados/AAAAMMDD_HHMMSS_predicoes/`. O comando `explicar` também
-conta quantos modelos estão instalados em cada camada.
+Without arguments, `python edc.py` shows the list of commands. With `--output PREFIX` you choose where
+to write; without it, the output goes to `results/YYYYMMDD_HHMMSS_predictions/`. The `explain` command also
+counts how many models are installed in each layer.
 
-Para a execução arquivada, que além da previsão gera os gráficos:
+For the archived run, which in addition to the prediction also generates the plots:
 
 ```bash
-python rodar_edc.py --input demo_edcs.csv --name-col nome --out demo
+python run_edc.py --input demo_edcs.csv --name-col name --out demo
 ```
 
-O CSV de entrada precisa de uma coluna `smiles` (ou informe `--smiles-col`). Cada execução grava em
-`resultados/AAAAMMDD_HHMMSS_<nome>/`:
+The input CSV needs a `smiles` column (or specify `--smiles-col`). Each run writes to
+`results/YYYYMMDD_HHMMSS_<name>/`:
 
-- `<nome>_resumo.csv`: alerta e contagem de camadas por molécula e receptor
-- `<nome>_detalhado.csv`: resultado de cada modelo, com domínio, probabilidade ou valor previsto e intervalo conformal
-- `<nome>_rejeitadas.csv`: moléculas rejeitadas na padronização, quando houver
-- `<nome>_dashboard.png` e `<nome>_fracao_ativa.png`: gráficos de alertas
-- `entrada.csv` e `LEIAME.txt`: cópia da entrada, comando, data e versões das bibliotecas
+- `<name>_summary.csv`: alert and layer count per molecule and receptor
+- `<name>_detail.csv`: result for each model, with domain, probability or predicted value, and conformal interval
+- `<name>_rejected.csv`: molecules rejected during standardization, if any
+- `<name>_dashboard.png` and `<name>_active_fraction.png`: alert plots
+- `input.csv` and `README.txt`: copy of the input, command, date, and library versions
 
-Também é possível usar os scripts separadamente:
+It is also possible to use the scripts separately:
 
 ```bash
-python predict_edc2.py --input demo_edcs.csv --name-col nome --out demo   # só previsão
-python plot_edc_results.py --out demo                                     # só gráficos, a partir de demo_*.csv
-python predict_edc2.py --smiles "CC(C)(c1ccc(O)cc1)c1ccc(O)cc1"           # uma molécula
+python predict_edc2.py --input demo_edcs.csv --name-col name --out demo   # prediction only
+python plot_edc_results.py --out demo                                     # plots only, from demo_*.csv
+python predict_edc2.py --smiles "CC(C)(c1ccc(O)cc1)c1ccc(O)cc1"           # one molecule
 ```
 
-`painel_ref.csv` é um painel de referência com classes conhecidas e `demo_edcs.csv` é um exemplo curto.
+`panel_ref.csv` is a reference panel with known classes, and `demo_edcs.csv` is a short example.
+## Contents of the repository
 
-## Conteúdo do repositório
-
-| Caminho | Função |
+| Path | Function |
 |---|---|
-| `rodar_edc.py` | executa a previsão, gera os gráficos e organiza a saída em `resultados/` |
-| `predict_edc2.py` | preditor de consenso multicamada |
-| `plot_edc_results.py` | gráficos de alertas e de fração ativa |
-| `features.py`, `curation.py` | featurização (ECFP4 por contagem e descritores RDKit) e padronização de estruturas |
-| `extract_chembl.py`, `extract_bindingdb.py` | extração de atividades dos dumps do ChEMBL 37 e do BindingDB |
-| `pipeline_curate.py`, `pipeline_layers.py`, `pipeline_tox21.py` | curadoria dos datasets de IC50, de Ki/Kd/EC50 e do Tox21 |
-| `modeling.py`, `modeling_layers.py`, `modeling_tox21.py` | treino e validação por camada |
-| `finalize_models.py`, `conformal.py` | modelos finais e predição conformal com limiar de decisão otimizado |
-| `datasets_camadas_por_endpoint/`, `datasets_tox21_por_ensaio/` | datasets curados de Ki/EC50/Kd e de Tox21 usados no treino |
-| `models_final/`, `models_layers/`, `models_tox21/` | os 52 modelos implantáveis, os únicos que o programa carrega (cerca de 110 MB) |
-| `models_reprovados/` | os 18 modelos reprovados, só como documentação, com `LEIAME_reprovados.csv` (cerca de 11 MB) |
-| `arquivar_reprovados.py` | move os reprovados para `models_reprovados/` e devolve à execução os que passarem a ser aprovados |
+| `run_edc.py` | runs the prediction, generates the plots, and organizes the output in `results/` |
+| `predict_edc2.py` | multilayer consensus predictor |
+| `plot_edc_results.py` | alert and active-fraction plots |
+| `features.py`, `curation.py` | featurization (ECFP4 by count and RDKit descriptors) and structure standardization |
+| `extract_chembl.py`, `extract_bindingdb.py` | extraction of activities from the ChEMBL 37 and BindingDB dumps |
+| `pipeline_curate.py`, `pipeline_layers.py`, `pipeline_tox21.py` | curation of the IC50, Ki/Kd/EC50, and Tox21 datasets |
+| `modeling.py`, `modeling_layers.py`, `modeling_tox21.py` | training and validation by layer |
+| `finalize_models.py`, `conformal.py` | final models and conformal prediction with optimized decision threshold |
+| `datasets_layers_by_endpoint/`, `datasets_tox21_by_assay/` | curated Ki/EC50/Kd and Tox21 datasets used in training |
+| `models_final/`, `models_layers/`, `models_tox21/` | the 52 deployable models, the only ones the program loads (about 110 MB) |
+| `models_failed/` | the 18 failed models, for documentation purposes only, with `README_failed_models.csv` (about 11 MB) |
+| `archive_failed_models.py` | moves the failed models to `models_failed/` and returns to execution any that become approved |
 
-Não estão incluídos: os dumps brutos do ChEMBL e do BindingDB, necessários para refazer a extração, e os
-datasets curados da camada IC50.
+Not included: the raw ChEMBL and BindingDB dumps, needed to redo the extraction, and the
+curated datasets of the IC50 layer.
+## Validation protocol
 
-## Protocolo de validação
+- External split by Bemis-Murcko scaffold (80/20) and model selection by 5-fold cross-validation on the training set. **Note:** the code fills the *test* set with the **largest** scaffold groups (the docstring of `features.scaffold_split` states the opposite). The external test is, therefore, extrapolation to the dominant chemical families, concentrated in few scaffolds (from 2 to 15 in the Ki/Kd/EC50 endpoints), and the test metrics are a high-variance lower bound. The training cross-validation, in contrast, is random and non-nested, so `Q2_cv` is optimistic.
+- Final model refit on 100% of the curated data, with metrics coming from the external scaffold-based test. The metrics recorded inside the production artifact (`Q2_cv`, `R2_test_scaffold`) are, therefore, from **another** fit: the 80% one. The domain threshold recorded in the artifact is also recalculated over 100% of the data, so it is wider than the validated threshold.
+- Y-scrambling and applicability domain by Tanimoto similarity.
+- Inductive conformal prediction with nominal coverage of 80%, and decision threshold optimized by MCC instead of 0.5. Two measured caveats: the **empirical** coverage falls below 0.80 in 8 of the 9 IC50 endpoints; and the conformal quantile is calibrated on a model fitted on 75% of the training set, but applied to the production model fitted on 100%, such that the coverage guarantee does not hold for the deployed model.
+- Curation: valid structures, standardized SMILES, removal of salts and solvents, and deduplication by InChIKey, with the median of replicates and discarding of the compound when they vary by more than 1 log unit. Measure types (IC50, Ki, Kd, EC50) and assay types are never mixed. Stereochemistry is only **recorded** (column `undefined_stereo`, which counts unassigned centers) and never filters. Deduplication uses the full InChIKey, which includes the stereochemical layer, so defined stereoisomers remain as distinct compounds, and a compound with undefined stereochemistry coexists as a separate row from its resolved enantiomers.
 
-- Divisão externa por scaffold de Bemis-Murcko (80/20) e seleção de modelo por validação cruzada 5-fold no treino. **Atenção:** o código preenche o *teste* com os **maiores** grupos de scaffold (o docstring de `features.scaffold_split` afirma o contrário). O teste externo é, portanto, extrapolação para as famílias químicas dominantes, concentrada em poucos scaffolds (de 2 a 15 nos endpoints de Ki/Kd/EC50), e as métricas de teste são um limite inferior de alta variância. A validação cruzada do treino, ao contrário, é aleatória e não aninhada, então o `Q2_cv` é otimista.
-- Modelo final reajustado em 100% dos dados curados, com as métricas vindas do teste externo por scaffold. As métricas gravadas dentro do artefato de produção (`Q2_cv`, `R2_teste_scaffold`) são, portanto, de **outro** ajuste: o de 80%. O limiar de domínio gravado no artefato também é recalculado sobre 100% dos dados, então é mais largo que o limiar validado.
-- Y-scrambling e domínio de aplicabilidade por similaridade de Tanimoto.
-- Predição conformal indutiva com cobertura nominal de 80%, e limiar de decisão otimizado por MCC em vez de 0,5. Duas ressalvas medidas: a cobertura **empírica** fica abaixo de 0,80 em 8 dos 9 endpoints de IC50; e o quantil conformal é calibrado num modelo ajustado em 75% do treino, mas aplicado ao modelo de produção ajustado em 100%, de modo que a garantia de cobertura não vale para o modelo implantado.
-- Curadoria: estruturas válidas, SMILES padronizados, remoção de sais e solventes e deduplicação por InChIKey, com a mediana das réplicas e descarte do composto quando elas variam mais de 1 unidade log. Tipos de medida (IC50, Ki, Kd, EC50) e tipos de ensaio nunca são misturados. A estereoquímica é apenas **registrada** (coluna `undefined_stereo`, que conta centros sem atribuição) e nunca filtra. A deduplicação usa o InChIKey completo, que inclui a camada estereoquímica, então estereoisômeros definidos permanecem como compostos distintos, e um composto com estereoquímica indefinida convive como linha separada dos seus enantiômeros resolvidos.
+## Known issues
 
-## Problemas conhecidos
+Verified in the code and in the data. The breakdown, with the numbers and the diagnostic files, is in
+`documents/code_audit_verification.md`.
+### Fixed
 
-Verificados no código e nos dados. O detalhamento, com os números e os arquivos de diagnóstico, está em
-`documentos/verificacao_auditoria_codigo.md`.
+No fix alters any model's prediction: what changes is which models vote, how
+the votes are aggregated, and what the output reports.
 
-### Corrigidos
+**Deployment criterion, now auditable** — `deployment_criterion.py`
 
-Nenhuma correção altera a previsão de modelo nenhum: o que muda é quais modelos votam, como
-os votos são agregados e o que a saída informa.
+The `not_deployable` flag recorded in the `.joblib` files of `models_final/` came from a script missing from
+the repository, and was not auditable: `ESR2_B` passed with R² of 0.098 and `AR_F` was failed with 0.076,
+with no rule written anywhere. The criterion was reconstructed from the metrics that the artifacts
+themselves store:
 
-**Critério de implantação, agora auditável** — `criterio_implantacao.py`
-
-O flag `nao_implantavel` gravado nos `.joblib` de `models_final/` vinha de um script ausente do
-repositório, e não era auditável: `ESR2_B` passava com R² de 0,098 e `AR_F` era reprovado com 0,076,
-sem regra escrita em lugar nenhum. O critério foi reconstruído a partir das métricas que os próprios
-artefatos guardam:
-
-| Condição | Veredito |
+| Condition | Verdict |
 |---|---|
-| `n_train < 200` | reprovado, em qualquer camada |
-| regressão com `Q2_cv < 0,30` | reprovado |
-| regressão com `R2_teste_scaffold < 0` | reprovado (pior que prever a média) |
-| classificação com `ROC_AUC_teste < 0,60` | reprovado |
+| `n_train < 200` | failed, in any layer |
+| regression with `Q2_cv < 0.30` | failed |
+| regression with `R2_test_scaffold < 0` | failed (worse than predicting the mean) |
+| classification with `ROC_AUC_test < 0.60` | failed |
 
-Ele reproduz todos os flags gravados menos dois, divergindo só em `AR_F` (n = 618, Q² = 0,450,
-R² = 0,076, ROC-AUC = 0,772), que passa a ser implantado. Resultado: **52 implantados de 70 treinados**,
-já com os 9 modelos de PXR (5 implantáveis: `PXR_EC50_A` e `PXR_EC50_B` nas duas tarefas, mais o ensaio
-Tox21; `PXR_IC50_B` com n = 176 e `PXR_EC50_F` com n = 62 são reprovados por tamanho).
-`criterio_implantacao.csv` traz o motivo de cada reprovação e, na coluna `local`, onde o modelo está.
+It reproduces all the recorded flags except two, diverging only on `AR_F` (n = 618, Q² = 0.450,
+R² = 0.076, ROC-AUC = 0.772), which becomes deployed. Result: **52 deployed out of 70 trained**,
+already including the 9 PXR models (5 deployable: `PXR_EC50_A` and `PXR_EC50_B` in both tasks, plus the
+Tox21 assay; `PXR_IC50_B` with n = 176 and `PXR_EC50_F` with n = 62 are failed due to size).
+`deployment_criterion.csv` gives the reason for each failure and, in the `local` column, where the model is.
 
-**Os reprovados não são carregados.** Um modelo reprovado nunca vota, então carregá-lo e aplicá-lo a toda
-molécula só para descartar o resultado era custo sem uso (324 das 1.260 previsões do painel). Eles ficam em
-`models_reprovados/`, e o `predict_edc2.py` ignora com aviso qualquer reprovado que reapareça nas pastas de
-execução. "Reprovado" quase sempre quer dizer **pouco dado**, e não modelo ruim: 15 dos 18 falham só em
-`n < 200`, um corte do projeto que não foi validado. Depois de retreinar, o fluxo é
-`python criterio_implantacao.py` e `python arquivar_reprovados.py --aplicar`.
+**Failed models are not loaded.** A failed model never votes, so loading it and applying it to every
+molecule just to discard the result was cost without use (324 of the panel's 1,260 predictions). They stay in
+`models_failed/`, and `predict_edc2.py` ignores with a warning any failed model that reappears in the
+execution folders. "Failed" almost always means **little data**, not a bad model: 15 of 18 fail only on
+`n < 200`, a project cutoff that was not validated. After retraining, the flow is
+`python deployment_criterion.py` and `python archive_failed_models.py --apply`.
 
-Ressalva importante: **os 12 modelos do Tox21 contam como implantados por ausência de critério**, não
-por terem passado em um — nem os `.joblib` nem o `LEIAME_modelos_tox21.csv` guardam métrica de
-validação. Isso precisa ser dito em qualquer relatório que use a camada de triagem.
+Important caveat: **the 12 Tox21 models count as deployed due to absence of a criterion**, not
+because they passed one — neither the `.joblib` files nor `README_models_tox21.csv` store a validation
+metric. This needs to be stated in any report that uses the screening layer.
 
-**Nova regra de níveis, baseada em unidades de evidência**
+**New tier rule, based on units of evidence**
 
-Um modelo não é uma evidência. Duas redundâncias foram medidas: regressão e classificação do mesmo
-endpoint usam os mesmos compostos e as mesmas features, diferindo só pela binarização em pAct ≥ 6; e
-os ensaios Tox21 de um mesmo receptor e modo são a mesma biblioteca (até 99,8% em comum) em linhagens
-celulares diferentes. Os votos passam a ser colapsados antes de qualquer contagem:
+A model is not a piece of evidence. Two redundancies were measured: regression and classification of the same
+endpoint use the same compounds and the same features, differing only by the binarization at pAct ≥ 6; and
+the Tox21 assays of the same receptor and mode are the same library (up to 99.8% overlap) in different
+cell lines. Votes are now collapsed before any counting:
 
-- **eixo farmacológico:** 1 unidade por endpoint do ChEMBL (receptor × medida × tipo de ensaio). A
-  classificação decide a positividade; a regressão entra como potência, não como voto separado.
-- **eixo de triagem:** 1 unidade por receptor e modo, colapsando linhagens.
+- **pharmacological axis:** 1 unit per ChEMBL endpoint (receptor × measure × assay type). The
+  classification decides positivity; the regression enters as potency, not as a separate vote.
+- **screening axis:** 1 unit per receptor and mode, collapsing cell lines.
+The ladder is now:
 
-A escada passou a ser:
+The ladder became:
 
-| Nível | Condição |
+| Level | Condition |
 |---|---|
-| `nao avaliado` | nenhuma unidade avaliada, ou uma só e negativa |
-| `sem alerta` | todas as unidades avaliadas negativas (2 ou mais) |
-| `alto` | os **dois** eixos positivos (convergência) |
-| `moderado` | ≥ 2 unidades independentes positivas num eixo só |
-| `baixo` | exatamente 1 unidade positiva |
+| `not assessed` | no unit assessed, or only one and negative |
+| `no alert` | all units assessed negative (2 or more) |
+| `high` | the **both** axes positive (convergence) |
+| `moderate` | ≥ 2 independent units positive on a single axis |
+| `low` | exactly 1 positive unit |
 
-O estado `nao avaliado` é o ganho principal: a regra anterior chamava de "sem alerta" tanto a molécula
-testada e negativa quanto aquela que modelo nenhum conseguiu avaliar. No `painel_ref.csv`, **14 dos 40
-pares que eram "sem alerta" eram, na verdade, não avaliados**. Os 10 "alto" permaneceram "alto", todos
-por convergência.
+The `not assessed` state is the main improvement: the previous rule called both the molecule
+tested and negative and the one that no model managed to assess "no alert". In `panel_ref.csv`, **14 of the 40
+pairs that were "no alert" were, in fact, not assessed**. The 10 "high" remained "high", all
+by convergence.
 
-**Saída**
+**Output**
 
-- O `_detalhado.csv` traz **apenas os modelos que votaram**. `--detalhe implantados` acrescenta os que
-  não votaram por estarem fora do domínio. `--detalhe todos` é aceito e dá o mesmo resultado, porque os
-  reprovados não são mais carregados. A tabela completa continua sendo usada internamente pelo
-  `--eixos`, cuja cobertura depende de comparar as unidades implantáveis com as avaliadas.
-- Coluna nova `motivo_nao_voto`: `modelo reprovado (<motivo>)` ou `molecula fora do dominio`.
-- Toda combinação molécula × receptor ganha linha no `_resumo.csv`, inclusive as sem nenhuma cobertura,
-  que saem como `nao avaliado`. Antes, um receptor cujas unidades ficassem todas fora do domínio
-  desaparecia da saída.
-- A coluna `evidencia` fala só do que foi avaliado (`positivas 1/3`). A cobertura continua no CSV, nas
-  colunas `unidades_implantaveis` e `cobertura`, mas sai da tabela impressa — a decisão foi deixar a
-  tela com o que de fato foi medido. Vale consultá-las antes de comparar duas moléculas: no painel, 33
-  dos 83 pares avaliados pertencem a grupos de mesmo nível e mesma fração positiva cuja cobertura varia
-  mais de 0,40 (`Ibuprofeno · ERβ` tem cobertura 0,25 e `17β-Estradiol · TR` tem 1,00, e ambos saem
-  "positivas 1/1"). A linha impressa acima da tabela dá a cobertura agregada da execução.
-- O `_resumo.csv` passou a `evidencia`, `unidades_positivas`, `unidades_avaliadas`,
-  `unidades_implantaveis`, `fracao_positiva`, `cobertura`, `concordancia`, `direcao` e `alerta`.
-- A tela informa quantas unidades de evidência puderam votar, do total disponível.
+- The `_detail.csv` brings **only the models that voted**. `--detail deployed` adds those that
+  did not vote because they were outside the domain. `--detail all` is accepted and gives the same result, because
+  failed models are no longer loaded. The complete table continues to be used internally by
+  `--axes`, whose coverage depends on comparing the deployable units with the assessed ones.
+- New column `reason_not_voted`: `model failed (<reason>)` or `molecule outside the applicability domain`.
+- Every molecule × receptor combination gets a row in `_summary.csv`, including those without any
+  coverage, which come out as `not assessed`. Previously, a receptor whose units were all outside the domain
+  disappeared from the output.
+- The `evidence` column speaks only about what was assessed (`positive 1/3`). The coverage remains in the CSV, in
+  the `units_deployable` and `coverage` columns, but is left out of the printed table — the decision was to keep the
+  screen showing what was actually measured. It is worth consulting them before comparing two molecules: in the panel, 33
+  of the 83 assessed pairs belong to groups of the same level and same positive fraction whose coverage varies
+  by more than 0.40 (`Ibuprofen · ERβ` has coverage 0.25 and `17β-Estradiol · TR` has 1.00, and both come out
+  "positives 1/1"). The line printed above the table gives the aggregate coverage of the run.
+- The `_summary.csv` came to have `evidence`, `units_positive`, `units_assessed`,
+  `units_deployable`, `positive_fraction`, `coverage`, `agreement`, `direction` and `alert`.
+- The screen reports how many units of evidence were able to vote, out of the total available.
 
-**Produziam resultado errado sem avisar**
+**Produced wrong results without warning**
 
-- **Camada identificada pelo nome da pasta.** A comparação passou a usar o nome *base*
-  (`os.path.basename`), então `--model-dirs` com caminho absoluto funciona, e uma pasta com nome
-  desconhecido levanta erro. Antes, `--model-dirs /abs/.../models_tox21` rotulava os 11 modelos do
-  Tox21 como `ChEMBL AR/ESR1/PPARG/TR`, com o modo do ensaio virando nome de receptor.
-- **Nomes repetidos na entrada.** O `predict_edc2.py` agora levanta erro explícito, em vez de fundir
-  moléculas diferentes numa linha do resumo.
-- **Moléculas sem scaffold de Bemis-Murcko.** Cada uma passou a receber o próprio grupo. O teste
-  externo de `TOX21_AR_antagonista_HEK293T` caiu de 95,2% para 0,0% de acíclicas e o de
-  `TOX21_TR_antagonista_GH3` de 91,9% para 0,1%; `PPARG_Kd_B`, cujo teste tinha uma **única classe**,
-  passou a ter duas. Afeta apenas retreino.
-- **Queda silenciosa para divisão aleatória.** `features.scaffold_split` levanta erro, e só aceita
-  divisão aleatória com `permitir_aleatorio=True`.
+- **Layer identified by folder name.** The comparison now uses the *base* name
+  (`os.path.basename`), so `--model-dirs` with an absolute path works, and a folder with an
+  unknown name raises an error. Previously, `--model-dirs /abs/.../models_tox21` labeled the 11 Tox21 models
+  as `ChEMBL AR/ESR1/PPARG/TR`, with the assay mode becoming the receptor name.
+- **Repeated names in the input.** `predict_edc2.py` now raises an explicit error, instead of merging
+  different molecules into one row of the summary.
+- **Molecules without a Bemis-Murcko scaffold.** Each one now receives its own group. The external
+  test of `TOX21_AR_antagonist_HEK293T` dropped from 95.2% to 0.0% acyclic and that of
+  `TOX21_TR_antagonist_GH3` from 91.9% to 0.1%; `PPARG_Kd_B`, whose test had a **single class**,
+  came to have two. Affects only retraining.
+- **Silent fallback to random split.** `features.scaffold_split` raises an error, and only accepts
+  random split with `allow_random=True`.
+**They prevented running end to end**
 
-**Impediam rodar de ponta a ponta**
+- **BindingDB.** `pipeline_curate.py` reads the `.parquet` that `extract_bindingdb.py` writes and
+  **builds** `cache/bindingdb_std_lookup.pkl`, instead of reading a file that no script created.
+- **Data folder names.** `modeling_layers.py` and `modeling_tox21.py` accept both `data_layers/`
+  and `data_tox21/` as well as `datasets_layers_by_endpoint/` and `datasets_tox21_by_assay/`.
+### Open Issues
 
-- **BindingDB.** O `pipeline_curate.py` lê o `.parquet` que o `extract_bindingdb.py` grava e
-  **constrói** o `cache/bindingdb_std_lookup.pkl`, em vez de ler um arquivo que nenhum script criava.
-- **Nomes das pastas de dados.** `modeling_layers.py` e `modeling_tox21.py` aceitam tanto `data_layers/`
-  e `data_tox21/` quanto `datasets_camadas_por_endpoint/` e `datasets_tox21_por_ensaio/`.
+**Reproducibility of what is deployed** — not fixable by a code change:
 
-### Em aberto
+- The 18 models in `models_final/` (14 in production and 4 archived in `models_failed/`) **cannot be regenerated by any script in the folder**. The
+  `README_calibration.csv` has columns (`production_threshold`, `threshold_gain`, `conformal_mode`,
+  `coverage_scaffold`) that `conformal.py` does not produce; it writes another file,
+  `results/conformal_and_thresholds.csv`. The script that closes this step is not in the repository, and rewriting it
+  would produce equivalent models, not the same ones. (The fifth column, `not_deployable`, no longer depends
+  on this script: `deployment_criterion.py` reconstructs it with a written rule.)
+- `finalize_models.py` and `conformal.py` depend on `data/dataset_*.csv` (curated IC50 datasets) and on
+  `results/model_performance.csv`, both absent. The IC50 datasets were deliberately left out of the
+  repository.
 
-**Reprodutibilidade do que está implantado** — não é corrigível por mudança de código:
+**Structural limits of the consensus** — depend on retraining or new data, not on code:
 
-- Os 18 modelos de `models_final/` (14 em execução e 4 arquivados em `models_reprovados/`) **não são regeráveis por nenhum script da pasta**. O
-  `LEIAME_calibracao.csv` tem colunas (`limiar_producao`, `ganho_limiar`, `conformal_modo`,
-  `cobertura_scaffold`) que o `conformal.py` não produz; ele grava outro arquivo,
-  `results/conformal_e_limiares.csv`. O script que fecha essa etapa não está no repositório, e reescrevê-lo
-  produziria modelos equivalentes, não os mesmos. (A quinta coluna, `nao_implantavel`, deixou de depender
-  desse script: o `criterio_implantacao.py` a reconstrói com regra escrita.)
-- `finalize_models.py` e `conformal.py` dependem de `data/dataset_*.csv` (datasets curados de IC50) e de
-  `results/desempenho_modelos.csv`, ambos ausentes. Os datasets de IC50 ficaram deliberadamente fora do
-  repositório.
+- Votes remain unweighted: two positive units count the same, whether they come from 2,700 compounds
+  (`ESR1_B`) or from 232 (`AR_EC50_B`). Weighting would require a confidence measure comparable across the
+  layers, which the screening layer does not have.
+- The alert cap depends on the receptor: "high" is only attainable for AR, ERα, PPARγ, and PXR, because it requires a
+  vote from each layer. ERβ has no Tox21 assay and reaches at most "moderate"; THRβ reaches "low";
+  THRα has no deployable ChEMBL model and does not appear in `_summary.csv` (the two-axis reading, with
+  `--axes`, shows THRα as `no coverage`, because it knows from the archived models' documentation that it exists). PXR is the thinnest of those that
+  reach "high": 2 pharmacological units and 1 screening unit, versus 4 and 4 for ERα. A "no alert" does not mean the same thing across
+  different receptors. The `units_deployable` column makes this cap visible.
+- **For PXR, the two axes are not on equal footing in the reference panel.** Of the 18 molecules in the
+  `panel_ref.csv`, **14 are in the Tox21 PXR training set and none in the ChEMBL PXR training set** (median Tanimoto
+  to the nearest training neighbor: 1.00 in screening versus 0.28 in the pharmacological axis). This is why 13 of the 18
+  appear as "divergent: screening positive, pharmacological negative" — the screening model recognizes
+  compounds it has already seen, while the pharmacological ones are extrapolating. This pattern is a result of the panel's composition, not
+  a property of PXR, and the panel is not meant to estimate PXR performance on new molecules.
+- "Active" does not mean the same thing in each layer: in ChEMBL it is potency of up to 1 µM with a probability
+  threshold of 0.5; in Tox21 it is the depositor's call, with optimized thresholds from 0.11 to 0.40. This is
+  why the two axes are never summed into a single fraction.
+- The Tox21 layer has no recorded validation metric, so its 12 models have never been submitted to the
+  deployment criterion. These are 12 of the 52 units that vote.
+- The `panel_ref.csv` **is not a blind evaluation set**: 59.9% of the votes that count come from models
+  that already had the molecule in their own training set (84.3% in the screening axis). It serves to check the
+  mechanism of the consensus, never to estimate accuracy on new molecules.
 
-**Limites estruturais do consenso** — dependem de retreino ou de dados novos, não de código:
+The `consensus_v2/` rewrites only the aggregation and makes these points explicit in the report, without retraining
+anything. See `documents/consensus_v2_specification.md`.
 
-- Os votos continuam sem peso: duas unidades positivas valem o mesmo, venham de 2.700 compostos
-  (`ESR1_B`) ou de 232 (`AR_EC50_B`). Ponderar exigiria uma medida de confiança comparável entre as
-  camadas, que a de triagem não tem.
-- O teto do alerta depende do receptor: "alto" só é atingível em AR, ERα, PPARγ e PXR, porque exige um
-  voto de cada camada. ERβ não tem ensaio Tox21 e chega no máximo a "moderado"; THRβ chega a "baixo";
-  THRα não tem nenhum modelo ChEMBL implantável e não aparece no `_resumo.csv` (a leitura em dois eixos, com
-  `--eixos`, mostra o THRα como `sem cobertura`, porque sabe pela documentação dos arquivados que ele existe). O PXR é o mais magro dos que
-  alcançam "alto": 2 unidades farmacológicas e 1 de triagem, contra 4 e 4 do ERα. Um "sem alerta" não significa o mesmo em
-  receptores diferentes. A coluna `modelos_implantaveis_receptor` deixa esse teto visível.
-- **No PXR, os dois eixos não estão em pé de igualdade no painel de referência.** Das 18 moléculas do
-  `painel_ref.csv`, **14 estão no conjunto de treino do Tox21 PXR e nenhuma no do ChEMBL PXR** (Tanimoto
-  mediano ao vizinho de treino: 1,00 na triagem contra 0,28 no eixo farmacológico). Por isso 13 das 18
-  aparecem como "divergente: triagem positiva, farmacológico negativo" — o modelo de triagem reconhece
-  compostos que já viu, e os farmacológicos estão extrapolando. Esse padrão é da composição do painel, não
-  uma propriedade do PXR, e o painel não serve para estimar desempenho do PXR em moléculas novas.
-- "Ativo" não quer dizer o mesmo em cada camada: no ChEMBL é potência de até 1 µM com limiar de
-  probabilidade 0,5; no Tox21 é a chamada do depositante, com limiares otimizados de 0,11 a 0,40. Por
-  isso os dois eixos nunca são somados numa fração única.
-- A camada Tox21 não tem métrica de validação gravada, então seus 12 modelos nunca foram submetidos ao
-  critério de implantação. São 12 das 52 unidades que votam.
-- O `painel_ref.csv` **não é um conjunto de avaliação cego**: 59,9% dos votos que contam vêm de modelos
-  que já tinham a molécula no próprio treino (84,3% no eixo de triagem). Ele serve para conferir o
-  mecanismo do consenso, nunca para estimar acerto em moléculas novas.
+**Artifact format.** The keys stored inside the `.joblib` model files keep their original names (`limiar`, `modelo`,
+`nao_implantavel`, `cobertura_scaffold`, `conformal_modo`, `frac_ativos`, `R2_teste_scaffold`, `ROC_AUC_teste_scaffold`,
+`conformal_usa_dificuldade`) and the value `fixo`/`normalizado` of `conformal_modo`, so the 70 existing models stay readable
+without re-saving them. Every script that writes or reads these files uses the same names; the columns of the CSV outputs
+are in English. Renaming the keys would require re-saving all 70 models (about 127 MB).
 
-O `consenso_v2/` reescreve só a agregação e deixa esses pontos explícitos no relatório, sem retreinar
-nada. Veja `documentos/consenso_v2_especificacao.md`.
+## Limitations
 
-## Limitações
+- Computational screening. An alert indicates plausibility and does not replace experimental assay or regulatory assessment.
+- Molecules outside the applicability domain do not enter the alert rule, even when the model returns a high probability. Compounds from classes poorly represented in training, such as phthalates, may end up without coverage.
+- Mechanisms that do not involve the modeled receptors are not detected. For example, effects via aromatase (CYP19A1) or steroidogenesis would require additional endpoints.
+- The Tox21 layer is environmental chemistry and uses a different kind of measure (AC50) than the ChEMBL layers.
 
-- Triagem computacional. Um alerta indica plausibilidade e não substitui ensaio experimental nem avaliação regulatória.
-- Moléculas fora do domínio de aplicabilidade não entram na regra de alerta, mesmo quando o modelo devolve uma probabilidade alta. Compostos de classes pouco representadas no treino, como ftalatos, podem ficar sem cobertura.
-- Mecanismos que não passam pelos receptores modelados não são detectados. Por exemplo, efeitos via aromatase (CYP19A1) ou esteroidogênese exigiriam endpoints adicionais.
-- A camada Tox21 é de química ambiental e usa outro tipo de medida (AC50) que as camadas do ChEMBL.
+## Data sources
 
-## Fontes de dados
+ChEMBL 37, BindingDB and Tox21. The derived data follow the terms of each source. ChEMBL is distributed under CC BY-SA 3.0. Consult the terms of the other sources before redistributing the datasets.
 
-ChEMBL 37, BindingDB e Tox21. Os dados derivados seguem os termos de cada fonte. O ChEMBL é distribuído sob CC BY-SA 3.0. Consulte os termos das demais fontes antes de redistribuir os datasets.
+## License
 
-## Licença
-
-A definir.
+To be determined.

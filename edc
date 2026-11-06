@@ -2,11 +2,11 @@
 # Local launcher: runs edc.py with the project's own virtual environment, from any
 # directory. Keeps PYTHONDONTWRITEBYTECODE on so the folder stays free of __pycache__.
 set -euo pipefail
-AQUI="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [ ! -x "$AQUI/.venv/bin/python" ]; then
-  echo "Ambiente local nao encontrado em $AQUI/.venv" >&2
-  echo "Crie com as instrucoes da secao 'Instalacao' do README.md" >&2
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ ! -x "$HERE/.venv/bin/python" ]; then
+  echo "Local environment not found at $HERE/.venv" >&2
+  echo "Create it following the 'Installation' section of README.md" >&2
   exit 1
 fi
 export PYTHONDONTWRITEBYTECODE=1
-exec "$AQUI/.venv/bin/python" "$AQUI/edc.py" "$@"
+exec "$HERE/.venv/bin/python" "$HERE/edc.py" "$@"

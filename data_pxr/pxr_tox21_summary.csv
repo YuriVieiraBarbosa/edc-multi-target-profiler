@@ -1,0 +1,2 @@
+aid,assay,receptor,mode,cell_line,n_tested,n_active,n_inconclusive,n_cytotox_confounds_registered,applied_cytotox_mask,viability_counter_assay,compounds_valid,frac_actives,pAC50_median_of_actives
+2283988,TOX21_PXR_LUC_Agonist,PXR,agonist,HepG2-LUC,9667,2759,1141,774,False,2283994,5924,0.3288,4.6

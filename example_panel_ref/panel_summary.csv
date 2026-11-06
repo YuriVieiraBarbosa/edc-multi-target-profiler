@@ -1,0 +1,84 @@
+name,receptor,layers_assessed,layers_active,pharmacological_evidence,tox21_evidence,active_fraction,alert
+17beta-Estradiol,AR,6,5,2,3,0.83,high (pharmacological + environmental)
+17beta-Estradiol,ESR1,12,11,8,3,0.92,high (pharmacological + environmental)
+17beta-Estradiol,ESR2,8,8,8,0,1.0,moderate (majority of layers)
+17beta-Estradiol,PPARG,2,0,0,0,0.0,no alert
+17beta-Estradiol,TR,1,1,0,1,1.0,low (isolated evidence)
+4-Nonylphenol,AR,4,1,0,1,0.25,low (isolated evidence)
+4-Nonylphenol,ESR1,12,9,6,3,0.75,high (pharmacological + environmental)
+4-Nonylphenol,ESR2,6,6,6,0,1.0,moderate (majority of layers)
+4-Nonylphenol,PPARG,2,0,0,0,0.0,no alert
+4-Nonylphenol,TR,1,1,0,1,1.0,low (isolated evidence)
+Atrazine,AR,4,0,0,0,0.0,no alert
+Atrazine,ESR1,4,0,0,0,0.0,no alert
+Atrazine,PPARG,2,0,0,0,0.0,no alert
+Atrazine,TR,1,0,0,0,0.0,no alert
+Bisphenol A,AR,6,2,0,2,0.33,low (isolated evidence)
+Bisphenol A,ESR1,12,10,7,3,0.83,high (pharmacological + environmental)
+Bisphenol A,ESR2,6,6,6,0,1.0,moderate (majority of layers)
+Bisphenol A,PPARG,2,1,0,1,0.5,low (isolated evidence)
+Bisphenol A,TR,1,1,0,1,1.0,low (isolated evidence)
+Bisphenol S,AR,4,1,0,1,0.25,low (isolated evidence)
+Bisphenol S,ESR1,10,5,3,2,0.5,high (pharmacological + environmental)
+Bisphenol S,ESR2,2,0,0,0,0.0,no alert
+Bisphenol S,PPARG,2,0,0,0,0.0,no alert
+Bisphenol S,TR,1,0,0,0,0.0,no alert
+Caffeine,AR,4,0,0,0,0.0,no alert
+Caffeine,ESR1,4,0,0,0,0.0,no alert
+Caffeine,PPARG,2,0,0,0,0.0,no alert
+Caffeine,TR,1,0,0,0,0.0,no alert
+DBP,AR,4,0,0,0,0.0,no alert
+DBP,ESR1,6,0,0,0,0.0,no alert
+DBP,PPARG,2,0,0,0,0.0,no alert
+DBP,TR,1,0,0,0,0.0,no alert
+DEHP,AR,4,0,0,0,0.0,no alert
+DEHP,ESR1,4,0,0,0,0.0,no alert
+DEHP,PPARG,2,0,0,0,0.0,no alert
+DEHP,TR,1,0,0,0,0.0,no alert
+Flutamide,AR,8,5,3,2,0.62,high (pharmacological + environmental)
+Flutamide,ESR1,4,2,0,2,0.5,moderate (majority of layers)
+Flutamide,PPARG,2,0,0,0,0.0,no alert
+Flutamide,TR,1,1,0,1,1.0,low (isolated evidence)
+Genistein,AR,4,1,0,1,0.25,low (isolated evidence)
+Genistein,ESR1,12,8,5,3,0.67,high (pharmacological + environmental)
+Genistein,ESR2,6,5,5,0,0.83,moderate (majority of layers)
+Genistein,PPARG,4,1,0,1,0.25,low (isolated evidence)
+Genistein,TR,1,1,0,1,1.0,low (isolated evidence)
+Ibuprofen,AR,4,0,0,0,0.0,no alert
+Ibuprofen,ESR1,10,2,2,0,0.2,low (isolated evidence)
+Ibuprofen,ESR2,2,1,1,0,0.5,low (isolated evidence)
+Ibuprofen,PPARG,2,0,0,0,0.0,no alert
+Ibuprofen,TR,1,0,0,0,0.0,no alert
+Methoxychlor,AR,4,2,0,2,0.5,moderate (majority of layers)
+Methoxychlor,ESR1,8,5,3,2,0.62,high (pharmacological + environmental)
+Methoxychlor,ESR2,2,0,0,0,0.0,no alert
+Methoxychlor,PPARG,2,0,0,0,0.0,no alert
+Methoxychlor,TR,1,1,0,1,1.0,low (isolated evidence)
+Rosiglitazone,AR,4,0,0,0,0.0,no alert
+Rosiglitazone,ESR1,6,1,0,1,0.17,low (isolated evidence)
+Rosiglitazone,ESR2,2,0,0,0,0.0,no alert
+Rosiglitazone,PPARG,12,4,3,1,0.33,high (pharmacological + environmental)
+Rosiglitazone,TR,1,0,0,0,0.0,no alert
+Sucrose,AR,4,0,0,0,0.0,no alert
+Sucrose,ESR1,4,0,0,0,0.0,no alert
+Sucrose,ESR2,2,0,0,0,0.0,no alert
+Sucrose,PPARG,2,0,0,0,0.0,no alert
+Sucrose,TR,1,0,0,0,0.0,no alert
+Triclosan,AR,4,3,0,3,0.75,moderate (majority of layers)
+Triclosan,ESR1,4,2,0,2,0.5,moderate (majority of layers)
+Triclosan,PPARG,2,0,0,0,0.0,no alert
+Triclosan,TR,1,1,0,1,1.0,low (isolated evidence)
+Vinclozolin,AR,4,2,0,2,0.5,moderate (majority of layers)
+Vinclozolin,ESR1,4,1,0,1,0.25,low (isolated evidence)
+Vinclozolin,PPARG,2,0,0,0,0.0,no alert
+Vinclozolin,TR,1,0,0,0,0.0,no alert
+Zearalenone,AR,3,1,0,1,0.33,low (isolated evidence)
+Zearalenone,ESR1,8,4,0,4,0.5,moderate (majority of layers)
+Zearalenone,ESR2,2,2,2,0,1.0,low (isolated evidence)
+Zearalenone,PPARG,2,1,0,1,0.5,low (isolated evidence)
+Zearalenone,TR,1,1,0,1,1.0,low (isolated evidence)
+p-p-DDT,AR,4,1,0,1,0.25,low (isolated evidence)
+p-p-DDT,ESR1,8,4,2,2,0.5,high (pharmacological + environmental)
+p-p-DDT,ESR2,2,0,0,0,0.0,no alert
+p-p-DDT,PPARG,2,0,0,0,0.0,no alert
+p-p-DDT,TR,1,1,0,1,1.0,low (isolated evidence)

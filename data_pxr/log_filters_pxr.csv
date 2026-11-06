@@ -1,0 +1,9 @@
+step,records
+"0. raw (IC50/Ki/Kd/EC50, human PXR)",1931
+1. confidence_score >= 8,1931
+2. relation '=',1165
+3. unit convertible to nM,1164
+4. plausible band,1164
+5. validity ok,1157
+6. with structure,1157
+7. standardized structure valid,1154

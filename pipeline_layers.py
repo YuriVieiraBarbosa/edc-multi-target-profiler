@@ -1,8 +1,8 @@
-"""Camadas paralelas de bioatividade do ChEMBL 37: Ki, Kd e EC50.
+"""Parallel bioactivity layers from ChEMBL 37: Ki, Kd, and EC50.
 
-Mesmos alvos, mesmos filtros de comparabilidade e mesma padronização do
-dataset de IC50. Cada tipo de medida gera datasets independentes —
-Ki, Kd, EC50 e IC50 nunca são fundidos.
+Same targets, same comparability filters, and same standardization as the
+IC50 dataset. Each kind of measure generates independent datasets —
+Ki, Kd, EC50, and IC50 are never merged.
 """
 import os, re, sys, sqlite3
 sys.path.append(os.getcwd())
@@ -27,7 +27,7 @@ PROV = ["molecule_chembl_id", "molecule_name", "canonical_smiles", "std_smiles",
         "undefined_stereo", "mw"]
 
 DB = "chembl/chembl_37/chembl_37_sqlite/chembl_37.db"
-TIPOS = ["Ki", "Kd", "EC50"]
+TYPES = ["Ki", "Kd", "EC50"]
 MIN_REG = 50
 
 if not os.path.exists("cache/chembl37_targets.csv"):
@@ -46,8 +46,8 @@ tids = sorted(set(single.tid))
 con = sqlite3.connect(DB)
 sql = ACT_SQL.format(tids=",".join("?" * len(tids))).replace(
     "AND act.standard_type = 'IC50'",
-    "AND act.standard_type IN ({})".format(",".join("?" * len(TIPOS))))
-raw = pd.read_sql(sql, con, params=tids + TIPOS)
+    "AND act.standard_type IN ({})".format(",".join("?" * len(TYPES))))
+raw = pd.read_sql(sql, con, params=tids + TYPES)
 con.close()
 raw = raw.merge(single[["target_chembl_id", "accession", "target_label"]].drop_duplicates(),
                 on="target_chembl_id", how="left")
@@ -55,19 +55,19 @@ raw = raw.merge(single[["target_chembl_id", "accession", "target_label"]].drop_d
 log = []
 # Record the record count after one filtering step, for the curation funnel log.
 def note(step, df):
-    log.append({"etapa": step, "registros": len(df)})
+    log.append({"step": step, "records": len(df)})
     print(f"{step:50s} n={len(df):7d}")
 
-note("0. brutos (Ki/Kd/EC50, alvo humano)", raw)
+note("0. Raw (Ki/Kd/EC50, human target)", raw)
 d = raw[raw.target_organism == "Homo sapiens"]
 d = d[d.confidence_score >= 8]; note("1. confidence_score >= 8", d)
-d = d[d.standard_relation == "="]; note("2. relação '='", d)
+d = d[d.standard_relation == "="]; note("2. relation '='", d)
 d = d[d.standard_units.isin(UNIT_TO_NM)].copy()
 d["value_nM"] = pd.to_numeric(d.standard_value, errors="coerce") * d.standard_units.map(UNIT_TO_NM)
-note("3. unidade conversível para nM", d)
-d = d[d.value_nM.between(1e-3, 1e7)]; note("4. faixa plausível", d)
-d = d[~d.data_validity_comment.isin(BAD_VALIDITY)]; note("5. validade ok", d)
-d = d[d.canonical_smiles.notna() & (d.structure_type == "MOL")]; note("6. com estrutura", d)
+note("3. unit convertible into nM", d)
+d = d[d.value_nM.between(1e-3, 1e7)]; note("4. plausible value band", d)
+d = d[~d.data_validity_comment.isin(BAD_VALIDITY)]; note("5. validity ok", d)
+d = d[d.canonical_smiles.notna() & (d.structure_type == "MOL")]; note("6. with structure", d)
 
 std_path = "cache/layers_std_lookup.pkl"
 if os.path.exists(std_path):
@@ -76,17 +76,17 @@ else:
     std = curation.standardize_frame(d.canonical_smiles, n_jobs=10)
     std.to_pickle(std_path)
 d = d.merge(std, on="canonical_smiles", how="left")
-d = d[d.reject_reason.isna()]; note("7. estrutura padronizada válida", d)
+d = d[d.reject_reason.isna()]; note("7. valid standardized structure", d)
 
 d["pAct"] = curation.to_pic50(d.value_nM)
-d["assay_mode"] = np.where(d.assay_description.fillna("").str.contains(ANTAG_RE), "antagonista",
-                  np.where(d.assay_description.fillna("").str.contains(AGONIST_RE), "agonista", "indefinido"))
+d["assay_mode"] = np.where(d.assay_description.fillna("").str.contains(ANTAG_RE), "antagonist",
+                  np.where(d.assay_description.fillna("").str.contains(AGONIST_RE), "agonist", "undefined"))
 d["source"] = "ChEMBL37"
-d.to_pickle("cache/chembl_layers_filtrado.pkl")
+d.to_pickle("cache/chembl_layers_filtered.pkl")
 
 os.makedirs("data_layers", exist_ok=True)
-resumo = []
-for (lab, tipo, atype), grp in d.groupby(["target_label", "standard_type", "assay_type"]):
+summary = []
+for (lab, kind, atype), grp in d.groupby(["target_label", "standard_type", "assay_type"]):
     if atype not in ("B", "F") or len(grp) < MIN_REG:
         continue
     agg = curation.aggregate_replicates(grp, ["inchikey"], "pAct", max_spread=1.0)
@@ -102,17 +102,17 @@ for (lab, tipo, atype), grp in d.groupby(["target_label", "standard_type", "assa
                     all_dois=("doi", lambda s: "|".join(sorted(set(s.dropna())))),
                     all_pmids=("pubmed_id", lambda s: "|".join(sorted(set(str(int(x)) for x in s.dropna()))))))
     ds = ds.merge(refs, on="inchikey", how="left")
-    ep = f"{lab}_{tipo}_{atype}"
+    ep = f"{lab}_{kind}_{atype}"
     ds["endpoint"] = ep
     ds.to_csv(f"data_layers/dataset_{ep}.csv", index=False)
-    resumo.append({"endpoint": ep, "alvo": lab, "medida": tipo, "assay_type": atype,
-                   "registros": len(grp), "compostos": grp.inchikey.nunique(),
-                   "descartados_discordantes": int(agg.discordant.sum()),
-                   "compostos_finais": len(ds),
-                   "pAct_mediana": round(ds.pAct_final.median(), 2),
-                   "frac_antagonista": round((ds.assay_mode == "antagonista").mean(), 3)})
+    summary.append({"endpoint": ep, "target": lab, "measure": kind, "assay_type": atype,
+                   "records": len(grp), "compounds": grp.inchikey.nunique(),
+                   "discarded_discordant": int(agg.discordant.sum()),
+                   "compounds_final": len(ds),
+                   "pAct_median": round(ds.pAct_final.median(), 2),
+                   "frac_antagonist": round((ds.assay_mode == "antagonist").mean(), 3)})
 
-resumo = pd.DataFrame(resumo).sort_values("compostos_finais", ascending=False)
-resumo.to_csv("data_layers/resumo_camadas.csv", index=False)
-pd.DataFrame(log).to_csv("data_layers/log_filtros_camadas.csv", index=False)
-print("\n", resumo.to_string(index=False))
+summary = pd.DataFrame(summary).sort_values("compounds_final", ascending=False)
+summary.to_csv("data_layers/layer_summary.csv", index=False)
+pd.DataFrame(log).to_csv("data_layers/log_layer_filters.csv", index=False)
+print("\n", summary.to_string(index=False))

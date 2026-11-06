@@ -1,5 +1,5 @@
-"""Filtra o dump completo do BindingDB (TSV) pelas UniProt dos alvos de
-desregulação endócrina, mantendo apenas registros com IC50."""
+"""Filters the complete BindingDB dump (TSV) by the UniProt IDs of the endocrine
+disruption targets, keeping only records with IC50."""
 import csv, pandas as pd
 
 ACC = {"P10275": "AR", "P03372": "ESR1", "Q92731": "ESR2",
@@ -31,6 +31,6 @@ for ch in reader:
 df = pd.concat(out, ignore_index=True)
 df["target_label"] = df[UP].map(ACC)
 df.to_parquet("cache/bindingdb_ic50_raw.parquet", index=False)
-print("linhas lidas:", n, "| registros IC50 nos alvos:", kept)
+print("rows read:", n, "| IC50 records in targets:", kept)
 print(df.groupby("target_label").size().to_string())
 print(df["Number of Protein Chains in Target (>1 implies a multichain complex)"].value_counts().to_dict())

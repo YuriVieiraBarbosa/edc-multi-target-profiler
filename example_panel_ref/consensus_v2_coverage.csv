@@ -1,0 +1,7 @@
+receptor,pharmacological,screening,pharmacological_measures,screening_modes
+AR,3,4,"EC50, IC50, Ki","agonist, antagonist"
+ESR1,4,4,"EC50, IC50, Ki","agonist, antagonist"
+ESR2,4,0,"EC50, IC50, Ki",
+PPARG,5,2,"EC50, IC50, Ki","agonist, antagonist"
+THRB,1,0,IC50,
+TR,0,1,,antagonist

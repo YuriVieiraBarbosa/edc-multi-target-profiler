@@ -1,0 +1,10 @@
+step,records
+"0. Raw (4 measures, 7 targets)",31792
+1. single-chain target,31148
+2. human organism,29427
+3. one row per record x measure,29952
+4. value not censored (without < nor >),25835
+5. plausible band (1e-3 to 1e7 nM),25788
+6. with structure,25788
+7. provenance outside ChEMBL,6694
+8. standardized structure valid,6684

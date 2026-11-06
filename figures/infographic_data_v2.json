@@ -1,0 +1,1 @@
+{"matrix": [[10, 1, 6], [4, 1, 5], [22, 34, 43]], "total": 126, "n_v1": 83, "n_new": 43, "v1": {"no alert": 40, "low": 23, "moderate": 10, "high": 10}, "coverage": [["AR", 3, 4], ["ESR1", 4, 4], ["ESR2", 4, 0], ["PPARG", 5, 2], ["THRB", 1, 0], ["TR", 0, 1]], "n_predictions": 1098, "n_endpoints": 666}

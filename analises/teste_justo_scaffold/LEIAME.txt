@@ -1,8 +1,0 @@
-Teste justo do efeito de grandes grupos de scaffold no treino (mesmo teste nas condicoes A, B e C).
-Pre-requisitos: copiar features.py, modeling.py e modeling_tox21.py da pasta do pipeline para work/; datasets em
-work/data_ic50, work/data_layers e work/data_tox21; resultados do regime antigo em work/out/old_<grupo>_<endpoint>.json
-(do pacote resultados_brutos da reavaliacao anterior).
-Ordem: (1) cd work; python fair_test.py <ic50|layers|tox21> <endpoint> <sementes...>  (tarefas_fair.txt lista as chamadas;
-o varrimento usou 4 sementes no ChEMBL e 3 no Tox21: o argumento da quinta semente foi cortado na fila);
-(2) python analise_teste_justo.py  -> out/fair_longo.csv, out/fair_resumo_pareado.csv, out/fair_consistencia_sementes.csv.
-Ambiente: edcqsar-ml (rdkit, scikit-learn, xgboost conforme requirements.txt do pipeline).

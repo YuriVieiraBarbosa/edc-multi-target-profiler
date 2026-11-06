@@ -1,8 +1,8 @@
-"""Treino e validação QSAR por endpoint (regressão de pIC50 + classificação).
+"""Training and validation QSAR per endpoint (pIC50 regression + classification).
 
-Protocolo: split externo por scaffold de Bemis-Murcko (80/20); seleção de modelo
-por CV 5-fold no treino; refit no treino completo; avaliação no teste externo;
-y-scrambling; domínio de aplicabilidade por similaridade de Tanimoto.
+Protocol: external split by Bemis-Murcko scaffold (80/20); model selection
+by 5-fold CV on training set; refit on full training set; evaluation on external test;
+y-scrambling; applicability domain by Tanimoto similarity.
 """
 import os, sys, json, glob, pickle, warnings
 sys.path.append(os.getcwd())
@@ -79,9 +79,9 @@ def run_endpoint(path):
     tr, te = F.scaffold_split(df["std_smiles"].tolist(), test_size=0.2, seed=SEED)
     res = {"endpoint": ep, "n_total": len(df), "n_train": len(tr), "n_test": len(te),
            "n_scaffolds": df["std_smiles"].map(F.murcko_scaffold).nunique(),
-           "frac_ativos": float(ycls.mean()), "limiar_pIC50": ACTIVE_THRESHOLD}
+           "frac_actives": float(ycls.mean()), "pIC50_threshold": ACTIVE_THRESHOLD}
 
-    # ---------------- regressão
+    # ---------------- regression
     kf = KFold(5, shuffle=True, random_state=SEED)
     rows = []
     best, best_q2 = None, -np.inf
@@ -93,18 +93,18 @@ def run_endpoint(path):
         q2 = r2_score(y[tr], yhat_cv)
         m = gs.best_estimator_.fit(X[tr], y[tr])
         yhat = m.predict(X[te])
-        row = {"endpoint": ep, "tarefa": "regressao", "modelo": mname,
+        row = {"endpoint": ep, "task": "regression", "model_name": mname,
                "Q2_cv": q2, "RMSE_cv": float(np.sqrt(mean_squared_error(y[tr], yhat_cv))),
-               "R2_teste": r2_score(y[te], yhat),
-               "RMSE_teste": float(np.sqrt(mean_squared_error(y[te], yhat))),
-               "MAE_teste": mean_absolute_error(y[te], yhat),
-               "melhores_params": json.dumps(gs.best_params_)}
+               "R2_test": r2_score(y[te], yhat),
+               "RMSE_test": float(np.sqrt(mean_squared_error(y[te], yhat))),
+               "MAE_test": mean_absolute_error(y[te], yhat),
+               "best_params": json.dumps(gs.best_params_)}
         rows.append(row)
         if q2 > best_q2:
             best_q2, best = q2, (mname, m, yhat, yhat_cv)
 
     mname, m, yhat, yhat_cv = best
-    # y-scrambling no melhor modelo
+    # y-scrambling on the best model
     rng = np.random.default_rng(SEED)
     scr = []
     n_scr = 10 if len(tr) < 800 else 5
@@ -112,32 +112,32 @@ def run_endpoint(path):
         yp = rng.permutation(y[tr])
         yh = cross_val_predict(m, X[tr], yp, cv=kf, n_jobs=1)
         scr.append(r2_score(yp, yh))
-    res["regressao_melhor"] = mname
-    res["y_scrambling_Q2_medio"] = float(np.mean(scr))
+    res["best_regression"] = mname
+    res["y_scrambling_Q2_mean"] = float(np.mean(scr))
     res["y_scrambling_Q2_max"] = float(np.max(scr))
 
-    # domínio de aplicabilidade
-    sim_tr = F.tanimoto_max_to_train(bits[tr], bits[tr])  # inclui self=1
+    # applicability domain
+    sim_tr = F.tanimoto_max_to_train(bits[tr], bits[tr])  # includes self=1
     nn_tr = np.array([np.sort(row)[-2] if len(row) > 1 else 1.0 for row in
                       _tanimoto_matrix(bits[tr])])
     ad_thr = float(np.percentile(nn_tr, 5))
     sim_te = F.tanimoto_max_to_train(bits[te], bits[tr])
     in_ad = sim_te >= ad_thr
-    res["AD_limiar_tanimoto"] = ad_thr
-    res["frac_teste_no_dominio"] = float(in_ad.mean())
+    res["AD_threshold_tanimoto"] = ad_thr
+    res["frac_test_in_domain"] = float(in_ad.mean())
     if in_ad.sum() > 5:
-        res["RMSE_teste_no_dominio"] = float(np.sqrt(mean_squared_error(y[te][in_ad], yhat[in_ad])))
+        res["RMSE_test_in_domain"] = float(np.sqrt(mean_squared_error(y[te][in_ad], yhat[in_ad])))
     if (~in_ad).sum() > 5:
-        res["RMSE_teste_fora_dominio"] = float(np.sqrt(mean_squared_error(y[te][~in_ad], yhat[~in_ad])))
+        res["RMSE_test_outside_domain"] = float(np.sqrt(mean_squared_error(y[te][~in_ad], yhat[~in_ad])))
 
     joblib.dump({"model": m, "feature_names": names, "endpoint": ep, "task": "regression",
                  "train_bits": bits[tr], "ad_threshold": ad_thr,
                  "train_smiles": df["std_smiles"].iloc[tr].tolist()},
-                f"models/{ep}_regressao.joblib", compress=3)
-    np.save(f"results/{ep}_pred_teste.npy",
+                f"models/{ep}_regression.joblib", compress=3)
+    np.save(f"results/{ep}_pred_test.npy",
             np.vstack([y[te], yhat, sim_te]))
 
-    # ---------------- classificação
+    # ---------------- classification
     skf = StratifiedKFold(5, shuffle=True, random_state=SEED)
     cbest, cbest_auc = None, -np.inf
     if 0.05 < ycls.mean() < 0.95 and min(np.bincount(ycls[tr])) >= 10:
@@ -151,19 +151,19 @@ def run_endpoint(path):
             mc = gs.best_estimator_.fit(X[tr], ycls[tr])
             p = mc.predict_proba(X[te])[:, 1]
             pred = (p >= 0.5).astype(int)
-            rows.append({"endpoint": ep, "tarefa": "classificacao", "modelo": mname_c,
-                         "ROC_AUC_cv": auc_cv, "ROC_AUC_teste": roc_auc_score(ycls[te], p),
-                         "PR_AUC_teste": average_precision_score(ycls[te], p),
-                         "BalAcc_teste": balanced_accuracy_score(ycls[te], pred),
-                         "MCC_teste": matthews_corrcoef(ycls[te], pred),
-                         "melhores_params": json.dumps(gs.best_params_)})
+            rows.append({"endpoint": ep, "task": "classification", "model_name": mname_c,
+                         "ROC_AUC_cv": auc_cv, "ROC_AUC_test": roc_auc_score(ycls[te], p),
+                         "PR_AUC_test": average_precision_score(ycls[te], p),
+                         "BalAcc_test": balanced_accuracy_score(ycls[te], pred),
+                         "MCC_test": matthews_corrcoef(ycls[te], pred),
+                         "best_params": json.dumps(gs.best_params_)})
             if auc_cv > cbest_auc:
                 cbest_auc, cbest = auc_cv, (mname_c, mc)
-        res["classificacao_melhor"] = cbest[0]
+        res["best_classification"] = cbest[0]
         joblib.dump({"model": cbest[1], "feature_names": names, "endpoint": ep,
                      "task": "classification", "threshold_pIC50": ACTIVE_THRESHOLD,
                      "train_bits": bits[tr], "ad_threshold": ad_thr},
-                    f"models/{ep}_classificacao.joblib", compress=3)
+                    f"models/{ep}_classification.joblib", compress=3)
     return res, rows
 
 
@@ -182,9 +182,9 @@ if __name__ == "__main__":
     for p in paths:
         r, rows = run_endpoint(p)
         all_res.append(r); all_rows.extend(rows)
-        print(f"{r['endpoint']:10s} n={r['n_total']:5d} melhor={r['regressao_melhor']:12s} "
-              f"Q2={max(x['Q2_cv'] for x in rows if x['endpoint']==r['endpoint'] and x['tarefa']=='regressao'):.3f} "
-              f"AD={r['frac_teste_no_dominio']:.2f}", flush=True)
-    pd.DataFrame(all_res).to_csv("results/resumo_modelos.csv", index=False)
-    pd.DataFrame(all_rows).to_csv("results/desempenho_modelos.csv", index=False)
+        print(f"{r['endpoint']:10s} n={r['n_total']:5d} best={r['best_regression']:12s} "
+              f"Q2={max(x['Q2_cv'] for x in rows if x['endpoint']==r['endpoint'] and x['task']=='regression'):.3f} "
+              f"AD={r['frac_test_in_domain']:.2f}", flush=True)
+    pd.DataFrame(all_res).to_csv("results/model_summary.csv", index=False)
+    pd.DataFrame(all_rows).to_csv("results/model_performance.csv", index=False)
     print("OK")

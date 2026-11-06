@@ -1,2 +1,0 @@
-aid,ensaio,receptor,modo,linhagem,n_testados,n_ativos,n_inconclusivos,n_citotox_confunde_registrado,mascara_citotox_aplicada,contra_ensaio_viabilidade,compostos_validos,frac_ativos,pAC50_mediana_dos_ativos
-2283988,TOX21_PXR_LUC_Agonist,PXR,agonista,HepG2-LUC,9667,2759,1141,774,False,2283994,5924,0.3288,4.6

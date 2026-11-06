@@ -1,8 +1,8 @@
-"""Classificadores Tox21 por ensaio (química ambiental).
+"""Tox21 classifiers per assay (environmental chemistry).
 
-Mesmo protocolo dos modelos ChEMBL: split externo por scaffold, seleção por
-CV 5-fold. O limiar de decisão é otimizado por CV (máximo MCC) em vez de 0,5,
-porque as classes são fortemente desbalanceadas.
+Same protocol as the ChEMBL models: external split by scaffold, selection by
+5-fold CV. The decision threshold is optimized by CV (maximum MCC) instead of 0.5,
+because the classes are strongly imbalanced.
 """
 import os, sys, glob, json, warnings
 sys.path.append(os.getcwd())
@@ -42,7 +42,7 @@ def zoo():
 
 
 # Probability threshold that maximises the MCC over a 0.05-0.95 grid.
-def melhor_limiar(y, p):
+def best_threshold(y, p):
     grid = np.unique(np.round(np.linspace(0.05, 0.95, 91), 3))
     mccs = [matthews_corrcoef(y, (p >= t).astype(int)) for t in grid]
     i = int(np.argmax(mccs))
@@ -50,51 +50,52 @@ def melhor_limiar(y, p):
 
 
 # Train and evaluate the active/inactive classifier for one Tox21 assay.
-def rodar(path):
+def run(path):
     ep = os.path.basename(path).replace("dataset_", "").replace(".csv", "")
     df = pd.read_csv(path)
     X, bits, names, ok = F.featurize(df["std_smiles"].tolist())
     df = df[ok].reset_index(drop=True)
-    y = df["ativo_especifico"].astype(int).to_numpy()
+    y = df["specific_active"].astype(int).to_numpy()
     if min(np.bincount(y)) < 30:
         return None, []
     tr, te = F.scaffold_split(df["std_smiles"].tolist(), test_size=0.2, seed=SEED)
     skf = StratifiedKFold(5, shuffle=True, random_state=SEED)
     rows, best, best_auc = [], None, -np.inf
-    for nome, (est, grid) in zoo().items():
+    for name, (est, grid) in zoo().items():
         gs = GridSearchCV(est, grid, cv=skf, scoring="roc_auc", n_jobs=1)
         gs.fit(X[tr], y[tr])
         p_cv = cross_val_predict(gs.best_estimator_, X[tr], y[tr], cv=skf,
                                  method="predict_proba", n_jobs=1)[:, 1]
         auc_cv = roc_auc_score(y[tr], p_cv)
-        thr, mcc_cv = melhor_limiar(y[tr], p_cv)
+        thr, mcc_cv = best_threshold(y[tr], p_cv)
         m = gs.best_estimator_.fit(X[tr], y[tr])
         p = m.predict_proba(X[te])[:, 1]
-        rows.append({"endpoint": ep, "modelo": nome, "ROC_AUC_cv": auc_cv,
-                     "MCC_cv_no_limiar": mcc_cv, "limiar": thr,
-                     "ROC_AUC_teste": roc_auc_score(y[te], p),
-                     "PR_AUC_teste": average_precision_score(y[te], p),
-                     "BalAcc_teste_0.5": balanced_accuracy_score(y[te], (p >= 0.5).astype(int)),
-                     "BalAcc_teste_limiar": balanced_accuracy_score(y[te], (p >= thr).astype(int)),
-                     "MCC_teste_0.5": matthews_corrcoef(y[te], (p >= 0.5).astype(int)),
-                     "MCC_teste_limiar": matthews_corrcoef(y[te], (p >= thr).astype(int)),
+        rows.append({"endpoint": ep, "model_name": name, "ROC_AUC_cv": auc_cv,
+                     "MCC_cv_at_threshold": mcc_cv, "threshold": thr,
+                     "ROC_AUC_test": roc_auc_score(y[te], p),
+                     "PR_AUC_test": average_precision_score(y[te], p),
+                     "BalAcc_test_0.5": balanced_accuracy_score(y[te], (p >= 0.5).astype(int)),
+                     "BalAcc_test_threshold": balanced_accuracy_score(y[te], (p >= thr).astype(int)),
+                     "MCC_test_0.5": matthews_corrcoef(y[te], (p >= 0.5).astype(int)),
+                     "MCC_test_threshold": matthews_corrcoef(y[te], (p >= thr).astype(int)),
                      "params": json.dumps(gs.best_params_)})
         if auc_cv > best_auc:
-            best_auc, best = auc_cv, (nome, m, thr)
-    nome, m, thr = best
+            best_auc, best = auc_cv, (name, m, thr)
+    name, m, thr = best
     sim_self = np.array([np.partition(r, -2)[-2] for r in _tan(bits[tr])])
     ad = float(np.percentile(sim_self, 5))
-    # refit em 100% para produção
-    mf = zoo()[nome][0]
-    mf.set_params(**json.loads([r for r in rows if r["modelo"] == nome][0]["params"]))
+    # refit at 100% for production
+    mf = zoo()[name][0]
+    mf.set_params(**json.loads([r for r in rows if r["model_name"] == name][0]["params"]))
     mf.fit(X, y)
+    # the keys of the saved .joblib artifacts keep their original names (limiar, modelo, nao_implantavel, ...) so the existing model files stay readable
     joblib.dump({"model": mf, "endpoint": ep, "task": "classification_tox21",
                  "limiar": thr, "train_bits": bits, "ad_threshold": ad,
-                 "n_train": len(df), "frac_ativos": float(y.mean()), "modelo": nome},
+                 "n_train": len(df), "frac_ativos": float(y.mean()), "modelo": name},
                 f"models_tox21/{ep}.joblib", compress=3)
-    res = {"endpoint": ep, "n": len(df), "frac_ativos": float(y.mean()),
+    res = {"endpoint": ep, "n": len(df), "frac_actives": float(y.mean()),
            "n_scaffolds": df["std_smiles"].map(F.murcko_scaffold).nunique(),
-           "melhor_modelo": nome, "limiar": thr, "AD_limiar_tanimoto": ad}
+           "best_model": name, "threshold": thr, "AD_threshold_tanimoto": ad}
     return res, rows
 
 
@@ -111,28 +112,28 @@ def _tan(bits, block=1024):
 # Locate the folder holding the curated assay datasets. pipeline_tox21.py writes to
 # data_tox21/, but the delivered tree renamed it, so accept either name instead of failing
 # with an empty glob that looks like "no datasets".
-def pasta_dados(candidatas, rotulo):
-    for c in candidatas:
+def data_folder(candidate_paths, label):
+    for c in candidate_paths:
         if glob.glob(os.path.join(c, "dataset_*.csv")):
             return c
-    raise SystemExit(f"nenhum dataset de {rotulo} encontrado. Procurei por dataset_*.csv em: "
-                     + ", ".join(candidatas) + ".\nRode o pipeline_* correspondente antes, ou "
-                     "crie um atalho simbolico com um desses nomes.")
+    raise SystemExit(f"no {label} dataset found. Searched for dataset_*.csv in: "
+                     + ", ".join(candidate_paths) + ".\nRun the corresponding pipeline_* first, or "
+                     "create a symbolic link with one of these names.")
 
 
 if __name__ == "__main__":
-    pasta = pasta_dados(["data_tox21", "datasets_tox21_por_ensaio"], "ensaios Tox21")
-    print(f"datasets lidos de: {pasta}/", flush=True)
+    folder = data_folder(["data_tox21", "datasets_tox21_by_assay"], "Tox21 assays")
+    print(f"datasets read from: {folder}/", flush=True)
     allr, allrows = [], []
-    for p in sorted(glob.glob(f"{pasta}/dataset_*.csv")):
-        r, rows = rodar(p)
+    for p in sorted(glob.glob(f"{folder}/dataset_*.csv")):
+        r, rows = run(p)
         if r is None:
-            print("pulado (poucos ativos):", p, flush=True); continue
+            print("skipped (few actives):", p, flush=True); continue
         allr.append(r); allrows.extend(rows)
         b = max((x for x in rows), key=lambda x: x["ROC_AUC_cv"])
-        print(f"{r['endpoint']:34s} n={r['n']:5d} ativos={r['frac_ativos']:.3f} "
-              f"{r['melhor_modelo']:12s} AUCcv={b['ROC_AUC_cv']:.3f} AUCte={b['ROC_AUC_teste']:.3f} "
-              f"MCCte={b['MCC_teste_limiar']:.3f} thr={r['limiar']:.2f}", flush=True)
-    pd.DataFrame(allr).to_csv("results/resumo_modelos_tox21.csv", index=False)
-    pd.DataFrame(allrows).to_csv("results/desempenho_modelos_tox21.csv", index=False)
+        print(f"{r['endpoint']:34s} n={r['n']:5d} actives={r['frac_actives']:.3f} "
+              f"{r['best_model']:12s} AUCcv={b['ROC_AUC_cv']:.3f} AUCte={b['ROC_AUC_test']:.3f} "
+              f"MCCte={b['MCC_test_threshold']:.3f} thr={r['threshold']:.2f}", flush=True)
+    pd.DataFrame(allr).to_csv("results/model_summary_tox21.csv", index=False)
+    pd.DataFrame(allrows).to_csv("results/model_performance_tox21.csv", index=False)
     print("OK")

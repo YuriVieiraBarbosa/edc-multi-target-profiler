@@ -1,11 +1,11 @@
-nome,smiles
-Bisfenol A,CC(C)(c1ccc(O)cc1)c1ccc(O)cc1
-Genisteina,Oc1ccc(-c2coc3cc(O)cc(O)c3c2=O)cc1
-Zearalenona,CC1CCCC(=O)CCC/C=C/c2cc(O)cc(O)c2C(=O)O1
-4-Nonilfenol,CCCCCCCCCc1ccc(O)cc1
+name,smiles
+Bisphenol A,CC(C)(c1ccc(O)cc1)c1ccc(O)cc1
+Genistein,Oc1ccc(-c2coc3cc(O)cc(O)c3c2=O)cc1
+Zearalenone,CC1CCCC(=O)CCC/C=C/c2cc(O)cc(O)c2C(=O)O1
+4-Nonylphenol,CCCCCCCCCc1ccc(O)cc1
 p-p-DDT,ClC(Cl)(Cl)C(c1ccc(Cl)cc1)c1ccc(Cl)cc1
-Atrazina,CCNc1nc(Cl)nc(NC(C)C)n1
-Rosiglitazona,CN(CCOc1ccc(CC2SC(=O)NC2=O)cc1)c1ccccn1
-Flutamida,CC(C)C(=O)Nc1ccc([N+](=O)[O-])c(C(F)(F)F)c1
+Atrazine,CCNc1nc(Cl)nc(NC(C)C)n1
+Rosiglitazone,CN(CCOc1ccc(CC2SC(=O)NC2=O)cc1)c1ccccn1
+Flutamide,CC(C)C(=O)Nc1ccc([N+](=O)[O-])c(C(F)(F)F)c1
 DEHP,CCCCC(CC)COC(=O)c1ccccc1C(=O)OCC(CC)CCCC
-Cafeina,Cn1c(=O)c2c(ncn2C)n(C)c1=O
+Caffeine,Cn1c(=O)c2c(ncn2C)n(C)c1=O

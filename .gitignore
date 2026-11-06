@@ -3,18 +3,18 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# Ambiente virtual local e o bootstrap do virtualenv (ver secao Instalacao do README).
-# O proprio virtualenv ja grava um .gitignore com '*' dentro de .venv/, mas a regra fica
-# aqui tambem para o caso de o ambiente ser recriado por outra ferramenta.
+# Local virtual environment and the virtualenv bootstrap (see the Installation section of the README).
+# virtualenv already writes a .gitignore with '*' inside .venv/, but the rule is kept
+# here too in case the environment is recreated by another tool.
 .venv/
 .tools/
 venv/
 env/
 
-# Resultados gerados a cada execucao (rodar_edc.py grava em resultados/AAAAMMDD_HHMMSS_<nome>/)
-resultados/
+# Results generated on every run (run_edc.py writes to results/YYYYMMDD_HHMMSS_<name>/)
+results/
 
-# Configuracao local de ferramentas/editor
+# Local tool/editor configuration
 .claude/
 .vscode/
 .idea/

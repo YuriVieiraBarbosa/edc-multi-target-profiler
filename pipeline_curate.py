@@ -1,7 +1,7 @@
-"""Pipeline de curadoria: ChEMBL 37 (primária) + BindingDB (secundária/externa).
+"""Curation pipeline: ChEMBL 37 (primary) + BindingDB (secondary/external).
 
-Produz, por endpoint e por tipo de ensaio, datasets de pIC50 comparáveis,
-com proveniência completa e um log de contagens por filtro.
+Produces, per endpoint and per assay kind, comparable pIC50 datasets,
+with full provenance and a log of counts per filter.
 """
 import os, sys, re, json
 sys.path.append(os.getcwd())
@@ -25,21 +25,21 @@ log = []
 
 # Record the record and compound count after one filtering step, for the curation funnel log.
 def note(step, df, extra=""):
-    log.append({"etapa": step, "registros": len(df),
-                "compostos": df["molecule_chembl_id"].nunique() if "molecule_chembl_id" in df else np.nan,
+    log.append({"step": step, "records": len(df),
+                "compounds": df["molecule_chembl_id"].nunique() if "molecule_chembl_id" in df else np.nan,
                 "obs": extra})
     print(f"{step:55s} n={len(df):7d} {extra}")
 
 
 # ---------------------------------------------------------------- ChEMBL
 act = pd.read_parquet("cache/chembl37_ic50_raw.parquet")
-note("0. IC50 brutos (alvo humano SINGLE PROTEIN)", act)
+note("0. Raw IC50 (human target SINGLE PROTEIN)", act)
 
 act = act[act["target_organism"] == "Homo sapiens"]
-note("1. alvo Homo sapiens", act)
+note("1. Homo sapiens target", act)
 
 act = act[act["confidence_score"] >= 8]
-note("2. confidence_score >= 8 (alvo proteico direto)", act)
+note("2. confidence_score >= 8 (direct protein target)", act)
 
 act = act[act["standard_relation"] == "="]
 note("3. standard_relation '='", act)
@@ -47,76 +47,76 @@ note("3. standard_relation '='", act)
 act = act[act["standard_units"].isin(UNIT_TO_NM)]
 act["value_nM"] = pd.to_numeric(act["standard_value"], errors="coerce") * \
     act["standard_units"].map(UNIT_TO_NM)
-note("4. unidade conversível para nM", act)
+note("4. unit convertible to nM", act)
 
 act = act[act["value_nM"].between(1e-3, 1e7, inclusive="both")]
-note("5. valor em faixa plausível (pIC50 2-12)", act)
+note("5. value in plausible band (pIC50 2-12)", act)
 
 act = act[~act["data_validity_comment"].isin(BAD_VALIDITY)]
-note("6. sem data_validity_comment problemático", act)
+note("6. without problematic data_validity_comment", act)
 
 act = act[act["canonical_smiles"].notna() & (act["structure_type"] == "MOL")]
-note("7. com estrutura química definida", act)
+note("7. with defined chemical structure", act)
 
-# padronização estrutural
+# structural standardization
 std_path = "cache/chembl_std_lookup.pkl"
 if os.path.exists(std_path):
     std = pd.read_pickle(std_path)
 else:
     std = curation.standardize_frame(act["canonical_smiles"], n_jobs=10)
     std.to_pickle(std_path)
-print("  SMILES únicos padronizados:", len(std),
-      "| rejeitados:", int(std["reject_reason"].notna().sum()))
+print("  SMILES unique standardized:", len(std),
+      "| rejected:", int(std["reject_reason"].notna().sum()))
 rej = std[std["reject_reason"].notna()]["reject_reason"].str.split(":").str[0].value_counts()
-print("  motivos:", rej.to_dict())
+print("  reasons:", rej.to_dict())
 
 act = act.merge(std, on="canonical_smiles", how="left")
-act_rejeitados = act[act["reject_reason"].notna()].copy()
+act_rejected = act[act["reject_reason"].notna()].copy()
 act = act[act["reject_reason"].isna()]
-note("8. estrutura padronizada válida (sal/solvente removido)", act)
+note("8. valid standardized structure (salt/solvent removed)", act)
 
 act["pIC50"] = curation.to_pic50(act["value_nM"])
 act["assay_mode"] = np.where(
-    act["assay_description"].fillna("").str.contains(ANTAG_RE), "antagonista",
-    np.where(act["assay_description"].fillna("").str.contains(AGONIST_RE), "agonista", "indefinido"))
+    act["assay_description"].fillna("").str.contains(ANTAG_RE), "antagonist",
+    np.where(act["assay_description"].fillna("").str.contains(AGONIST_RE), "agonist", "undefined"))
 act["source"] = "ChEMBL37"
-act.to_pickle("cache/chembl_ic50_filtrado.pkl")
+act.to_pickle("cache/chembl_ic50_filtered.pkl")
 
 # ---------------------------------------------------------------- BindingDB
-# extract_bindingdb.py grava .parquet; o .pkl fica aceito para caches antigos.
+# extract_bindingdb.py writes .parquet; .pkl remains accepted for old caches.
 bdb_raw = "cache/bindingdb_ic50_raw.parquet"
 if os.path.exists(bdb_raw):
     bdb = pd.read_parquet(bdb_raw)
 elif os.path.exists("cache/bindingdb_ic50_raw.pkl"):
     bdb = pd.read_pickle("cache/bindingdb_ic50_raw.pkl")
 else:
-    raise SystemExit(f"{bdb_raw} nao encontrado. Rode antes: python extract_bindingdb.py")
+    raise SystemExit(f"{bdb_raw} not found. Run before: python extract_bindingdb.py")
 bdb = bdb[bdb["Number of Protein Chains in Target (>1 implies a multichain complex)"] == "1"]
 raw_ic = bdb["IC50 (nM)"].astype(str).str.strip()
 bdb = bdb[~raw_ic.str.contains(r"[<>]")]
 bdb["value_nM"] = pd.to_numeric(raw_ic.str.replace(r"[^0-9eE.+-]", "", regex=True),
                                 errors="coerce")
 bdb = bdb[bdb["value_nM"].between(1e-3, 1e7)]
-# Nenhum script gravava cache/bindingdb_std_lookup.pkl, que antes era apenas LIDO aqui.
-# O lookup passa a ser construido como o do ChEMBL (mesma funcao, mesmo cache em disco),
-# e depois dos filtros numericos, para padronizar menos SMILES.
+# No script wrote cache/bindingdb_std_lookup.pkl, which before was only READ here.
+# The lookup now gets built like ChEMBL's (same function, same cache on disk),
+# and after the numeric filters, to standardize fewer SMILES.
 bstd_path = "cache/bindingdb_std_lookup.pkl"
 if os.path.exists(bstd_path):
     bstd = pd.read_pickle(bstd_path)
 else:
     bstd = curation.standardize_frame(bdb["Ligand SMILES"], n_jobs=10)
     bstd.to_pickle(bstd_path)
-print("  BindingDB SMILES unicos padronizados:", len(bstd),
-      "| rejeitados:", int(bstd["reject_reason"].notna().sum()))
+print("  BindingDB SMILES unique standardized:", len(bstd),
+      "| rejected:", int(bstd["reject_reason"].notna().sum()))
 bstd = bstd.rename(columns={"canonical_smiles": "Ligand SMILES"})
 bdb = bdb.merge(bstd, on="Ligand SMILES", how="left")
 bdb = bdb[bdb["reject_reason"].isna()]
 bdb["pIC50"] = curation.to_pic50(bdb["value_nM"])
 bdb["source"] = "BindingDB_202609"
-print(f"BindingDB após filtros equivalentes: n={len(bdb)}")
-bdb.to_pickle("cache/bindingdb_ic50_filtrado.pkl")
+print(f"BindingDB after equivalent filters: n={len(bdb)}")
+bdb.to_pickle("cache/bindingdb_ic50_filtered.pkl")
 
-# ------------------------------------------------- agregação por endpoint
+# ------------------------------------------------- aggregation by endpoint
 PROV = ["molecule_chembl_id", "molecule_name", "canonical_smiles", "std_smiles",
         "inchikey", "standard_type", "standard_relation", "standard_value",
         "standard_units", "value_nM", "pIC50", "pchembl_value", "assay_chembl_id",
@@ -137,7 +137,7 @@ for (lab, atype), grp in act.groupby(["target_label", "assay_type"]):
     ds = keep.set_index("inchikey").join(first[[c for c in PROV if c in first.columns]])
     ds = ds.reset_index().rename(columns={"pIC50_median": "pIC50_final"})
     ds["endpoint"] = f"{lab}_{atype}"
-    # proveniência de todas as referências que suportam cada composto
+    # provenance of all references that support each compound
     refs = (grp.groupby("inchikey")
                .agg(all_assays=("assay_chembl_id", lambda s: "|".join(sorted(set(s.dropna())))),
                     all_docs=("document_chembl_id", lambda s: "|".join(sorted(set(s.dropna())))),
@@ -145,22 +145,22 @@ for (lab, atype), grp in act.groupby(["target_label", "assay_type"]):
                     all_pmids=("pubmed_id", lambda s: "|".join(sorted(set(str(int(x)) for x in s.dropna()))))))
     ds = ds.merge(refs, on="inchikey", how="left")
     datasets[f"{lab}_{atype}"] = ds
-    summary.append({"endpoint": f"{lab}_{atype}", "alvo": lab, "assay_type": atype,
-                    "registros": len(grp), "compostos_unicos": grp["inchikey"].nunique(),
-                    "descartados_discordantes": int(agg["discordant"].sum()),
-                    "compostos_finais": len(ds),
+    summary.append({"endpoint": f"{lab}_{atype}", "target": lab, "assay_type": atype,
+                    "records": len(grp), "compounds_unique": grp["inchikey"].nunique(),
+                    "discarded_discordant": int(agg["discordant"].sum()),
+                    "compounds_final": len(ds),
                     "pIC50_min": round(ds["pIC50_final"].min(), 2),
                     "pIC50_max": round(ds["pIC50_final"].max(), 2),
-                    "pIC50_mediana": round(ds["pIC50_final"].median(), 2),
-                    "frac_modo_antagonista": round((ds["assay_mode"] == "antagonista").mean(), 3)})
+                    "pIC50_median": round(ds["pIC50_final"].median(), 2),
+                    "frac_antagonist_mode": round((ds["assay_mode"] == "antagonist").mean(), 3)})
     ds.to_csv(f"data/dataset_{lab}_{atype}.csv", index=False)
 
-summary = pd.DataFrame(summary).sort_values("compostos_finais", ascending=False)
-summary.to_csv("data/resumo_endpoints.csv", index=False)
-pd.DataFrame(log).to_csv("data/log_filtros_chembl.csv", index=False)
+summary = pd.DataFrame(summary).sort_values("compounds_final", ascending=False)
+summary.to_csv("data/endpoints_summary.csv", index=False)
+pd.DataFrame(log).to_csv("data/log_filters_chembl.csv", index=False)
 print("\n", summary.to_string(index=False))
 
-# ------------------------------------- conjunto externo independente (BindingDB)
+# ------------------------------------- independent external set (BindingDB)
 ext_rows = []
 for lab, grp in bdb.groupby("target_label"):
     chembl_keys = set(act[act["target_label"] == lab]["inchikey"])
@@ -175,6 +175,6 @@ for lab, grp in bdb.groupby("target_label"):
     e["target_label"] = lab
     ext_rows.append(e)
 ext = pd.concat(ext_rows, ignore_index=True)
-ext.to_csv("data/externo_bindingdb.csv", index=False)
-print("\nConjunto externo BindingDB (compostos ausentes do ChEMBL):")
+ext.to_csv("data/external_bindingdb.csv", index=False)
+print("\nExternal BindingDB set (compounds absent from ChEMBL):")
 print(ext.groupby("target_label").size().to_string())

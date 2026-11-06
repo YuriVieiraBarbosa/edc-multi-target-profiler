@@ -1,0 +1,667 @@
+name,receptor,axis,measure,endpoint_base,deployable,assessed,decision_base,positive,prob_active,threshold,tanimoto_nn,mode,pAct_predicted,pAct_lower,pAct_upper,simple_mode
+17beta-Estradiol,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.379,,,,,
+17beta-Estradiol,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.379,,,,,
+17beta-Estradiol,AR,pharmacological,IC50,AR_B,True,True,classification,True,0.8690000176429749,0.5,1.0,,7.5,6.699999809265137,8.300000190734863,
+17beta-Estradiol,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.271,,,,,
+17beta-Estradiol,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.379,,,,,
+17beta-Estradiol,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,True,0.915,0.4,1.0,agonist/HEK293T,,,,agonist
+17beta-Estradiol,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,True,0.792,0.36,1.0,agonist/MDA,,,,agonist
+17beta-Estradiol,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.9480000138282776,0.24,1.0,antagonist/HEK293T,,,,antagonist
+17beta-Estradiol,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.1099999994039535,0.15,1.0,antagonist/MDA,,,,antagonist
+17beta-Estradiol,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,True,0.734,0.5,0.717,,7.44,6.29,8.58,
+17beta-Estradiol,ESR1,pharmacological,EC50,ESR1_EC50_F,True,True,classification,True,0.9729999899864196,0.5,0.66,,7.179999828338623,6.199999809265137,8.15999984741211,
+17beta-Estradiol,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,True,0.9940000176429749,0.5,0.717,,7.340000152587891,6.510000228881836,8.180000305175781,
+17beta-Estradiol,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,1.0,,,,,
+17beta-Estradiol,ESR1,pharmacological,Ki,ESR1_Ki_B,True,True,classification,True,0.971,0.5,0.717,,9.119999885559082,8.319999694824219,9.93000030517578,
+17beta-Estradiol,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,True,0.988,0.26,1.0,agonist/HEK293T,,,,agonist
+17beta-Estradiol,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.982,0.35,1.0,agonist/VM7,,,,agonist
+17beta-Estradiol,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.0359999984502792,0.11,1.0,antagonist/HEK293T,,,,antagonist
+17beta-Estradiol,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,True,0.895,0.2,1.0,antagonist/VM7,,,,antagonist
+17beta-Estradiol,ESR2,pharmacological,EC50,ESR2_EC50_B,True,True,classification,True,0.962,0.5,0.717,,9.1899995803833,7.929999828338623,10.4399995803833,
+17beta-Estradiol,ESR2,pharmacological,EC50,ESR2_EC50_F,True,True,classification,True,0.996,0.5,0.711,,7.679999828338623,6.670000076293945,8.6899995803833,
+17beta-Estradiol,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,True,0.99,0.5,0.607,,7.78000020980835,6.860000133514404,8.710000038146973,
+17beta-Estradiol,ESR2,pharmacological,Ki,ESR2_Ki_B,True,True,classification,True,0.968,0.5,0.674,,8.14,7.14,9.14,
+17beta-Estradiol,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.207,,,,,
+17beta-Estradiol,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.198,,,,,
+17beta-Estradiol,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.198,,,,,
+17beta-Estradiol,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.198,,,,,
+17beta-Estradiol,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.14,,,,,
+17beta-Estradiol,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.2,,,,,
+17beta-Estradiol,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.002,0.4,1.0,agonist/HEK293,,,,agonist
+17beta-Estradiol,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0099999997764825,0.13,1.0,antagonist/HEK293,,,,antagonist
+17beta-Estradiol,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.151,,,,,
+17beta-Estradiol,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.169,,,,,
+17beta-Estradiol,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.176,,,,,
+17beta-Estradiol,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.141,,,,,
+17beta-Estradiol,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.169,,,,,
+17beta-Estradiol,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.183,,,,,
+17beta-Estradiol,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.8899999856948853,0.28,1.0,antagonist/GH3,,,,antagonist
+4-Nonylphenol,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.225,,,,,
+4-Nonylphenol,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.173,,,,,
+4-Nonylphenol,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.31,,,,,
+4-Nonylphenol,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.22,,,,,
+4-Nonylphenol,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.246,,,,,
+4-Nonylphenol,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.005,0.4,1.0,agonist/HEK293T,,,,agonist
+4-Nonylphenol,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.002,0.36,1.0,agonist/MDA,,,,agonist
+4-Nonylphenol,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.796999990940094,0.24,1.0,antagonist/HEK293T,,,,antagonist
+4-Nonylphenol,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.1490000039339065,0.15,1.0,antagonist/MDA,,,,antagonist
+4-Nonylphenol,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,False,0.444,0.5,0.452,,6.19,5.05,7.33,
+4-Nonylphenol,ESR1,pharmacological,EC50,ESR1_EC50_F,True,True,classification,True,0.975000023841858,0.5,0.565,,6.989999771118164,6.019999980926514,7.96999979019165,
+4-Nonylphenol,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,True,0.8999999761581421,0.5,1.0,,5.699999809265137,4.869999885559082,6.539999961853027,
+4-Nonylphenol,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.378,,,,,
+4-Nonylphenol,ESR1,pharmacological,Ki,ESR1_Ki_B,True,True,classification,True,0.85,0.5,1.0,,6.820000171661377,6.019999980926514,7.630000114440918,
+4-Nonylphenol,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.185,0.26,1.0,agonist/HEK293T,,,,agonist
+4-Nonylphenol,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.962,0.35,1.0,agonist/VM7,,,,agonist
+4-Nonylphenol,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.1260000020265579,0.11,1.0,antagonist/HEK293T,,,,antagonist
+4-Nonylphenol,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,True,0.418,0.2,1.0,antagonist/VM7,,,,antagonist
+4-Nonylphenol,ESR2,pharmacological,EC50,ESR2_EC50_B,True,True,classification,True,0.748,0.5,0.565,,7.010000228881836,5.760000228881836,8.270000457763672,
+4-Nonylphenol,ESR2,pharmacological,EC50,ESR2_EC50_F,True,True,classification,True,0.874,0.5,0.565,,7.489999771118164,6.480000019073486,8.510000228881836,
+4-Nonylphenol,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,True,0.502,0.5,0.452,,6.03000020980835,5.110000133514404,6.960000038146973,
+4-Nonylphenol,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.432,,,,,
+4-Nonylphenol,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.436,,,,,
+4-Nonylphenol,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.298,,,,,
+4-Nonylphenol,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.4,,,,,
+4-Nonylphenol,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.226,,,,,
+4-Nonylphenol,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.271,,,,,
+4-Nonylphenol,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.3,,,,,
+4-Nonylphenol,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.01,0.4,1.0,agonist/HEK293,,,,agonist
+4-Nonylphenol,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0219999998807907,0.13,1.0,antagonist/HEK293,,,,antagonist
+4-Nonylphenol,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.2,,,,,
+4-Nonylphenol,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.545,,,,,
+4-Nonylphenol,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.196,,,,,
+4-Nonylphenol,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.286,,,,,
+4-Nonylphenol,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.545,,,,,
+4-Nonylphenol,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.226,,,,,
+4-Nonylphenol,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.718999981880188,0.28,0.826,antagonist/GH3,,,,antagonist
+Atrazine,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.13,,,,,
+Atrazine,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.148,,,,,
+Atrazine,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.167,,,,,
+Atrazine,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.148,,,,,
+Atrazine,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.19,,,,,
+Atrazine,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.0,0.4,1.0,agonist/HEK293T,,,,agonist
+Atrazine,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.0,0.36,1.0,agonist/MDA,,,,agonist
+Atrazine,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,False,0.0740000009536743,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Atrazine,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0080000003799796,0.15,1.0,antagonist/MDA,,,,antagonist
+Atrazine,ESR1,pharmacological,EC50,ESR1_EC50_B,True,False,not_assessed,,,,0.232,,,,,
+Atrazine,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.155,,,,,
+Atrazine,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.167,,,,,
+Atrazine,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.289,,,,,
+Atrazine,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.351,,,,,
+Atrazine,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.042,0.26,1.0,agonist/HEK293T,,,,agonist
+Atrazine,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.058,0.35,1.0,agonist/VM7,,,,agonist
+Atrazine,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.0020000000949949,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Atrazine,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.022,0.2,0.731,antagonist/VM7,,,,antagonist
+Atrazine,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.14,,,,,
+Atrazine,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.116,,,,,
+Atrazine,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.155,,,,,
+Atrazine,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.239,,,,,
+Atrazine,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.164,,,,,
+Atrazine,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.177,,,,,
+Atrazine,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.15,,,,,
+Atrazine,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.119,,,,,
+Atrazine,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.147,,,,,
+Atrazine,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.145,,,,,
+Atrazine,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.002,0.4,0.731,agonist/HEK293,,,,agonist
+Atrazine,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0010000000474974,0.13,1.0,antagonist/HEK293,,,,antagonist
+Atrazine,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.182,,,,,
+Atrazine,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.148,,,,,
+Atrazine,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.148,,,,,
+Atrazine,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.182,,,,,
+Atrazine,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.15,,,,,
+Atrazine,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.148,,,,,
+Atrazine,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.0740000009536743,0.28,1.0,antagonist/GH3,,,,antagonist
+Bisphenol A,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.265,,,,,
+Bisphenol A,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.133,,,,,
+Bisphenol A,AR,pharmacological,IC50,AR_B,True,True,classification,False,0.0590000003576278,0.5,1.0,,5.28000020980835,4.480000019073486,6.079999923706055,
+Bisphenol A,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.25,,,,,
+Bisphenol A,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.234,,,,,
+Bisphenol A,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.005,0.4,1.0,agonist/HEK293T,,,,agonist
+Bisphenol A,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.002,0.36,1.0,agonist/MDA,,,,agonist
+Bisphenol A,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.9319999814033508,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Bisphenol A,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,True,0.7200000286102295,0.15,1.0,antagonist/MDA,,,,antagonist
+Bisphenol A,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,True,0.886,0.5,1.0,,6.39,5.24,7.53,
+Bisphenol A,ESR1,pharmacological,EC50,ESR1_EC50_F,True,True,classification,True,0.9120000004768372,0.5,0.52,,7.070000171661377,6.090000152587891,8.050000190734863,
+Bisphenol A,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,True,0.9079999923706056,0.5,1.0,,5.960000038146973,5.119999885559082,6.800000190734863,
+Bisphenol A,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.31,,,,,
+Bisphenol A,ESR1,pharmacological,Ki,ESR1_Ki_B,True,True,classification,True,0.935,0.5,1.0,,6.25,5.440000057220459,7.050000190734863,
+Bisphenol A,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,True,0.872,0.26,1.0,agonist/HEK293T,,,,agonist
+Bisphenol A,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.99,0.35,1.0,agonist/VM7,,,,agonist
+Bisphenol A,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.9679999947547911,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Bisphenol A,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.105,0.2,1.0,antagonist/VM7,,,,antagonist
+Bisphenol A,ESR2,pharmacological,EC50,ESR2_EC50_B,True,True,classification,True,0.892,0.5,1.0,,6.039999961853027,4.789999961853027,7.289999961853027,
+Bisphenol A,ESR2,pharmacological,EC50,ESR2_EC50_F,True,True,classification,True,0.954,0.5,0.52,,8.369999885559082,7.360000133514404,9.380000114440918,
+Bisphenol A,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,True,0.764,0.5,1.0,,6.019999980926514,5.090000152587891,6.940000057220459,
+Bisphenol A,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.265,,,,,
+Bisphenol A,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.296,,,,,
+Bisphenol A,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.212,,,,,
+Bisphenol A,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.212,,,,,
+Bisphenol A,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.333,,,,,
+Bisphenol A,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.148,,,,,
+Bisphenol A,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.195,,,,,
+Bisphenol A,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.008,0.4,1.0,agonist/HEK293,,,,agonist
+Bisphenol A,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,True,0.9589999914169312,0.13,1.0,antagonist/HEK293,,,,antagonist
+Bisphenol A,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.228,,,,,
+Bisphenol A,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.2,,,,,
+Bisphenol A,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.138,,,,,
+Bisphenol A,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.228,,,,,
+Bisphenol A,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.2,,,,,
+Bisphenol A,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.18,,,,,
+Bisphenol A,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.902999997138977,0.28,1.0,antagonist/GH3,,,,antagonist
+Bisphenol S,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.31,,,,,
+Bisphenol S,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.158,,,,,
+Bisphenol S,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.333,,,,,
+Bisphenol S,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.237,,,,,
+Bisphenol S,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.193,,,,,
+Bisphenol S,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.018,0.4,0.65,agonist/HEK293T,,,,agonist
+Bisphenol S,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.005,0.36,1.0,agonist/MDA,,,,agonist
+Bisphenol S,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.7960000038146973,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Bisphenol S,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0659999996423721,0.15,1.0,antagonist/MDA,,,,antagonist
+Bisphenol S,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,True,0.534,0.5,0.364,,6.17,5.03,7.32,
+Bisphenol S,ESR1,pharmacological,EC50,ESR1_EC50_F,True,True,classification,False,0.3819999992847442,0.5,0.464,,6.349999904632568,5.369999885559082,7.329999923706055,
+Bisphenol S,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,False,0.1129999980330467,0.5,0.409,,5.349999904632568,4.510000228881836,6.190000057220459,
+Bisphenol S,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.464,,,,,
+Bisphenol S,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.36,,,,,
+Bisphenol S,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,True,0.75,0.26,1.0,agonist/HEK293T,,,,agonist
+Bisphenol S,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.772,0.35,1.0,agonist/VM7,,,,agonist
+Bisphenol S,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.0599999986588954,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Bisphenol S,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.025,0.2,1.0,antagonist/VM7,,,,antagonist
+Bisphenol S,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.364,,,,,
+Bisphenol S,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.371,,,,,
+Bisphenol S,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,False,0.444,0.5,0.421,,5.130000114440918,4.210000038146973,6.059999942779541,
+Bisphenol S,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.36,,,,,
+Bisphenol S,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.346,,,,,
+Bisphenol S,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.196,,,,,
+Bisphenol S,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.231,,,,,
+Bisphenol S,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.155,,,,,
+Bisphenol S,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.136,,,,,
+Bisphenol S,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.173,,,,,
+Bisphenol S,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.02,0.4,0.65,agonist/HEK293,,,,agonist
+Bisphenol S,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0179999992251396,0.13,1.0,antagonist/HEK293,,,,antagonist
+Bisphenol S,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.136,,,,,
+Bisphenol S,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.231,,,,,
+Bisphenol S,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.133,,,,,
+Bisphenol S,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.22,,,,,
+Bisphenol S,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.231,,,,,
+Bisphenol S,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.18,,,,,
+Bisphenol S,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.1080000028014183,0.28,1.0,antagonist/GH3,,,,antagonist
+Caffeine,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.14,,,,,
+Caffeine,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.157,,,,,
+Caffeine,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.17,,,,,
+Caffeine,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.161,,,,,
+Caffeine,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.161,,,,,
+Caffeine,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.002,0.4,1.0,agonist/HEK293T,,,,agonist
+Caffeine,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.0,0.36,1.0,agonist/MDA,,,,agonist
+Caffeine,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,False,0.0219999998807907,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Caffeine,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0130000002682209,0.15,0.6,antagonist/MDA,,,,antagonist
+Caffeine,ESR1,pharmacological,EC50,ESR1_EC50_B,True,False,not_assessed,,,,0.23,,,,,
+Caffeine,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.13,,,,,
+Caffeine,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.224,,,,,
+Caffeine,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.13,,,,,
+Caffeine,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.143,,,,,
+Caffeine,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.005,0.26,1.0,agonist/HEK293T,,,,agonist
+Caffeine,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.015,0.35,1.0,agonist/VM7,,,,agonist
+Caffeine,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.0080000003799796,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Caffeine,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.012,0.2,1.0,antagonist/VM7,,,,antagonist
+Caffeine,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.122,,,,,
+Caffeine,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.22,,,,,
+Caffeine,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.224,,,,,
+Caffeine,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.143,,,,,
+Caffeine,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.172,,,,,
+Caffeine,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.169,,,,,
+Caffeine,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.169,,,,,
+Caffeine,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.169,,,,,
+Caffeine,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.114,,,,,
+Caffeine,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.148,,,,,
+Caffeine,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.002,0.4,1.0,agonist/HEK293,,,,agonist
+Caffeine,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0010000000474974,0.13,1.0,antagonist/HEK293,,,,antagonist
+Caffeine,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.164,,,,,
+Caffeine,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.159,,,,,
+Caffeine,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.138,,,,,
+Caffeine,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.164,,,,,
+Caffeine,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.123,,,,,
+Caffeine,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.138,,,,,
+Caffeine,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.1110000014305114,0.28,0.553,antagonist/GH3,,,,antagonist
+DBP,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.212,,,,,
+DBP,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.197,,,,,
+DBP,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.292,,,,,
+DBP,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.255,,,,,
+DBP,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.23,,,,,
+DBP,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.005,0.4,1.0,agonist/HEK293T,,,,agonist
+DBP,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.0,0.36,1.0,agonist/MDA,,,,agonist
+DBP,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,False,0.1120000034570694,0.24,1.0,antagonist/HEK293T,,,,antagonist
+DBP,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0340000018477439,0.15,1.0,antagonist/MDA,,,,antagonist
+DBP,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,False,0.286,0.5,0.333,,5.6,4.45,6.74,
+DBP,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.35,,,,,
+DBP,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.302,,,,,
+DBP,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.327,,,,,
+DBP,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.309,,,,,
+DBP,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.01,0.26,1.0,agonist/HEK293T,,,,agonist
+DBP,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.08,0.35,0.889,agonist/VM7,,,,agonist
+DBP,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.0280000008642673,0.11,1.0,antagonist/HEK293T,,,,antagonist
+DBP,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.01,0.2,1.0,antagonist/VM7,,,,antagonist
+DBP,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.333,,,,,
+DBP,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.35,,,,,
+DBP,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.286,,,,,
+DBP,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.288,,,,,
+DBP,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.327,,,,,
+DBP,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.419,,,,,
+DBP,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.308,,,,,
+DBP,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.308,,,,,
+DBP,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.306,,,,,
+DBP,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.333,,,,,
+DBP,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.002,0.4,1.0,agonist/HEK293,,,,agonist
+DBP,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0299999993294477,0.13,1.0,antagonist/HEK293,,,,antagonist
+DBP,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.226,,,,,
+DBP,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.347,,,,,
+DBP,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.194,,,,,
+DBP,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.226,,,,,
+DBP,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.347,,,,,
+DBP,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.194,,,,,
+DBP,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.0289999991655349,0.28,1.0,antagonist/GH3,,,,antagonist
+DEHP,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.186,,,,,
+DEHP,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.176,,,,,
+DEHP,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.238,,,,,
+DEHP,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.238,,,,,
+DEHP,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.224,,,,,
+DEHP,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.028,0.4,1.0,agonist/HEK293T,,,,agonist
+DEHP,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.015,0.36,1.0,agonist/MDA,,,,agonist
+DEHP,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,False,0.0879999995231628,0.24,1.0,antagonist/HEK293T,,,,antagonist
+DEHP,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0189999993890523,0.15,1.0,antagonist/MDA,,,,antagonist
+DEHP,ESR1,pharmacological,EC50,ESR1_EC50_B,True,False,not_assessed,,,,0.283,,,,,
+DEHP,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.245,,,,,
+DEHP,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.267,,,,,
+DEHP,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.263,,,,,
+DEHP,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.227,,,,,
+DEHP,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.008,0.26,1.0,agonist/HEK293T,,,,agonist
+DEHP,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.015,0.35,1.0,agonist/VM7,,,,agonist
+DEHP,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.0160000007599592,0.11,1.0,antagonist/HEK293T,,,,antagonist
+DEHP,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.002,0.2,1.0,antagonist/VM7,,,,antagonist
+DEHP,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.279,,,,,
+DEHP,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.25,,,,,
+DEHP,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.237,,,,,
+DEHP,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.221,,,,,
+DEHP,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.333,,,,,
+DEHP,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.346,,,,,
+DEHP,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.268,,,,,
+DEHP,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.268,,,,,
+DEHP,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.246,,,,,
+DEHP,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.315,,,,,
+DEHP,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.005,0.4,1.0,agonist/HEK293,,,,agonist
+DEHP,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0049999998882412,0.13,1.0,antagonist/HEK293,,,,antagonist
+DEHP,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.182,,,,,
+DEHP,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.288,,,,,
+DEHP,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.169,,,,,
+DEHP,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.182,,,,,
+DEHP,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.288,,,,,
+DEHP,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.169,,,,,
+DEHP,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.0240000002086162,0.28,1.0,antagonist/GH3,,,,antagonist
+Flutamide,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.25,,,,,
+Flutamide,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.338,,,,,
+Flutamide,AR,pharmacological,IC50,AR_B,True,True,classification,True,0.6869999766349792,0.5,0.554,,5.920000076293945,5.119999885559082,6.71999979019165,
+Flutamide,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,1.0,,,,,
+Flutamide,AR,pharmacological,Ki,AR_Ki_B,True,True,classification,True,0.894,0.5,0.612,,7.51,6.79,8.24,
+Flutamide,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.008,0.4,1.0,agonist/HEK293T,,,,agonist
+Flutamide,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.04,0.36,1.0,agonist/MDA,,,,agonist
+Flutamide,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.6489999890327454,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Flutamide,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,True,0.6710000038146973,0.15,1.0,antagonist/MDA,,,,antagonist
+Flutamide,ESR1,pharmacological,EC50,ESR1_EC50_B,True,False,not_assessed,,,,0.234,,,,,
+Flutamide,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.206,,,,,
+Flutamide,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.276,,,,,
+Flutamide,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.206,,,,,
+Flutamide,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.184,,,,,
+Flutamide,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.0,0.26,1.0,agonist/HEK293T,,,,agonist
+Flutamide,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.095,0.35,0.429,agonist/VM7,,,,agonist
+Flutamide,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.8140000104904175,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Flutamide,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,True,0.705,0.2,1.0,antagonist/VM7,,,,antagonist
+Flutamide,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.234,,,,,
+Flutamide,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.175,,,,,
+Flutamide,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.228,,,,,
+Flutamide,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.184,,,,,
+Flutamide,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.273,,,,,
+Flutamide,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.243,,,,,
+Flutamide,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.261,,,,,
+Flutamide,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.263,,,,,
+Flutamide,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.173,,,,,
+Flutamide,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.211,,,,,
+Flutamide,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.0,0.4,1.0,agonist/HEK293,,,,agonist
+Flutamide,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.061999998986721,0.13,1.0,antagonist/HEK293,,,,antagonist
+Flutamide,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.183,,,,,
+Flutamide,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.281,,,,,
+Flutamide,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.2,,,,,
+Flutamide,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.183,,,,,
+Flutamide,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.247,,,,,
+Flutamide,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.2,,,,,
+Flutamide,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.7139999866485596,0.28,1.0,antagonist/GH3,,,,antagonist
+Genistein,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.212,,,,,
+Genistein,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.19,,,,,
+Genistein,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.37,,,,,
+Genistein,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.561,,,,,
+Genistein,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.19,,,,,
+Genistein,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.08,0.4,0.372,agonist/HEK293T,,,,agonist
+Genistein,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.008,0.36,1.0,agonist/MDA,,,,agonist
+Genistein,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.9070000052452089,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Genistein,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0649999976158142,0.15,0.561,antagonist/MDA,,,,antagonist
+Genistein,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,False,0.48,0.5,0.455,,6.24,5.1,7.39,
+Genistein,ESR1,pharmacological,EC50,ESR1_EC50_F,True,True,classification,True,0.9819999933242798,0.5,1.0,,6.099999904632568,5.119999885559082,7.079999923706055,
+Genistein,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,False,0.0350000001490116,0.5,0.684,,4.940000057220459,4.110000133514404,5.78000020980835,
+Genistein,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.25,,,,,
+Genistein,ESR1,pharmacological,Ki,ESR1_Ki_B,True,True,classification,True,0.935,0.5,1.0,,6.829999923706055,6.03000020980835,7.639999866485596,
+Genistein,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,True,0.94,0.26,1.0,agonist/HEK293T,,,,agonist
+Genistein,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.968,0.35,1.0,agonist/VM7,,,,agonist
+Genistein,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.9240000247955322,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Genistein,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.142,0.2,0.561,antagonist/VM7,,,,antagonist
+Genistein,ESR2,pharmacological,EC50,ESR2_EC50_B,True,True,classification,True,0.884,0.5,0.419,,6.869999885559082,5.619999885559082,8.119999885559082,
+Genistein,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.378,,,,,
+Genistein,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,True,0.502,0.5,0.684,,5.880000114440918,4.960000038146973,6.809999942779541,
+Genistein,ESR2,pharmacological,Ki,ESR2_Ki_B,True,True,classification,True,0.933,0.5,0.632,,7.43,6.43,8.43,
+Genistein,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.535,,,,,
+Genistein,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.535,,,,,
+Genistein,PPARG,pharmacological,IC50,PPARG_B,True,True,classification,False,0.0,0.5,0.561,,4.610000133514404,3.7899999618530273,5.429999828338623,
+Genistein,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.174,,,,,
+Genistein,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.169,,,,,
+Genistein,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.444,,,,,
+Genistein,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.058,0.4,0.632,agonist/HEK293,,,,agonist
+Genistein,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,True,0.8610000014305115,0.13,1.0,antagonist/HEK293,,,,antagonist
+Genistein,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.18,,,,,
+Genistein,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.259,,,,,
+Genistein,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.169,,,,,
+Genistein,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.18,,,,,
+Genistein,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.259,,,,,
+Genistein,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.169,,,,,
+Genistein,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.6949999928474426,0.28,0.75,antagonist/GH3,,,,antagonist
+Ibuprofen,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.19,,,,,
+Ibuprofen,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.167,,,,,
+Ibuprofen,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.306,,,,,
+Ibuprofen,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.2,,,,,
+Ibuprofen,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.2,,,,,
+Ibuprofen,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.0,0.4,1.0,agonist/HEK293T,,,,agonist
+Ibuprofen,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.008,0.36,1.0,agonist/MDA,,,,agonist
+Ibuprofen,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,False,0.0359999984502792,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Ibuprofen,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.006000000052154,0.15,1.0,antagonist/MDA,,,,antagonist
+Ibuprofen,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,False,0.334,0.5,0.424,,5.99,4.85,7.14,
+Ibuprofen,ESR1,pharmacological,EC50,ESR1_EC50_F,True,True,classification,True,0.859000027179718,0.5,0.424,,7.090000152587891,6.110000133514404,8.069999694824219,
+Ibuprofen,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,False,0.0109999999403953,0.5,0.37,,5.099999904632568,4.260000228881836,5.929999828338623,
+Ibuprofen,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.209,,,,,
+Ibuprofen,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.231,,,,,
+Ibuprofen,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.002,0.26,1.0,agonist/HEK293T,,,,agonist
+Ibuprofen,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.042,0.35,1.0,agonist/VM7,,,,agonist
+Ibuprofen,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.0080000003799796,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Ibuprofen,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.018,0.2,1.0,antagonist/VM7,,,,antagonist
+Ibuprofen,ESR2,pharmacological,EC50,ESR2_EC50_B,True,True,classification,True,0.534,0.5,0.424,,5.840000152587891,4.590000152587891,7.090000152587891,
+Ibuprofen,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.424,,,,,
+Ibuprofen,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.281,,,,,
+Ibuprofen,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.217,,,,,
+Ibuprofen,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.46,,,,,
+Ibuprofen,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.429,,,,,
+Ibuprofen,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.429,,,,,
+Ibuprofen,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.319,,,,,
+Ibuprofen,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.288,,,,,
+Ibuprofen,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.316,,,,,
+Ibuprofen,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.01,0.4,1.0,agonist/HEK293,,,,agonist
+Ibuprofen,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0099999997764825,0.13,1.0,antagonist/HEK293,,,,antagonist
+Ibuprofen,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.245,,,,,
+Ibuprofen,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.277,,,,,
+Ibuprofen,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.245,,,,,
+Ibuprofen,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.264,,,,,
+Ibuprofen,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.277,,,,,
+Ibuprofen,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.245,,,,,
+Ibuprofen,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.0419999994337558,0.28,1.0,antagonist/GH3,,,,antagonist
+Methoxychlor,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.22,,,,,
+Methoxychlor,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.157,,,,,
+Methoxychlor,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.317,,,,,
+Methoxychlor,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.317,,,,,
+Methoxychlor,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.333,,,,,
+Methoxychlor,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.052,0.4,1.0,agonist/HEK293T,,,,agonist
+Methoxychlor,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.002,0.36,1.0,agonist/MDA,,,,agonist
+Methoxychlor,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.6959999799728394,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Methoxychlor,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,True,0.5609999895095825,0.15,1.0,antagonist/MDA,,,,antagonist
+Methoxychlor,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,True,0.542,0.5,0.519,,6.32,5.18,7.46,
+Methoxychlor,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.229,,,,,
+Methoxychlor,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,False,0.2280000001192093,0.5,0.519,,6.369999885559082,5.539999961853027,7.210000038146973,
+Methoxychlor,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.244,,,,,
+Methoxychlor,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.333,,,,,
+Methoxychlor,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.022,0.26,1.0,agonist/HEK293T,,,,agonist
+Methoxychlor,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.81,0.35,1.0,agonist/VM7,,,,agonist
+Methoxychlor,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.8840000033378601,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Methoxychlor,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.172,0.2,1.0,antagonist/VM7,,,,antagonist
+Methoxychlor,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.244,,,,,
+Methoxychlor,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.262,,,,,
+Methoxychlor,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,False,0.335,0.5,0.519,,5.949999809265137,5.019999980926514,6.869999885559082,
+Methoxychlor,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.244,,,,,
+Methoxychlor,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.293,,,,,
+Methoxychlor,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.209,,,,,
+Methoxychlor,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.333,,,,,
+Methoxychlor,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.204,,,,,
+Methoxychlor,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.159,,,,,
+Methoxychlor,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.217,,,,,
+Methoxychlor,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.042,0.4,1.0,agonist/HEK293,,,,agonist
+Methoxychlor,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0299999993294477,0.13,1.0,antagonist/HEK293,,,,antagonist
+Methoxychlor,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.18,,,,,
+Methoxychlor,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.19,,,,,
+Methoxychlor,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.17,,,,,
+Methoxychlor,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.224,,,,,
+Methoxychlor,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.204,,,,,
+Methoxychlor,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.17,,,,,
+Methoxychlor,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.5830000042915344,0.28,0.5,antagonist/GH3,,,,antagonist
+Rosiglitazone,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.172,,,,,
+Rosiglitazone,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.16,,,,,
+Rosiglitazone,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.239,,,,,
+Rosiglitazone,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.198,,,,,
+Rosiglitazone,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.185,,,,,
+Rosiglitazone,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.055,0.4,0.492,agonist/HEK293T,,,,agonist
+Rosiglitazone,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.012,0.36,1.0,agonist/MDA,,,,agonist
+Rosiglitazone,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,False,0.1190000027418136,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Rosiglitazone,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0489999987185001,0.15,1.0,antagonist/MDA,,,,antagonist
+Rosiglitazone,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,False,0.138,0.5,0.377,,5.21,4.06,6.35,
+Rosiglitazone,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.188,,,,,
+Rosiglitazone,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.304,,,,,
+Rosiglitazone,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.288,,,,,
+Rosiglitazone,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.288,,,,,
+Rosiglitazone,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.002,0.26,1.0,agonist/HEK293T,,,,agonist
+Rosiglitazone,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.052,0.35,1.0,agonist/VM7,,,,agonist
+Rosiglitazone,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.7710000276565552,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Rosiglitazone,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.12,0.2,1.0,antagonist/VM7,,,,antagonist
+Rosiglitazone,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.29,,,,,
+Rosiglitazone,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.181,,,,,
+Rosiglitazone,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,False,0.242,0.5,0.338,,5.340000152587891,4.420000076293945,6.269999980926514,
+Rosiglitazone,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.288,,,,,
+Rosiglitazone,PPARG,pharmacological,EC50,PPARG_EC50_B,True,True,classification,False,0.1410000026226043,0.5,0.636,,5.849999904632568,5.170000076293945,6.53000020980835,
+Rosiglitazone,PPARG,pharmacological,EC50,PPARG_EC50_F,True,True,classification,False,0.3,0.5,0.656,,6.110000133514404,5.210000038146973,7.010000228881836,
+Rosiglitazone,PPARG,pharmacological,IC50,PPARG_B,True,True,classification,False,0.0070000002160668,0.5,0.789,,4.75,3.930000066757202,5.570000171661377,
+Rosiglitazone,PPARG,pharmacological,IC50,PPARG_F,True,True,classification,True,0.96,0.57,1.0,,6.650000095367432,5.630000114440918,7.670000076293945,
+Rosiglitazone,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.54,,,,,
+Rosiglitazone,PPARG,pharmacological,Ki,PPARG_Ki_B,True,True,classification,False,0.252,0.5,0.656,,5.940000057220459,5.099999904632568,6.789999961853027,
+Rosiglitazone,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,True,0.722,0.4,1.0,agonist/HEK293,,,,agonist
+Rosiglitazone,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0350000001490116,0.13,1.0,antagonist/HEK293,,,,antagonist
+Rosiglitazone,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.224,,,,,
+Rosiglitazone,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.269,,,,,
+Rosiglitazone,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.235,,,,,
+Rosiglitazone,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.224,,,,,
+Rosiglitazone,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.269,,,,,
+Rosiglitazone,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.235,,,,,
+Rosiglitazone,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.2560000121593475,0.28,0.408,antagonist/GH3,,,,antagonist
+Sucrose,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.094,,,,,
+Sucrose,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.095,,,,,
+Sucrose,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.125,,,,,
+Sucrose,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.107,,,,,
+Sucrose,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.114,,,,,
+Sucrose,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.005,0.4,1.0,agonist/HEK293T,,,,agonist
+Sucrose,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.0,0.36,1.0,agonist/MDA,,,,agonist
+Sucrose,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,False,0.0350000001490116,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Sucrose,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.006000000052154,0.15,1.0,antagonist/MDA,,,,antagonist
+Sucrose,ESR1,pharmacological,EC50,ESR1_EC50_B,True,False,not_assessed,,,,0.152,,,,,
+Sucrose,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.179,,,,,
+Sucrose,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.311,,,,,
+Sucrose,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.086,,,,,
+Sucrose,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.311,,,,,
+Sucrose,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.002,0.26,1.0,agonist/HEK293T,,,,agonist
+Sucrose,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.01,0.35,1.0,agonist/VM7,,,,agonist
+Sucrose,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,False,0.003000000026077,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Sucrose,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.002,0.2,1.0,antagonist/VM7,,,,antagonist
+Sucrose,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.137,,,,,
+Sucrose,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.179,,,,,
+Sucrose,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,False,0.447,0.5,0.311,,5.110000133514404,4.179999828338623,6.03000020980835,
+Sucrose,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.311,,,,,
+Sucrose,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.317,,,,,
+Sucrose,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.117,,,,,
+Sucrose,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.115,,,,,
+Sucrose,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.103,,,,,
+Sucrose,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.1,,,,,
+Sucrose,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.111,,,,,
+Sucrose,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.0,0.4,1.0,agonist/HEK293,,,,agonist
+Sucrose,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0010000000474974,0.13,1.0,antagonist/HEK293,,,,antagonist
+Sucrose,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.083,,,,,
+Sucrose,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.092,,,,,
+Sucrose,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.075,,,,,
+Sucrose,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.085,,,,,
+Sucrose,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.101,,,,,
+Sucrose,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.075,,,,,
+Sucrose,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.0939999967813491,0.28,1.0,antagonist/GH3,,,,antagonist
+Triclosan,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.258,,,,,
+Triclosan,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.175,,,,,
+Triclosan,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.333,,,,,
+Triclosan,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.333,,,,,
+Triclosan,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.211,,,,,
+Triclosan,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,True,0.652,0.4,1.0,agonist/HEK293T,,,,agonist
+Triclosan,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.008,0.36,1.0,agonist/MDA,,,,agonist
+Triclosan,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.3160000145435333,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Triclosan,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,True,0.3680000007152557,0.15,0.581,antagonist/MDA,,,,antagonist
+Triclosan,ESR1,pharmacological,EC50,ESR1_EC50_B,True,False,not_assessed,,,,0.254,,,,,
+Triclosan,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.243,,,,,
+Triclosan,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.294,,,,,
+Triclosan,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.364,,,,,
+Triclosan,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.208,,,,,
+Triclosan,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.028,0.26,1.0,agonist/HEK293T,,,,agonist
+Triclosan,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.088,0.35,1.0,agonist/VM7,,,,agonist
+Triclosan,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.9300000071525574,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Triclosan,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,True,0.835,0.2,1.0,antagonist/VM7,,,,antagonist
+Triclosan,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.244,,,,,
+Triclosan,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.239,,,,,
+Triclosan,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.294,,,,,
+Triclosan,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.208,,,,,
+Triclosan,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.333,,,,,
+Triclosan,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.262,,,,,
+Triclosan,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.333,,,,,
+Triclosan,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.262,,,,,
+Triclosan,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.189,,,,,
+Triclosan,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.255,,,,,
+Triclosan,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.018,0.4,1.0,agonist/HEK293,,,,agonist
+Triclosan,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0790000036358833,0.13,1.0,antagonist/HEK293,,,,antagonist
+Triclosan,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.245,,,,,
+Triclosan,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.25,,,,,
+Triclosan,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.231,,,,,
+Triclosan,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.245,,,,,
+Triclosan,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.245,,,,,
+Triclosan,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.231,,,,,
+Triclosan,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.7720000147819519,0.28,1.0,antagonist/GH3,,,,antagonist
+Vinclozolin,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.237,,,,,
+Vinclozolin,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.153,,,,,
+Vinclozolin,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.388,,,,,
+Vinclozolin,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.312,,,,,
+Vinclozolin,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.312,,,,,
+Vinclozolin,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.025,0.4,1.0,agonist/HEK293T,,,,agonist
+Vinclozolin,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.008,0.36,1.0,agonist/MDA,,,,agonist
+Vinclozolin,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.7400000095367432,0.24,1.0,antagonist/HEK293T,,,,antagonist
+Vinclozolin,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,True,0.8320000171661377,0.15,1.0,antagonist/MDA,,,,antagonist
+Vinclozolin,ESR1,pharmacological,EC50,ESR1_EC50_B,True,False,not_assessed,,,,0.143,,,,,
+Vinclozolin,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.182,,,,,
+Vinclozolin,ESR1,pharmacological,IC50,ESR1_B,True,False,not_assessed,,,,0.197,,,,,
+Vinclozolin,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.167,,,,,
+Vinclozolin,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.169,,,,,
+Vinclozolin,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.008,0.26,1.0,agonist/HEK293T,,,,agonist
+Vinclozolin,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,False,0.142,0.35,0.462,agonist/VM7,,,,agonist
+Vinclozolin,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.1199999973177909,0.11,0.462,antagonist/HEK293T,,,,antagonist
+Vinclozolin,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.062,0.2,1.0,antagonist/VM7,,,,antagonist
+Vinclozolin,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.172,,,,,
+Vinclozolin,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.188,,,,,
+Vinclozolin,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.197,,,,,
+Vinclozolin,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.169,,,,,
+Vinclozolin,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.188,,,,,
+Vinclozolin,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.184,,,,,
+Vinclozolin,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.175,,,,,
+Vinclozolin,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.164,,,,,
+Vinclozolin,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.152,,,,,
+Vinclozolin,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.179,,,,,
+Vinclozolin,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.005,0.4,1.0,agonist/HEK293,,,,agonist
+Vinclozolin,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0649999976158142,0.13,1.0,antagonist/HEK293,,,,antagonist
+Vinclozolin,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.147,,,,,
+Vinclozolin,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.153,,,,,
+Vinclozolin,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.115,,,,,
+Vinclozolin,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.147,,,,,
+Vinclozolin,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.16,,,,,
+Vinclozolin,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.141,,,,,
+Vinclozolin,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,False,0.2179999947547912,0.28,1.0,antagonist/GH3,,,,antagonist
+Zearalenone,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.172,,,,,
+Zearalenone,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.176,,,,,
+Zearalenone,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.212,,,,,
+Zearalenone,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.21,,,,,
+Zearalenone,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.222,,,,,
+Zearalenone,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,False,not_assessed,,,,0.265,agonist/HEK293T,,,,agonist
+Zearalenone,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.018,0.36,1.0,agonist/MDA,,,,agonist
+Zearalenone,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.2540000081062317,0.24,0.574,antagonist/HEK293T,,,,antagonist
+Zearalenone,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0780000016093254,0.15,1.0,antagonist/MDA,,,,antagonist
+Zearalenone,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,False,0.24,0.5,0.725,,5.72,4.57,6.86,
+Zearalenone,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.222,,,,,
+Zearalenone,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,False,0.0070000002160668,0.5,0.365,,4.940000057220459,4.110000133514404,5.78000020980835,
+Zearalenone,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.209,,,,,
+Zearalenone,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.25,,,,,
+Zearalenone,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,True,0.748,0.26,1.0,agonist/HEK293T,,,,agonist
+Zearalenone,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.795,0.35,1.0,agonist/VM7,,,,agonist
+Zearalenone,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.8560000061988831,0.11,1.0,antagonist/HEK293T,,,,antagonist
+Zearalenone,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,True,0.758,0.2,1.0,antagonist/VM7,,,,antagonist
+Zearalenone,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.291,,,,,
+Zearalenone,ESR2,pharmacological,EC50,ESR2_EC50_F,True,True,classification,True,0.92,0.5,1.0,,6.929999828338623,5.920000076293945,7.949999809265137,
+Zearalenone,ESR2,pharmacological,IC50,ESR2_B,True,False,not_assessed,,,,0.28,,,,,
+Zearalenone,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.25,,,,,
+Zearalenone,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.215,,,,,
+Zearalenone,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.188,,,,,
+Zearalenone,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.226,,,,,
+Zearalenone,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.178,,,,,
+Zearalenone,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.156,,,,,
+Zearalenone,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.226,,,,,
+Zearalenone,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.042,0.4,1.0,agonist/HEK293,,,,agonist
+Zearalenone,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,True,0.3880000114440918,0.13,0.574,antagonist/HEK293,,,,antagonist
+Zearalenone,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.165,,,,,
+Zearalenone,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.161,,,,,
+Zearalenone,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.163,,,,,
+Zearalenone,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.153,,,,,
+Zearalenone,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.161,,,,,
+Zearalenone,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.165,,,,,
+Zearalenone,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.6159999966621399,0.28,0.574,antagonist/GH3,,,,antagonist
+p-p-DDT,AR,pharmacological,EC50,AR_EC50_B,True,False,not_assessed,,,,0.167,,,,,
+p-p-DDT,AR,pharmacological,EC50,AR_EC50_F,False,False,not_assessed,,,,0.14,,,,,
+p-p-DDT,AR,pharmacological,IC50,AR_B,True,False,not_assessed,,,,0.22,,,,,
+p-p-DDT,AR,pharmacological,IC50,AR_F,False,False,not_assessed,,,,0.154,,,,,
+p-p-DDT,AR,pharmacological,Ki,AR_Ki_B,True,False,not_assessed,,,,0.222,,,,,
+p-p-DDT,AR,screening,AC50,TOX21_AR_agonist_HEK293T,True,True,classification,False,0.068,0.4,0.63,agonist/HEK293T,,,,agonist
+p-p-DDT,AR,screening,AC50,TOX21_AR_agonist_MDA,True,True,classification,False,0.0,0.36,1.0,agonist/MDA,,,,agonist
+p-p-DDT,AR,screening,AC50,TOX21_AR_antagonist_HEK293T,True,True,classification,True,0.4699999988079071,0.24,1.0,antagonist/HEK293T,,,,antagonist
+p-p-DDT,AR,screening,AC50,TOX21_AR_antagonist_MDA,True,True,classification,False,0.0199999995529651,0.15,1.0,antagonist/MDA,,,,antagonist
+p-p-DDT,ESR1,pharmacological,EC50,ESR1_EC50_B,True,True,classification,True,0.558,0.5,0.609,,6.38,5.24,7.53,
+p-p-DDT,ESR1,pharmacological,EC50,ESR1_EC50_F,True,False,not_assessed,,,,0.182,,,,,
+p-p-DDT,ESR1,pharmacological,IC50,ESR1_B,True,True,classification,False,0.0230000000447034,0.5,0.609,,5.769999980926514,4.929999828338623,6.610000133514404,
+p-p-DDT,ESR1,pharmacological,IC50,ESR1_F,False,False,not_assessed,,,,0.149,,,,,
+p-p-DDT,ESR1,pharmacological,Ki,ESR1_Ki_B,True,False,not_assessed,,,,0.184,,,,,
+p-p-DDT,ESR1,screening,AC50,TOX21_ESR1_agonist_HEK293T,True,True,classification,False,0.128,0.26,1.0,agonist/HEK293T,,,,agonist
+p-p-DDT,ESR1,screening,AC50,TOX21_ESR1_agonist_VM7,True,True,classification,True,0.832,0.35,1.0,agonist/VM7,,,,agonist
+p-p-DDT,ESR1,screening,AC50,TOX21_ESR1_antagonist_HEK293T,True,True,classification,True,0.6959999799728394,0.11,1.0,antagonist/HEK293T,,,,antagonist
+p-p-DDT,ESR1,screening,AC50,TOX21_ESR1_antagonist_VM7,True,True,classification,False,0.072,0.2,1.0,antagonist/VM7,,,,antagonist
+p-p-DDT,ESR2,pharmacological,EC50,ESR2_EC50_B,True,False,not_assessed,,,,0.214,,,,,
+p-p-DDT,ESR2,pharmacological,EC50,ESR2_EC50_F,True,False,not_assessed,,,,0.182,,,,,
+p-p-DDT,ESR2,pharmacological,IC50,ESR2_B,True,True,classification,False,0.42,0.5,0.609,,5.78000020980835,4.860000133514404,6.710000038146973,
+p-p-DDT,ESR2,pharmacological,Ki,ESR2_Ki_B,True,False,not_assessed,,,,0.184,,,,,
+p-p-DDT,PPARG,pharmacological,EC50,PPARG_EC50_B,True,False,not_assessed,,,,0.279,,,,,
+p-p-DDT,PPARG,pharmacological,EC50,PPARG_EC50_F,True,False,not_assessed,,,,0.231,,,,,
+p-p-DDT,PPARG,pharmacological,IC50,PPARG_B,True,False,not_assessed,,,,0.214,,,,,
+p-p-DDT,PPARG,pharmacological,IC50,PPARG_F,True,False,not_assessed,,,,0.279,,,,,
+p-p-DDT,PPARG,pharmacological,Kd,PPARG_Kd_B,False,False,not_assessed,,,,0.159,,,,,
+p-p-DDT,PPARG,pharmacological,Ki,PPARG_Ki_B,True,False,not_assessed,,,,0.2,,,,,
+p-p-DDT,PPARG,screening,AC50,TOX21_PPARG_agonist_HEK293,True,True,classification,False,0.03,0.4,1.0,agonist/HEK293,,,,agonist
+p-p-DDT,PPARG,screening,AC50,TOX21_PPARG_antagonist_HEK293,True,True,classification,False,0.0080000003799796,0.13,1.0,antagonist/HEK293,,,,antagonist
+p-p-DDT,THRA,pharmacological,EC50,THRA_EC50_B,False,False,not_assessed,,,,0.122,,,,,
+p-p-DDT,THRA,pharmacological,IC50,THRA_B,False,False,not_assessed,,,,0.122,,,,,
+p-p-DDT,THRA,pharmacological,Ki,THRA_Ki_B,False,False,not_assessed,,,,0.121,,,,,
+p-p-DDT,THRB,pharmacological,EC50,THRB_EC50_B,False,False,not_assessed,,,,0.122,,,,,
+p-p-DDT,THRB,pharmacological,IC50,THRB_B,True,False,not_assessed,,,,0.122,,,,,
+p-p-DDT,THRB,pharmacological,Ki,THRB_Ki_B,False,False,not_assessed,,,,0.121,,,,,
+p-p-DDT,TR,screening,AC50,TOX21_TR_antagonist_GH3,True,True,classification,True,0.6449999809265137,0.28,0.444,antagonist/GH3,,,,antagonist

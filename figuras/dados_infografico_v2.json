@@ -1,1 +1,0 @@
-{"matriz": [[10, 1, 6], [4, 1, 5], [22, 34, 43]], "total": 126, "n_v1": 83, "n_novos": 43, "v1": {"sem alerta": 40, "baixo": 23, "moderado": 10, "alto": 10}, "cobertura": [["AR", 3, 4], ["ESR1", 4, 4], ["ESR2", 4, 0], ["PPARG", 5, 2], ["THRB", 1, 0], ["TR", 0, 1]], "n_previsoes": 1098, "n_endpoints": 666}

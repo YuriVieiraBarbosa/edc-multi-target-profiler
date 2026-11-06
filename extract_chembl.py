@@ -1,7 +1,7 @@
-"""Extração de atividades IC50 do dump SQLite do ChEMBL 37 para os alvos de
-desregulação endócrina (AR, ERalfa, ERbeta, THRalfa, THRbeta, PPARgama).
+"""Extraction of IC50 activities from the ChEMBL 37 SQLite dump for the endocrine
+disruption targets (AR, ERalpha, ERbeta, THRalpha, THRbeta, PPARgamma).
 
-Mantém proveniência completa por medida: composto, ensaio, alvo e referência.
+Keeps full provenance per measure: compound, assay, target, and reference.
 """
 import sqlite3, sys, pandas as pd
 
@@ -74,8 +74,8 @@ def main(db_path, out_prefix="cache/chembl37"):
 
 if __name__ == "__main__":
     tg, acts = main(sys.argv[1])
-    print("targets encontrados:", len(tg))
+    print("targets found:", len(tg))
     print(tg[["target_chembl_id", "target_name", "target_type", "organism", "target_label"]]
           .to_string(index=False))
-    print("\natividades IC50:", acts.shape)
+    print("\nIC50 activities:", acts.shape)
     print(acts.groupby(["target_label", "assay_type"]).size().unstack(fill_value=0).to_string())
